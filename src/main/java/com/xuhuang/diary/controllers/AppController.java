@@ -35,8 +35,15 @@ public class AppController {
 
     @PostMapping("/register")
     public String submitRegistration(RegistrationRequest request, Model model) {
-        userService.register(request);
-        return "redirect:/";
+        try {
+            userService.register(request);
+        } catch (Exception e) {
+            model.addAttribute("request", request);
+            model.addAttribute("errorMsg", e.getMessage());
+        return "register";
+        }
+        
+        return "redirect:/login";
     }
 
     @GetMapping("/login")

@@ -7,6 +7,10 @@
     <h3>Register a new account</h3>
     <form th:action="@{/register}" th:object="${request}" method="post">
         <div>
+            <span th:if="${errorMsg}" th:text="${errorMsg}"></span>
+        </div>
+
+        <div>
             <input type="text" th:field="*{username}" placeholder="Username" required>
         </div>
 
