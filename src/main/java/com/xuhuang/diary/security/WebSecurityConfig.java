@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         // TODO: enable csrf after testing
         .csrf().disable()
         .authorizeRequests()
-            .antMatchers("/api/v*/user/register", "/register").permitAll()
+            .antMatchers("/api/v*/auth/**").permitAll()
             .anyRequest().authenticated()
             .and()
         .formLogin()
