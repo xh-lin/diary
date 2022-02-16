@@ -33,7 +33,8 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("registered successfully", HttpStatus.OK);
+
+        return new ResponseEntity<>("Registered successfully", HttpStatus.OK);
     }
 
     @PostMapping("login")
@@ -43,7 +44,7 @@ public class AuthController {
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Logged-in failed.", HttpStatus.OK);
+            return new ResponseEntity<>("Logged-in failed.", HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>("Logged-in successfully", HttpStatus.OK);

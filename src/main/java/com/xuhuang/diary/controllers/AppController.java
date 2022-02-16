@@ -40,7 +40,7 @@ public class AppController {
         } catch (Exception e) {
             model.addAttribute("request", request);
             model.addAttribute("errorMsg", e.getMessage());
-        return "register";
+            return "register";
         }
         
         return "redirect:/login";
