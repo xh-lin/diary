@@ -38,4 +38,9 @@ public class AppController {
         userService.register(request);
         return "redirect:/";
     }
+
+    @GetMapping("/login")
+    public String viewLoginPage() {
+        return "login";
+    }
 }

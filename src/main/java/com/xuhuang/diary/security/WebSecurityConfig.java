@@ -30,7 +30,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             .antMatchers("/api/v*/user/register", "/register").permitAll()
             .anyRequest().authenticated()
             .and()
-        .formLogin();
+        .formLogin()
+            .loginPage("/login")
+            .permitAll();
     }
 
     @Override
