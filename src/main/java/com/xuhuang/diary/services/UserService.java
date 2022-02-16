@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
-    public String register(RegistrationRequest request) {
+    public void register(RegistrationRequest request) {
         User user = new User (
             request.getUsername(),
             request.getEmail(),
@@ -48,8 +48,6 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
-
-        return "successfully registered";
     }
     
 }
