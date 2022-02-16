@@ -1,6 +1,6 @@
 package com.xuhuang.diary.controllers;
 
-import com.xuhuang.diary.domains.RegistrationRequest;
+import com.xuhuang.diary.domains.AuthRequest;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.security.core.Authentication;
@@ -29,12 +29,12 @@ public class AppController {
     
     @GetMapping("/register")
     public String viewRegistrationPage(Model model) {
-        model.addAttribute("request", new RegistrationRequest());
+        model.addAttribute("request", new AuthRequest());
         return "register";
     }
 
     @PostMapping("/register")
-    public String submitRegistration(RegistrationRequest request, Model model) {
+    public String submitRegistration(AuthRequest request, Model model) {
         try {
             userService.register(request);
         } catch (Exception e) {

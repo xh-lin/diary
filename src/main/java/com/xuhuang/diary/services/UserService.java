@@ -1,6 +1,6 @@
 package com.xuhuang.diary.services;
 
-import com.xuhuang.diary.domains.RegistrationRequest;
+import com.xuhuang.diary.domains.AuthRequest;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
-    public void register(RegistrationRequest request) {
+    public void register(AuthRequest request) {
         User user = new User (
             request.getUsername(),
             request.getEmail(),

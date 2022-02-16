@@ -1,6 +1,6 @@
 package com.xuhuang.diary.controllers.api.v1;
 
-import com.xuhuang.diary.domains.RegistrationRequest;
+import com.xuhuang.diary.domains.AuthRequest;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<String> register(@RequestBody AuthRequest request) {
         try {
             userService.register(request);
         } catch (Exception e) {
