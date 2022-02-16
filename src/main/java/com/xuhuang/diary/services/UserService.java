@@ -29,6 +29,10 @@ public class UserService implements UserDetailsService {
     }
 
     public void register(AuthRequest request) {
+        if (!request.getPassword().equals(request.getPasswordConfirm())) {
+            throw new IllegalStateException("Passwords do not match");
+        }
+
         User user = new User (
             request.getUsername(),
             request.getEmail(),

@@ -29,6 +29,8 @@ public class AuthController {
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody AuthRequest request) {
         try {
+            // password confirmation not required
+            request.setPasswordConfirm(request.getPassword());
             userService.register(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
