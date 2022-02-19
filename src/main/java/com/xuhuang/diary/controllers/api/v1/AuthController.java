@@ -14,12 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("api/v1/auth") // Spring Security permit all
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -27,10 +30,11 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody AuthRequest request) {
+    public ResponseEntity<Object> register(@RequestBody AuthRequest request) {
+        // password confirmation not required
+        request.setPasswordConfirm(request.getPassword());
+
         try {
-            // password confirmation not required
-            request.setPasswordConfirm(request.getPassword());
             userService.register(request);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -40,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<Object> login(@RequestBody AuthRequest request) {
         try {
             SecurityContextHolder.getContext().setAuthentication(
                 authenticationManager.authenticate(
@@ -53,13 +57,13 @@ public class AuthController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity<String> fetchSignoutSite(HttpServletRequest request, HttpServletResponse response) {        
+    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
           
         return new ResponseEntity<>("Logged-out successfully", HttpStatus.OK);
     }
-    
 }
