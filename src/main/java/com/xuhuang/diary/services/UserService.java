@@ -1,10 +1,13 @@
 package com.xuhuang.diary.services;
 
+import javax.security.auth.message.AuthException;
+
 import com.xuhuang.diary.domains.AuthRequest;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,9 +31,9 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
-    public void register(AuthRequest request) {
+    public void register(AuthRequest request) throws AuthException {
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new IllegalStateException("Passwords do not match");
+            throw new AuthException("Passwords do not match");
         }
 
         User user = new User (
@@ -41,17 +44,25 @@ public class UserService implements UserDetailsService {
 
         boolean usernameExists = userRepository.findByUsername(user.getUsername()).isPresent();
         if (usernameExists) {
-            throw new IllegalStateException("Username already taken");
+            throw new AuthException("Username already taken");
         }
 
         boolean emailExists = userRepository.findByEmail(user.getEmail()).isPresent();
         if (emailExists) {
-            throw new IllegalStateException("Email already taken");
+            throw new AuthException("Email already taken");
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
+    }
+
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public boolean isCurrentUser(User user) {
+        return user.getId().equals(getCurrentUser().getId());
     }
     
 }
