@@ -1,6 +1,8 @@
 package com.xuhuang.diary.controllers;
 
-import com.xuhuang.diary.domains.AuthRequest;
+import javax.security.auth.message.AuthException;
+
+import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.stereotype.Controller;
@@ -24,15 +26,15 @@ public class AppController {
     
     @GetMapping("/register")
     public String viewRegistrationPage(Model model) {
-        model.addAttribute("request", new AuthRequest());
+        model.addAttribute("request", new RegisterRequest());
         return "register";
     }
 
     @PostMapping("/register")
-    public String submitRegistration(AuthRequest request, Model model) {
+    public String submitRegistration(RegisterRequest request, Model model) {
         try {
             userService.register(request);
-        } catch (Exception e) {
+        } catch (AuthException e) {
             model.addAttribute("request", request);
             model.addAttribute("errorMsg", e.getMessage());
             return "register";

@@ -1,9 +1,11 @@
 package com.xuhuang.diary.controllers.api.v1;
 
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xuhuang.diary.domains.AuthRequest;
+import com.xuhuang.diary.domains.LoginRequest;
+import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -30,13 +32,10 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("register")
-    public ResponseEntity<Object> register(@RequestBody AuthRequest request) {
-        // password confirmation not required
-        request.setPasswordConfirm(request.getPassword());
-
+    public ResponseEntity<Object> register(@RequestBody RegisterRequest request) {
         try {
             userService.register(request);
-        } catch (Exception e) {
+        } catch (AuthException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -44,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Object> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
         try {
             SecurityContextHolder.getContext().setAuthentication(
                 authenticationManager.authenticate(
