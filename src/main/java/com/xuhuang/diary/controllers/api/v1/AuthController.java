@@ -3,6 +3,7 @@ package com.xuhuang.diary.controllers.api.v1;
 import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
@@ -32,7 +33,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("register")
-    public ResponseEntity<Object> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         try {
             userService.register(request);
         } catch (AuthException e) {
