@@ -32,10 +32,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void register(RegisterRequest request) throws AuthException {
-        if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new AuthException("Passwords do not match");
-        }
-
         User user = new User (
             request.getUsername(),
             request.getEmail(),

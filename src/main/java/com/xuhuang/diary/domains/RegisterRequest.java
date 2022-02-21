@@ -4,6 +4,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.xuhuang.diary.validators.FieldMatch;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldMatch(fields = {"password", "passwordConfirm"}, message = "Password confirmation does not match.")
 public class RegisterRequest {
 
     @Pattern(
