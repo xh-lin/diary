@@ -27,7 +27,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", status.value());
 
         // get all errors
-        List<String> errors = ex.getFieldErrors()
+        List<String> errors = ex.getAllErrors()
             .stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
