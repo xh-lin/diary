@@ -40,20 +40,20 @@ public class AuthController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Registered successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Registered successfully.", HttpStatus.OK);
     }
 
     @PostMapping("login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) {
         try {
             SecurityContextHolder.getContext().setAuthentication(
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Logged-in failed.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid username and password.", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Logged-in successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Logged-in successfully.", HttpStatus.OK);
     }
 
     @PostMapping("logout")
@@ -64,6 +64,6 @@ public class AuthController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
           
-        return new ResponseEntity<>("Logged-out successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Logged-out successfully.", HttpStatus.OK);
     }
 }
