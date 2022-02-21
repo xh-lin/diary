@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("api/v1/auth") // Spring Security permit all
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthRestController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
