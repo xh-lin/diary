@@ -6,8 +6,8 @@
 <body>
     <h3>Register a new account</h3>
     <form th:action="@{/register}" th:object="${request}" method="post">
-        <div>
-            <span th:if="${errorMsg}" th:text="${errorMsg}"></span>
+        <div th:each="error : ${errors}">
+            <span th:text="${error}"></span>
         </div>
 
         <div>
