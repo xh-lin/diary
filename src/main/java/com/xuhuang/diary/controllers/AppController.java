@@ -28,13 +28,13 @@ public class AppController {
     @GetMapping("")
     public String viewHomePage(Model model) {
         model.addAttribute("username", userService.getCurrentUser().getUsername());
-        return "index";
+        return Template.INDEX.toString();
     }
     
     @GetMapping("/register")
     public String viewRegistrationPage(Model model) {
         model.addAttribute("request", new RegisterRequest());
-        return "register";
+        return Template.REGISTER.toString();
     }
 
     @PostMapping("/register")
@@ -47,7 +47,7 @@ public class AppController {
 
             model.addAttribute("request", request);
             model.addAttribute("errors", errors);
-            return "register";
+            return Template.REGISTER.toString();
         }
 
         try {
@@ -58,15 +58,15 @@ public class AppController {
 
             model.addAttribute("request", request);
             model.addAttribute("errors", errors);
-            return "register";
+            return Template.REGISTER.toString();
         }
         
-        return "redirect:/login";
+        return Template.LOGIN.toString();
     }
 
     @GetMapping("/login")
     public String viewLoginPage() {
-        return "login";
+        return Template.LOGIN.toString();
     }
 
 }
