@@ -1,5 +1,6 @@
 package com.xuhuang.diary.exceptions;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
         
+        Collections.sort(errors);
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, headers, status);
