@@ -14,6 +14,7 @@ import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -78,14 +79,13 @@ public class AuthRestController {
         Map<String, Object> body = new LinkedHashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            body.put("message", LOGGED_OUT_SUCCESSFULLY);
-            return new ResponseEntity<>(body, HttpStatus.OK);
+        if (auth instanceof AnonymousAuthenticationToken) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        body.put("message", YOU_HAVE_NOT_LOGGED_IN);
-        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
+        new SecurityContextLogoutHandler().logout(request, response, auth);
+        body.put("message", LOGGED_OUT_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
     
 }
