@@ -1,8 +1,10 @@
 package com.xuhuang.diary.services;
 
-import javax.security.auth.message.AuthException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.xuhuang.diary.domains.RegisterRequest;
+import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
@@ -33,15 +35,21 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
-    public void register(RegisterRequest request) throws AuthException {
+    public void register(RegisterRequest request) throws RegisterException {
+        List<String> exceptionMessages = new ArrayList<>();
         boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
+        boolean emailExists = userRepository.findByEmail(request.getEmail()).isPresent();
+
         if (usernameExists) {
-            throw new AuthException(USERNAME_ALREADY_TAKEN);
+            exceptionMessages.add(USERNAME_ALREADY_TAKEN);
         }
 
-        boolean emailExists = userRepository.findByEmail(request.getEmail()).isPresent();
         if (emailExists) {
-            throw new AuthException(EMAIL_ALREADY_TAKEN);
+            exceptionMessages.add(EMAIL_ALREADY_TAKEN);
+        }
+
+        if (!exceptionMessages.isEmpty()) {
+            throw new RegisterException(exceptionMessages);
         }
 
         User user = new User (

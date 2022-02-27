@@ -3,13 +3,13 @@ package com.xuhuang.diary.controllers.api.v1;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
+import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -41,6 +41,7 @@ public class AuthRestController {
 
     private static final String MESSAGE = "message";
     private static final String ERROR = "error";
+    private static final String ERRORS = "errors";
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -51,8 +52,8 @@ public class AuthRestController {
         
         try {
             userService.register(request);
-        } catch (AuthException e) {
-            body.put(ERROR, e.getMessage());
+        } catch (RegisterException e) {
+            body.put(ERRORS, e.getMessages());
             return new ResponseEntity<>(body, HttpStatus.CONFLICT);
         }
 

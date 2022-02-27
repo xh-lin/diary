@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 
 import com.xuhuang.diary.domains.RegisterRequest;
+import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -52,9 +52,8 @@ public class AppController {
 
         try {
             userService.register(request);
-        } catch (AuthException e) {
-            List<String> errors = new ArrayList<>();
-            errors.add(e.getMessage());
+        } catch (RegisterException e) {
+            List<String> errors = e.getMessages();
 
             model.addAttribute("request", request);
             model.addAttribute("errors", errors);
