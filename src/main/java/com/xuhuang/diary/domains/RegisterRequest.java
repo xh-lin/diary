@@ -22,12 +22,16 @@ public class RegisterRequest {
     public static final String VALIDATION_MESSAGE_USERNAME_AT_LEAST = "Username must contain at least one letter or number.";
     public static final String VALIDATION_MESSAGE_USERNAME_SIZE = "Username length must be between {min} and {max}.";
     public static final String VALIDATION_MESSAGE_EMAIL = "Email format not valid.";
+    public static final int USERNAME_SIZE_MIN = 4;
+    public static final int USERNAME_SIZE_MAX = 16;
     
     public static final String VALIDATION_MESSAGE_PASSWORD_LOWER = "Password must contain at least one lowercase letter.";
     public static final String VALIDATION_MESSAGE_PASSWORD_UPPER = "Password must contain at least one uppercase letter.";
     public static final String VALIDATION_MESSAGE_PASSWORD_NUMBER = "Password must contain at least one number.";
     public static final String VALIDATION_MESSAGE_PASSWORD_SPECIAL = "Password must contain at least one special character.";
     public static final String VALIDATION_MESSAGE_PASSWORD_SIZE = "Password length must be between {min} and {max}.";
+    public static final int PASSWORD_SIZE_MIN = 8;
+    public static final int PASSWORD_SIZE_MAX = 32;
 
     @Pattern(
         regexp = "^[a-zA-Z0-9_-]*$", 
@@ -36,7 +40,7 @@ public class RegisterRequest {
         regexp = "^.*[a-zA-Z0-9].*$", 
         message = VALIDATION_MESSAGE_USERNAME_AT_LEAST)
     @Size(
-        min = 4, max = 16,
+        min = USERNAME_SIZE_MIN, max = USERNAME_SIZE_MAX,
         message = VALIDATION_MESSAGE_USERNAME_SIZE)
     private String username;
 
@@ -56,7 +60,7 @@ public class RegisterRequest {
         regexp = "^.*[^\\w\\s].*$", 
         message = VALIDATION_MESSAGE_PASSWORD_SPECIAL)
     @Size(
-        min = 8, max = 32,
+        min = PASSWORD_SIZE_MIN, max = PASSWORD_SIZE_MAX,
         message = VALIDATION_MESSAGE_PASSWORD_SIZE)
     private String password;
 
