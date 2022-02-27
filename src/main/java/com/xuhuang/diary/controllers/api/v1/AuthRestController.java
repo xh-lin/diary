@@ -29,6 +29,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthRestController {
 
+    public static final String REGISTERED_SUCCESSFULLY = "Registered successfully.";
+    public static final String INVALID_USERNAME_AND_PASSWORD = "Invalid username and password.";
+    public static final String LOGGED_IN_SUCCESSFULLY = "Logged in successfully.";
+    public static final String LOGGED_OUT_SUCCESSFULLY = "Logged out successfully.";
+    public static final String YOU_HAVE_NOT_LOGGED_IN = "You have not logged in";
+
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
@@ -40,7 +46,7 @@ public class AuthRestController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>("Registered successfully.", HttpStatus.CREATED);
+        return new ResponseEntity<>(REGISTERED_SUCCESSFULLY, HttpStatus.CREATED);
     }
 
     @PostMapping("login")
@@ -50,10 +56,10 @@ public class AuthRestController {
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid username and password.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(INVALID_USERNAME_AND_PASSWORD, HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>("Logged-in successfully.", HttpStatus.OK);
+        return new ResponseEntity<>(LOGGED_IN_SUCCESSFULLY, HttpStatus.OK);
     }
 
     @PostMapping("logout")
@@ -62,10 +68,10 @@ public class AuthRestController {
         
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
-            return new ResponseEntity<>("Logged-out successfully.", HttpStatus.OK);
+            return new ResponseEntity<>(LOGGED_OUT_SUCCESSFULLY, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("You have not logged in.", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(YOU_HAVE_NOT_LOGGED_IN, HttpStatus.NO_CONTENT);
     }
     
 }

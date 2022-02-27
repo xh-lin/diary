@@ -20,7 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private static final String USER_NOT_FOUND_MSG = "User with username %s not found.";
+    public static final String USER_NOT_FOUND_MSG = "User with username %s not found.";
+    public static final String USERNAME_ALREADY_TAKEN = "Username already taken.";
+    public static final String EMAIL_ALREADY_TAKEN = "Email already taken.";
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -34,12 +36,12 @@ public class UserService implements UserDetailsService {
     public void register(RegisterRequest request) throws AuthException {
         boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
         if (usernameExists) {
-            throw new AuthException("Username already taken.");
+            throw new AuthException(USERNAME_ALREADY_TAKEN);
         }
 
         boolean emailExists = userRepository.findByEmail(request.getEmail()).isPresent();
         if (emailExists) {
-            throw new AuthException("Email already taken.");
+            throw new AuthException(EMAIL_ALREADY_TAKEN);
         }
 
         User user = new User (
