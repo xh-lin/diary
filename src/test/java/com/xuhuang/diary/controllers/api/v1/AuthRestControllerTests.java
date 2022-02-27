@@ -1,8 +1,12 @@
 package com.xuhuang.diary.controllers.api.v1;
 
+import java.util.Optional;
+
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.models.User;
+import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
+import com.xuhuang.diary.services.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +18,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.xuhuang.diary.utils.JsonUtil.asJsonString;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -30,6 +38,60 @@ class AuthRestControllerTests {
 
     @MockBean
     private UserRepository mockUserRepository;
+
+    @Test
+    void registerConflict() throws Exception {
+        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER));
+
+        doReturn(mockUser).when(mockUserRepository).findByUsername("test1");
+        doReturn(mockUser).when(mockUserRepository).findByEmail("test1@test.com");
+
+        // username and email taken
+        RegisterRequest requestBody = new RegisterRequest("test1", "test1@test.com", "Qwerty123.", "Qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(2)))
+            .andExpect(jsonPath("$.errors", hasItem(UserService.USERNAME_ALREADY_TAKEN)))
+            .andExpect(jsonPath("$.errors", hasItem(UserService.EMAIL_ALREADY_TAKEN)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // username taken
+        requestBody = new RegisterRequest("test1", "test2@test.com", "Qwerty123.", "Qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(UserService.USERNAME_ALREADY_TAKEN)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // email taken
+        requestBody = new RegisterRequest("test2", "test1@test.com", "Qwerty123.", "Qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(UserService.EMAIL_ALREADY_TAKEN)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+    }
     
     @Test
     void registerSuccess() throws Exception {
