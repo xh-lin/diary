@@ -24,18 +24,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-        // TODO: enable csrf after testing
-        .csrf().disable()
-        .authorizeRequests()
-            .antMatchers("/api/v*/auth/**", "/register").permitAll()
-            .anyRequest().authenticated()
-            .and()
-        .formLogin()
-            .loginPage("/login").permitAll()
-            .and()
-            .logout()
-            .logoutSuccessUrl("/login?logout").permitAll();
+        http.csrf().disable()
+            .authorizeRequests()
+                .antMatchers("/api/v*/auth/**", "/register").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login?logout").permitAll();
     }
 
     @Override

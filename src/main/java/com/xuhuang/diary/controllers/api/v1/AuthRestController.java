@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/auth") // Spring Security permit all
+@RequestMapping("api/v1/auth") // Spring Security permit all /api/v*/auth/**
 @RequiredArgsConstructor
 public class AuthRestController {
 

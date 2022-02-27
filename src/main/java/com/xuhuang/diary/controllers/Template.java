@@ -14,4 +14,5 @@ public enum Template {
     public String toString() {
         return name;
     }
+    
 }
