@@ -39,6 +39,9 @@ public class AuthRestController {
     public static final String LOGGED_OUT_SUCCESSFULLY = "Logged out successfully.";
     public static final String YOU_HAVE_NOT_LOGGED_IN = "You have not logged in";
 
+    private static final String MESSAGE = "message";
+    private static final String ERROR = "error";
+
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
@@ -49,11 +52,11 @@ public class AuthRestController {
         try {
             userService.register(request);
         } catch (AuthException e) {
-            body.put("error", e.getMessage());
+            body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.CONFLICT);
         }
 
-        body.put("message", REGISTERED_SUCCESSFULLY);
+        body.put(MESSAGE, REGISTERED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
@@ -66,11 +69,11 @@ public class AuthRestController {
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            body.put("error", INVALID_USERNAME_AND_PASSWORD);
+            body.put(ERROR, INVALID_USERNAME_AND_PASSWORD);
             return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
         }
 
-        body.put("message", LOGGED_IN_SUCCESSFULLY);
+        body.put(MESSAGE, LOGGED_IN_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
@@ -84,7 +87,7 @@ public class AuthRestController {
         }
 
         new SecurityContextLogoutHandler().logout(request, response, auth);
-        body.put("message", LOGGED_OUT_SUCCESSFULLY);
+        body.put(MESSAGE, LOGGED_OUT_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
     
