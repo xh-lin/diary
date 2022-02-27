@@ -37,10 +37,10 @@ public class AuthRestController {
         try {
             userService.register(request);
         } catch (AuthException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>("Registered successfully.", HttpStatus.OK);
+        return new ResponseEntity<>("Registered successfully.", HttpStatus.CREATED);
     }
 
     @PostMapping("login")
@@ -50,7 +50,7 @@ public class AuthRestController {
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid username and password.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid username and password.", HttpStatus.UNAUTHORIZED);
         }
 
         return new ResponseEntity<>("Logged-in successfully.", HttpStatus.OK);
@@ -62,8 +62,10 @@ public class AuthRestController {
         
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            return new ResponseEntity<>("Logged-out successfully.", HttpStatus.OK);
         }
-          
-        return new ResponseEntity<>("Logged-out successfully.", HttpStatus.OK);
+
+        return new ResponseEntity<>("You have not logged in.", HttpStatus.NO_CONTENT);
     }
+    
 }
