@@ -15,7 +15,9 @@ import javax.validation.Payload;
 @Documented
 public @interface FieldMatch {
 
-    String message() default "fields must match";
+    public static final String MESSAGE = "fields must match";
+
+    String message() default MESSAGE;
 
     Class<?>[] groups() default {};
 
