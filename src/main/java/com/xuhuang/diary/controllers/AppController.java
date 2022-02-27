@@ -1,6 +1,5 @@
 package com.xuhuang.diary.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +22,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppController {
 
+    private static final String REQUEST = "request";
+    private static final String ERRORS = "errors";
+
     private final UserService userService;
     
     @GetMapping("")
@@ -33,7 +35,7 @@ public class AppController {
     
     @GetMapping("/register")
     public String viewRegistrationPage(Model model) {
-        model.addAttribute("request", new RegisterRequest());
+        model.addAttribute(REQUEST, new RegisterRequest());
         return Template.REGISTER.toString();
     }
 
@@ -45,8 +47,8 @@ public class AppController {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-            model.addAttribute("request", request);
-            model.addAttribute("errors", errors);
+            model.addAttribute(REQUEST, request);
+            model.addAttribute(ERRORS, errors);
             return Template.REGISTER.toString();
         }
 
@@ -55,8 +57,8 @@ public class AppController {
         } catch (RegisterException e) {
             List<String> errors = e.getMessages();
 
-            model.addAttribute("request", request);
-            model.addAttribute("errors", errors);
+            model.addAttribute(REQUEST, request);
+            model.addAttribute(ERRORS, errors);
             return Template.REGISTER.toString();
         }
         
