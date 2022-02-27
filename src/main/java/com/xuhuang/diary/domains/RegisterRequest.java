@@ -15,8 +15,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldMatch(fields = {"password", "passwordConfirm"}, message = "Password confirmation does not match.")
+@FieldMatch(fields = {"password", "passwordConfirm"}, message = RegisterRequest.PASSWORD_CONFIRMATION_DOES_NOT_MATCH)
 public class RegisterRequest {
+
+    public static final String PASSWORD_CONFIRMATION_DOES_NOT_MATCH = "Password confirmation does not match.";
 
     public static final String VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY = "Username must contain only hyphens (-), underscores (_), letters or numbers.";
     public static final String VALIDATION_MESSAGE_USERNAME_AT_LEAST = "Username must contain at least one letter or number.";
