@@ -1,5 +1,8 @@
 package com.xuhuang.diary.controllers.api.v1;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,38 +43,49 @@ public class AuthRestController {
 
     @PostMapping("register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        
         try {
             userService.register(request);
         } catch (AuthException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+            body.put("error", e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(REGISTERED_SUCCESSFULLY, HttpStatus.CREATED);
+        body.put("message", REGISTERED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     @PostMapping("login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        
         try {
             SecurityContextHolder.getContext().setAuthentication(
                 authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>(INVALID_USERNAME_AND_PASSWORD, HttpStatus.UNAUTHORIZED);
+            body.put("error", INVALID_USERNAME_AND_PASSWORD);
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>(LOGGED_IN_SUCCESSFULLY, HttpStatus.OK);
+        body.put("message", LOGGED_IN_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @PostMapping("logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {        
+    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {    
+        Map<String, Object> body = new LinkedHashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
-            return new ResponseEntity<>(LOGGED_OUT_SUCCESSFULLY, HttpStatus.OK);
+            body.put("message", LOGGED_OUT_SUCCESSFULLY);
+            return new ResponseEntity<>(body, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(YOU_HAVE_NOT_LOGGED_IN, HttpStatus.NO_CONTENT);
+        body.put("message", YOU_HAVE_NOT_LOGGED_IN);
+        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
     }
     
 }
