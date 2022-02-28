@@ -139,6 +139,118 @@ class AuthRestControllerTests {
     }
 
     @Test
+    void registerValidatePassword() throws Exception {
+        // at least one lowercase letter
+        RegisterRequest requestBody = new RegisterRequest("test1", "test1@test.com", "QWERTY123.", "QWERTY123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_LOWER)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // at least one uppercase letter
+        requestBody = new RegisterRequest("test1", "test1@test.com", "qwerty123.", "qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_UPPER)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // at least one number
+        requestBody = new RegisterRequest("test1", "test1@test.com", "Qwertyabc.", "Qwertyabc.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NUMBER)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // at least one special character
+        requestBody = new RegisterRequest("test1", "test1@test.com", "Qwerty123", "Qwerty123");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SPECIAL)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // size
+        requestBody = new RegisterRequest("test1", "test1@test.com", "Qw1.", "Qw1.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(
+                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SIZE
+                    .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
+                    .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)))));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // not blank
+        requestBody = new RegisterRequest("test1", "test1@test.com", null, null);
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(2)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // password confirmation
+        requestBody = new RegisterRequest("test1", "test1@test.com", "Qwerty123.", "Qwerty123");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRMATION)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+    }
+
+    @Test
     void registerConflict() throws Exception {
         Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER));
 
