@@ -2,6 +2,7 @@ package com.xuhuang.diary.controllers.api.v1;
 
 import java.util.Optional;
 
+import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
@@ -316,6 +317,22 @@ class AuthRestControllerTests {
             .andExpect(status().isCreated());
 
         verify(mockUserRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void loginValidations() throws Exception {
+        LoginRequest requestBody = new LoginRequest(null, null);
+
+        mockMvc.perform(
+            post("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(2)))
+            .andExpect(jsonPath("$.errors", hasItem(LoginRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK)))
+            .andExpect(jsonPath("$.errors", hasItem(LoginRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK)));
     }
 
 }
