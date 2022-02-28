@@ -19,8 +19,6 @@ import lombok.Setter;
 @FieldMatch(fields = {"password", "passwordConfirm"}, message = RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRMATION)
 public class RegisterRequest {
 
-    public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRMATION = "Password confirmation does not match.";
-
     public static final String VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY = "Username must contain only hyphens (-), underscores (_), letters or numbers.";
     public static final String VALIDATION_MESSAGE_USERNAME_AT_LEAST = "Username must contain at least one letter or number.";
     public static final String VALIDATION_MESSAGE_USERNAME_SIZE = "Username length must be between {min} and {max}.";
@@ -41,6 +39,7 @@ public class RegisterRequest {
     public static final int PASSWORD_SIZE_MAX = 32;
 
     public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK = "Password confirmation must not be blank.";
+    public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRMATION = "Password confirmation does not match.";
 
     @Pattern(
         regexp = "^[a-zA-Z0-9_-]*$", 
