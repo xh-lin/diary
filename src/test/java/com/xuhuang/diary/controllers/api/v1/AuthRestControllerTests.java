@@ -104,6 +104,39 @@ class AuthRestControllerTests {
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
+    
+    @Test
+    void registerValidateEmail() throws Exception {
+        // email format
+        RegisterRequest requestBody = new RegisterRequest("test1", "test1", "Qwerty123.", "Qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_EMAIL)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // not blank
+        requestBody = new RegisterRequest("test1", null, "Qwerty123.", "Qwerty123.");
+
+        mockMvc.perform(
+            post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(requestBody)))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors").isArray())
+            .andExpect(jsonPath("$.errors", hasSize(1)))
+            .andExpect(jsonPath("$.errors", hasItem(RegisterRequest.VALIDATION_MESSAGE_EMAIL_NOTBLANK)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+    }
 
     @Test
     void registerConflict() throws Exception {
