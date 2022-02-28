@@ -3,6 +3,7 @@ package com.xuhuang.diary.models;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,9 +25,11 @@ public abstract class BaseEntity implements Serializable {
     private Long id;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private Timestamp updatedAt;
 
  }
