@@ -253,7 +253,7 @@ class AuthRestControllerTests {
 
     @Test
     void registerConflict() throws Exception {
-        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER));
+        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER, null));
 
         doReturn(mockUser).when(mockUserRepository).findByUsername("test1");
         doReturn(mockUser).when(mockUserRepository).findByEmail("test1@test.com");
