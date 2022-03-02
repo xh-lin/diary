@@ -1,18 +1,14 @@
 package com.xuhuang.diary.models;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -26,10 +22,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book extends BaseEntity {
+public class Record extends BaseEntity {
     
+    @Lob
     @Column(nullable = false)
-    private String title;
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
@@ -37,11 +34,7 @@ public class Book extends BaseEntity {
         generator = ObjectIdGenerators.PropertyGenerator.class, 
         property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Record> records;
+    @JsonProperty("book_id")
+    private Book book;
 
 }
