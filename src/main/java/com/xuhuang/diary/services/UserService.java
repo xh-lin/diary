@@ -37,6 +37,10 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
+    /*
+        Throws:
+            RegisterException - if either username or email is taken
+    */
     public void register(RegisterRequest request) throws RegisterException {
         List<String> exceptionMessages = new ArrayList<>();
         boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
