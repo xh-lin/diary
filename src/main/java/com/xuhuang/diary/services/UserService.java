@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
 
     public boolean isCurrentUser(User user) {
         User currentUser = getCurrentUser();
-        
+
         if (user == null) {
             return currentUser == null;
         } else if (currentUser == null) {
@@ -86,4 +86,7 @@ public class UserService implements UserDetailsService {
         return user.getId().equals(getCurrentUser().getId());
     }
     
+    public boolean isLoggedIn() {
+        return getCurrentUser() != null;
+    }
 }
