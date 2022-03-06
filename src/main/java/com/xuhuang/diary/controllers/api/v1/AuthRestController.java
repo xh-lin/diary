@@ -37,7 +37,6 @@ public class AuthRestController {
     public static final String INVALID_USERNAME_AND_PASSWORD = "Invalid username and password.";
     public static final String LOGGED_IN_SUCCESSFULLY = "Logged in successfully.";
     public static final String LOGGED_OUT_SUCCESSFULLY = "Logged out successfully.";
-    public static final String YOU_HAVE_NOT_LOGGED_IN = "You have not logged in";
 
     private static final String MESSAGE = "message";
     private static final String ERROR = "error";
