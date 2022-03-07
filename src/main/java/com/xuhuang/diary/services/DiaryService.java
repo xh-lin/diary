@@ -123,11 +123,11 @@ public class DiaryService {
             NoSuchElementException - if book with id is not found
     */
     public Record getRecord(Long recordId) throws AuthException {
-        Record record = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(record.getBook().getUser())) {
+        Record recd = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(recd.getBook().getUser())) {
             throw new AuthException(NOT_AUTHORIZED);
         }
-        return record;
+        return recd;
     }
 
     /*
@@ -136,12 +136,12 @@ public class DiaryService {
             NoSuchElementException - if book with id is not found
     */
     public Record updateRecord(Long recordId, String text) throws AuthException {
-        Record record = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(record.getBook().getUser())) {
+        Record recd = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(recd.getBook().getUser())) {
             throw new AuthException(NOT_AUTHORIZED);
         }
-        record.setText(text);
-        return recordRepository.save(record);
+        recd.setText(text);
+        return recordRepository.save(recd);
     }
 
     /*
@@ -150,12 +150,12 @@ public class DiaryService {
             NoSuchElementException - if book with id is not found
     */
     public Record deleteRecord(Long recordId) throws AuthException {
-        Record record = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(record.getBook().getUser())) {
+        Record recd = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(recd.getBook().getUser())) {
             throw new AuthException(NOT_AUTHORIZED);
         }
         recordRepository.deleteById(recordId);
-        return record;
+        return recd;
     }
 
 }
