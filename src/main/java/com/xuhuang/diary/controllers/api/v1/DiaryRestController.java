@@ -11,6 +11,7 @@ import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.services.DiaryService;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,6 +38,10 @@ public class DiaryRestController {
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
     private static final String ERROR = "error";
+    private static final String CONTENT = "content";
+    private static final String TOTAL_PAGES = "totalPages";
+    private static final String PAGE_NUMBER = "pageNumber";
+    private static final String PAGE_SIZE = "pageSize";
 
     private final DiaryService diaryService;
     
@@ -142,6 +147,35 @@ public class DiaryRestController {
 
         body.put(DATA, record);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @GetMapping("/{bookId}/record/{page}/{size}")
+    public ResponseEntity<Object> getRecords(@PathVariable Long bookId, @PathVariable int page, @PathVariable int size) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Page<Record> recordPage;
+
+        try {
+            recordPage = diaryService.getRecords(bookId, page, size);
+        } catch (AuthException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchElementException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        }
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put(CONTENT, recordPage.getContent());
+        data.put(TOTAL_PAGES, recordPage.getTotalPages());
+        data.put(PAGE_NUMBER, page);
+        data.put(PAGE_SIZE, size);
+
+        body.put(DATA, data);
+        body.put(MESSAGE, FETCHED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 

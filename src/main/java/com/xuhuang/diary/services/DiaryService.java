@@ -100,6 +100,27 @@ public class DiaryService {
         Throws:
             AuthException - if book does not belong to current user
             NoSuchElementException - if book with id is not found
+            IllegalArgumentException - if either page < 0 or size <= 0
+    */
+    public Page<Record> getRecords(Long bookId, int page, int size) throws AuthException {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page must be greater than or equal to zero.");
+        } else if (size <= 0) {
+            throw new IllegalArgumentException("Size must be greater than zero.");
+        }
+
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        if (!userService.isCurrentUser(book.getUser())) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return recordRepository.findByBook(book, pageable);
+    }
+
+    /*
+        Throws:
+            AuthException - if book does not belong to current user
+            NoSuchElementException - if book with id is not found
     */
     public Record getRecord(Long recordId) throws AuthException {
         Record record = recordRepository.findById(recordId).orElseThrow();
