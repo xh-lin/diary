@@ -6,6 +6,7 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 
@@ -49,9 +50,7 @@ public class DiaryService {
     */
     public Book getBook(Long bookId) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
-        if (!userService.isCurrentUser(book.getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(book.getUser());
         return book;
     }
 
@@ -62,9 +61,7 @@ public class DiaryService {
     */
     public Book updateBook(Long bookId, String title) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
-        if (!userService.isCurrentUser(book.getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(book.getUser());
         book.setTitle(title);
         return bookRepository.save(book);
     }
@@ -76,9 +73,7 @@ public class DiaryService {
     */
     public Book deleteBook(Long bookId) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
-        if (!userService.isCurrentUser(book.getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(book.getUser());
         bookRepository.deleteById(bookId);
         return book;
     }
@@ -90,9 +85,7 @@ public class DiaryService {
     */
     public Record createRecord(Long bookId, String text) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
-        if (!userService.isCurrentUser(book.getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(book.getUser());
         return recordRepository.save(new Record(text, book));
     }
 
@@ -110,9 +103,7 @@ public class DiaryService {
         }
 
         Book book = bookRepository.findById(bookId).orElseThrow();
-        if (!userService.isCurrentUser(book.getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(book.getUser());
         Pageable pageable = PageRequest.of(page, size);
         return recordRepository.findByBook(book, pageable);
     }
@@ -124,9 +115,7 @@ public class DiaryService {
     */
     public Record getRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(recd.getBook().getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(recd.getBook().getUser());
         return recd;
     }
 
@@ -137,9 +126,7 @@ public class DiaryService {
     */
     public Record updateRecord(Long recordId, String text) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(recd.getBook().getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(recd.getBook().getUser());
         recd.setText(text);
         return recordRepository.save(recd);
     }
@@ -151,11 +138,15 @@ public class DiaryService {
     */
     public Record deleteRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
-        if (!userService.isCurrentUser(recd.getBook().getUser())) {
-            throw new AuthException(NOT_AUTHORIZED);
-        }
+        throwIfIsNotCurrentUser(recd.getBook().getUser());
         recordRepository.deleteById(recordId);
         return recd;
+    }
+
+    private void throwIfIsNotCurrentUser(User user) throws AuthException {
+        if (!userService.isCurrentUser(user)) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
     }
 
 }
