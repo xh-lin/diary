@@ -5,8 +5,13 @@ import java.util.List;
 import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
+import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.repositories.BookRepository;
+import com.xuhuang.diary.repositories.RecordRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +24,7 @@ public class DiaryService {
     public static final String NOT_AUTHORIZED = "Not authorized.";
     
     private final BookRepository bookRepository;
+    private final RecordRepository recordRepository;
     private final UserService userService;
 
     /*
@@ -77,4 +83,58 @@ public class DiaryService {
         return book;
     }
     
+    /*
+        Throws:
+            AuthException - if book does not belong to current user
+            NoSuchElementException - if book with id is not found
+    */
+    public Record createRecord(Long bookId, String text) throws AuthException {
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        if (!userService.isCurrentUser(book.getUser())) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
+        return recordRepository.save(new Record(text, book));
+    }
+
+    /*
+        Throws:
+            AuthException - if book does not belong to current user
+            NoSuchElementException - if book with id is not found
+    */
+    public Record getRecord(Long recordId) throws AuthException {
+        Record record = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(record.getBook().getUser())) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
+        return record;
+    }
+
+    /*
+        Throws:
+            AuthException - if book does not belong to current user
+            NoSuchElementException - if book with id is not found
+    */
+    public Record updateRecord(Long recordId, String text) throws AuthException {
+        Record record = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(record.getBook().getUser())) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
+        record.setText(text);
+        return recordRepository.save(record);
+    }
+
+    /*
+        Throws:
+            AuthException - if book does not belong to current user
+            NoSuchElementException - if book with id is not found
+    */
+    public Record deleteRecord(Long recordId) throws AuthException {
+        Record record = recordRepository.findById(recordId).orElseThrow();
+        if (!userService.isCurrentUser(record.getBook().getUser())) {
+            throw new AuthException(NOT_AUTHORIZED);
+        }
+        recordRepository.deleteById(recordId);
+        return record;
+    }
+
 }

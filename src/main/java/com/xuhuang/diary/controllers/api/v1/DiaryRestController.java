@@ -1,12 +1,14 @@
 package com.xuhuang.diary.controllers.api.v1;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
+import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.services.DiaryService;
 
 import org.springframework.http.HttpStatus;
@@ -119,6 +121,86 @@ public class DiaryRestController {
         }
         
         body.put(DATA, book);
+        body.put(MESSAGE, DELETED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @PostMapping("/{bookId}/record")
+    public ResponseEntity<Object> createRecord(@PathVariable Long bookId, @RequestParam String text) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record record;
+
+        try {
+            record = diaryService.createRecord(bookId, text);
+        } catch (AuthException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchElementException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        }
+
+        body.put(DATA, record);
+        body.put(MESSAGE, CREATED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @GetMapping("/record/{recordId}")
+    public ResponseEntity<Object> getRecord(@PathVariable Long recordId) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record record;
+
+        try {
+            record = diaryService.getRecord(recordId);
+        } catch (AuthException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchElementException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        }
+
+        body.put(DATA, record);
+        body.put(MESSAGE, FETCHED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @PutMapping("/record/{recordId}")
+    public ResponseEntity<Object> updateRecord(@PathVariable Long recordId, @RequestParam String text) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record record;
+
+        try {
+            record = diaryService.updateRecord(recordId, text);
+        } catch (AuthException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchElementException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        }
+
+        body.put(DATA, record);
+        body.put(MESSAGE, UPDATED_SUCCESSFULLY);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/record/{recordId}")
+    public ResponseEntity<Object> deleteRecord(@PathVariable Long recordId) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record record;
+
+        try {
+            record = diaryService.deleteRecord(recordId);
+        } catch (AuthException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+        } catch (NoSuchElementException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        }
+
+        body.put(DATA, record);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
