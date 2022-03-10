@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class DiaryService {
 
     public static final String TITLE_MUST_NOT_BE_BLANK = "Title must not be blank.";
-    public static final String NOT_AUTHORIZED = "Not authorized.";
-    
+    public static final String YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS = "You do not have permission to access.";
+
     private final BookRepository bookRepository;
     private final RecordRepository recordRepository;
     private final UserService userService;
@@ -77,7 +77,7 @@ public class DiaryService {
         bookRepository.deleteById(bookId);
         return book;
     }
-    
+
     /*
         Throws:
             AuthException - if book does not belong to current user
@@ -145,7 +145,7 @@ public class DiaryService {
 
     private void throwIfIsNotCurrentUser(User user) throws AuthException {
         if (!userService.isCurrentUser(user)) {
-            throw new AuthException(NOT_AUTHORIZED);
+            throw new AuthException(YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS);
         }
     }
 

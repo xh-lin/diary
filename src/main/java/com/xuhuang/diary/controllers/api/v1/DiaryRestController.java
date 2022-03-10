@@ -43,19 +43,19 @@ public class DiaryRestController {
     private static final String PAGE_SIZE = "pageSize";
 
     private final DiaryService diaryService;
-    
+
     @PostMapping()
     public ResponseEntity<Object> createBook(@RequestParam String title) {
         Map<String, Object> body = new LinkedHashMap<>();
         Book book;
-        
+
         try {
             book = diaryService.createBook(title);
         } catch (IllegalArgumentException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
         }
-        
+
         body.put(DATA, book);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
@@ -78,7 +78,7 @@ public class DiaryRestController {
             book = diaryService.getBook(bookId);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -98,7 +98,7 @@ public class DiaryRestController {
             book = diaryService.updateBook(bookId, title);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -118,12 +118,12 @@ public class DiaryRestController {
             book = diaryService.deleteBook(bookId);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
         }
-        
+
         body.put(DATA, book);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
@@ -138,7 +138,7 @@ public class DiaryRestController {
             recd = diaryService.createRecord(bookId, text);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -158,7 +158,7 @@ public class DiaryRestController {
             recordPage = diaryService.getRecords(bookId, page, size);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -187,7 +187,7 @@ public class DiaryRestController {
             recd = diaryService.getRecord(recordId);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -207,7 +207,7 @@ public class DiaryRestController {
             recd = diaryService.updateRecord(recordId, text);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
@@ -227,7 +227,7 @@ public class DiaryRestController {
             recd = diaryService.deleteRecord(recordId);
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
