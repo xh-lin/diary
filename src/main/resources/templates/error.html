@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title} ? ${title} : 'Error'"></title>
+</head>
+<body>
+    <h1 th:text="${code}"></h1>
+    <p th:utext="${message} ? ${message} : 'Something went wrong'"></p>
+    <a th:href="@{/}">Back to Home Page</a>
+</body>
+</html>
