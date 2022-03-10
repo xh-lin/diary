@@ -28,7 +28,7 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping("/register")
-    public String viewRegistrationPage(Model model) {
+    public String viewRegistration(Model model) {
         model.addAttribute(REQUEST, new RegisterRequest());
         return Template.REGISTER.toString();
     }
@@ -60,7 +60,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String viewLoginPage() {
+    public String viewLogin() {
         return Template.LOGIN.toString();
     }
 
