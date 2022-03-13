@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <div th:replace="fragments/global::header"></div>
+
     <title>Registration</title>
 </head>
 <body>
@@ -31,5 +33,7 @@
         </div>
     </form>
     <a th:href="@{/login}">Already have a account</a>
+
+    <div th:replace="fragments/global::scripts"></div>
 </body>
 </html>
