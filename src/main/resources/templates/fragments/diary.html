@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title></title></head>
+<body>
+    <div th:fragment="book">
+        <a th:class="${bookId == book.id} ? active : null"
+            th:text="${book.title}"
+            th:href="@{/diary/} + ${book.id}"></a>
+    </div>
+
+    <div th:fragment="record">
+        <div class="record"
+            th:text="${record.text}"></div>
+    </div>
+</body>
+</html>

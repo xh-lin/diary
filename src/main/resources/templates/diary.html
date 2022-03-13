@@ -12,10 +12,8 @@
     <!-- The sidebar -->
     <div class="sidebar">
         <!-- book links -->
-        <a th:class="${bookId == book.id} ? active : null"
-            th:each="book : ${books}"
-            th:text="${book.title}"
-            th:href="@{/diary/} + ${book.id}"></a>
+        <div th:each="book : ${books}"
+            th:insert="fragments/diary::book"></div>
         <!-- user related links -->
         <span style="padding: 16px; color:grey;"
             th:text="${user.username}"></span>
@@ -25,10 +23,9 @@
     <!-- Page content -->
     <div class="content">
         <!-- record cards -->
-        <div class="record"
-            th:if="${records}"
+        <div th:if="${records}"
             th:each="record : ${records}"
-            th:text="${record.text}"></div>
+            th:insert="fragments/diary::record"></div>
     </div>
 
     <div th:replace="fragments/global::scripts"></div>
