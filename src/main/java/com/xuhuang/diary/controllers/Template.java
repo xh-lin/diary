@@ -2,10 +2,10 @@ package com.xuhuang.diary.controllers;
 
 public enum Template {
 
-    INDEX("index"),
     LOGIN("login"),
     REGISTER("register"),
-    ERROR("error");
+    ERROR("error"),
+    DIARY("diary");
 
     private String name;
 

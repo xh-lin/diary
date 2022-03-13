@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link th:href="@{/css/diary.css}" rel="stylesheet"/>
+
+    <title>Diary Demo</title>
+</head>
+<body>
+
+    <!-- The sidebar -->
+    <div class="sidebar">
+        <!-- book links -->
+        <a th:class="${bookId == book.id} ? active : null"
+            th:each="book : ${books}"
+            th:text="${book.title}"
+            th:href="@{/diary/} + ${book.id}"></a>
+        <!-- user related links -->
+        <span style="padding: 16px; color:grey;"
+            th:text="${user.username}"></span>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+
+    <!-- Page content -->
+    <div class="content">
+        <!-- record cards -->
+        <div class="record"
+            th:if="${records}"
+            th:each="record : ${records}"
+            th:text="${record.text}"></div>
+    </div>
+
+</body>
+</html>
