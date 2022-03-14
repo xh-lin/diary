@@ -10,14 +10,17 @@
 <body>
 
     <!-- The sidebar -->
-    <div class="sidebar">
+    <div class="sidebar d-flex flex-column">
         <!-- book links -->
         <div th:each="book : ${books}"
             th:insert="fragments/diary::book"></div>
+
         <!-- user related links -->
-        <span style="padding: 16px; color:grey;"
+        <div class="flex-fill"></div>
+        <span style="display: block; color:grey; padding: 16px;"
             th:text="${user.username}"></span>
-        <a th:href="@{/logout}">Logout</a>
+        <a class="item"
+            th:href="@{/logout}">Logout</a>
     </div>
 
     <!-- Page content -->

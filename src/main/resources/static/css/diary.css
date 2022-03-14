@@ -1,7 +1,5 @@
 /* The side navigation menu */
 .sidebar {
-    margin: 0;
-    padding: 0;
     width: 200px;
     background-color: #f1f1f1;
     position: fixed;
@@ -9,22 +7,22 @@
     overflow: auto;
 }
 
-/* Sidebar links */
-.sidebar a {
+/* Sidebar items */
+.sidebar .item {
     display: block;
     color: black;
     padding: 16px;
     text-decoration: none;
 }
 
-/* Active/current link */
-.sidebar a.active {
+/* Active/current item */
+.sidebar .item.active {
     background-color: #04AA6D;
     color: white;
 }
 
-/* Links on mouse-over */
-.sidebar a:hover:not(.active) {
+/* Items on mouse-over */
+.sidebar .item:hover:not(.active) {
     background-color: #555;
     color: white;
 }
@@ -39,7 +37,7 @@ div.content {
 .record {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 300px;
+    width: 400px;
     padding: 20px;
     margin-top: 20px;
 }

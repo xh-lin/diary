@@ -3,9 +3,25 @@
 <head><title></title></head>
 <body>
     <div th:fragment="book">
-        <a th:class="${bookId == book.id} ? active : null"
-            th:text="${book.title}"
-            th:href="@{/diary/} + ${book.id}"></a>
+        <div class="d-flex flex-row">
+            <!-- book link -->
+            <a class="item flex-fill"
+                th:classappend="${bookId == book.id} ? active : ''"
+                th:text="${book.title}"
+                th:href="@{/diary/} + ${book.id}"></a>
+            <!-- dropdown options -->
+            <div class="dropdown">
+                <a class="item dropdown-toggle"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"></a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#update-mock">Update</a>
+                  <a class="dropdown-item" href="#delete-mock">Delete</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:fragment="record">
