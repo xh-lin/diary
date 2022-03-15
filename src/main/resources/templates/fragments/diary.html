@@ -2,16 +2,19 @@
 <html lang="en">
 <head><title></title></head>
 <body>
+
     <div th:fragment="book">
         <div class="d-flex flex-row">
             <!-- book link -->
-            <a class="item flex-fill"
+            <a
+                class="item flex-fill"
                 th:classappend="${bookId == book.id} ? active : ''"
                 th:text="${book.title}"
                 th:href="@{/diary/} + ${book.id}"></a>
             <!-- dropdown options -->
             <div class="dropdown">
-                <a class="item dropdown-toggle"
+                <a
+                    class="item dropdown-toggle"
                     role="button"
                     data-toggle="dropdown"
                     aria-haspopup="true"
@@ -25,8 +28,8 @@
     </div>
 
     <div th:fragment="record">
-        <div class="record"
-            th:text="${record.text}"></div>
+        <div class="record" th:text="${record.text}"></div>
     </div>
+
 </body>
 </html>

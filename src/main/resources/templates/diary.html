@@ -2,9 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="fragments/global::header"></div>
-
     <link th:href="@{/css/diary.css}" rel="stylesheet"/>
-
     <title>Diary Demo</title>
 </head>
 <body>
@@ -12,25 +10,23 @@
     <!-- The sidebar -->
     <div class="sidebar d-flex flex-column">
         <!-- book links -->
-        <div th:each="book : ${books}"
-            th:insert="fragments/diary::book"></div>
-
+        <div th:each="book : ${books}" th:insert="fragments/diary::book"></div>
         <!-- user related links -->
         <div class="flex-fill"></div>
-        <span style="display: block; color:grey; padding: 16px;"
-            th:text="${user.username}"></span>
-        <a class="item"
-            th:href="@{/logout}">Logout</a>
+        <span style="display: block; color:grey; padding: 16px;" th:text="${user.username}"></span>
+        <a class="item" th:href="@{/logout}">Logout</a>
     </div>
 
     <!-- Page content -->
     <div class="content">
         <!-- record cards -->
-        <div th:if="${records}"
+        <div
+            th:if="${records}"
             th:each="record : ${records}"
             th:insert="fragments/diary::record"></div>
     </div>
 
     <div th:replace="fragments/global::scripts"></div>
+
 </body>
 </html>
