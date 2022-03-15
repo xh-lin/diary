@@ -20,8 +20,13 @@
                     aria-haspopup="true"
                     aria-expanded="false"></a>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#update-mock">Update</a>
-                  <a class="dropdown-item" href="#delete-mock">Delete</a>
+                    <a class="dropdown-item" href="#update-mock">Update</a>
+                    <a
+                        class="dropdown-item"
+                        data-toggle="modal"
+                        data-target="#deleteDiaryDialogModal"
+                        th:data-title="${book.title}"
+                        th:data-url="@{/diary/delete/} + ${book.id}">Delete</a>
                 </div>
             </div>
         </div>
@@ -29,6 +34,48 @@
 
     <div th:fragment="record">
         <div class="record" th:text="${record.text}"></div>
+    </div>
+
+    <div th:fragment="delete_diary_dialog">
+        <!-- Modal -->
+        <div class="modal fade" id="deleteDiaryDialogModal" tabindex="-1" role="dialog" aria-labelledby="deleteDiaryDialogModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteDiaryDialogModalLabel">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="dialog_form" method="post">
+                            <div id="dialog_text"></div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" type="submit" form="dialog_form">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="delete_diary_dialog_script">
+        <script  type="text/javascript">
+        $('#deleteDiaryDialogModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var title = button.data('title') // Extract info from data-* attributes
+            var url = button.data('url');
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('#dialog_text').html('<b>' + title + '</b> will be deleted.')
+            modal.find('#dialog_form').attr('action', url)
+        })
+        </script>
     </div>
 
 </body>

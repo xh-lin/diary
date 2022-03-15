@@ -26,7 +26,10 @@
             th:insert="fragments/diary::record"></div>
     </div>
 
+    <div th:replace="fragments/diary::delete_diary_dialog"></div>
+
     <div th:replace="fragments/global::scripts"></div>
+    <div th:replace="fragments/diary::delete_diary_dialog_script"></div>
 
 </body>
 </html>
