@@ -16,18 +16,18 @@
                 <a
                     class="item dropdown-toggle"
                     role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
+                    id="dropdownMenuLink"
+                    data-bs-toggle="dropdown"
                     aria-expanded="false"></a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#update-mock">Update</a>
-                    <a
-                        class="dropdown-item"
-                        data-toggle="modal"
-                        data-target="#deleteDiaryDialogModal"
-                        th:data-title="${book.title}"
-                        th:data-url="@{/diary/delete/} + ${book.id}">Delete</a>
-                </div>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Update</a></li>
+                    <li><a
+                            class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteDiaryDialogModal"
+                            th:data-bs-title="${book.title}"
+                            th:data-bs-url="@{/diary/delete/} + ${book.id}">Delete</a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -38,25 +38,29 @@
 
     <div th:fragment="delete_diary_dialog">
         <!-- Modal -->
-        <div class="modal fade" id="deleteDiaryDialogModal" tabindex="-1" role="dialog" aria-labelledby="deleteDiaryDialogModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div
+            class="modal fade"
+            id="deleteDiaryDialogModal"
+            tabindex="-1"
+            aria-labelledby="deleteDiaryDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
+                    <!-- Header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteDiaryDialogModalLabel">Are you sure?</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="dialog_form" method="post">
-                            <div id="dialog_text"></div>
+                        <form id="deleteDiaryForm" method="post">
+                            <div id="deleteDiaryMessage"></div>
                         </form>
                     </div>
                     <!-- Footer -->
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-danger" type="submit" form="dialog_form">Delete</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" type="submit" form="deleteDiaryForm">Delete</button>
                     </div>
                 </div>
             </div>
@@ -65,16 +69,23 @@
 
     <div th:fragment="delete_diary_dialog_script">
         <script  type="text/javascript">
-        $('#deleteDiaryDialogModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var title = button.data('title') // Extract info from data-* attributes
-            var url = button.data('url');
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this)
-            modal.find('#dialog_text').html('<b>' + title + '</b> will be deleted.')
-            modal.find('#dialog_form').attr('action', url)
-        })
+            var deleteDiaryDialogModal = document.getElementById('deleteDiaryDialogModal')
+            deleteDiaryDialogModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget
+                // Extract info from data-bs-* attributes
+                var title = button.getAttribute('data-bs-title')
+                var url = button.getAttribute('data-bs-url')
+                // If necessary, you could initiate an AJAX request here
+                // and then do the updating in a callback.
+                //
+                // Update the modal's content.
+                var deleteDiaryForm = deleteDiaryDialogModal.querySelector('#deleteDiaryForm')
+                var deleteDiaryMessage = deleteDiaryDialogModal.querySelector('#deleteDiaryMessage')
+
+                deleteDiaryForm.setAttribute('action', url)
+                deleteDiaryMessage.innerHTML = '<b>' + title + '</b> will be deleted.'
+            })
         </script>
     </div>
 
