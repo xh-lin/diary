@@ -21,6 +21,8 @@
 
     <!-- Page content -->
     <div class="content">
+        <!-- If haven't created any book -->
+        <div th:if="${currentBookId == -1}">Please create a diary book.</div>
         <!-- Records -->
         <div
             th:if="${records}"

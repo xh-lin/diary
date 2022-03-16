@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DiaryController {
 
-    private static final Long BOOK_ID_UNDEFINED = 0L;
+    private static final Long BOOK_ID_UNDEFINED = -1L;
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 10;
 
