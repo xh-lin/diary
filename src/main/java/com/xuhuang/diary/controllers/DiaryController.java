@@ -31,7 +31,7 @@ public class DiaryController {
     private static final int DEFAULT_SIZE = 10;
 
     private static final String USER = "user";
-    private static final String BOOK_ID = "bookId";
+    private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
     private static final String TOTAL_PAGES = "totalPages";
@@ -76,7 +76,7 @@ public class DiaryController {
         }
 
         model.addAttribute(USER, userService.getCurrentUser());
-        model.addAttribute(BOOK_ID, bookId);
+        model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
         model.addAttribute(RECORDS, recordPage == null ? null : recordPage.getContent());
         model.addAttribute(TOTAL_PAGES, recordPage == null ? null : recordPage.getTotalPages());
@@ -84,7 +84,7 @@ public class DiaryController {
     }
 
     @PostMapping("/update/{bookId}")
-    public String updateBook(Model model, @PathVariable Long bookId, @RequestParam String title) {
+    public String updateBook(Model model, @PathVariable Long bookId, @RequestParam(required = false) Long redirectBookId, @RequestParam String title) {
         try {
             diaryService.updateBook(bookId, title);
         } catch (AuthException e) {
@@ -94,7 +94,7 @@ public class DiaryController {
         } catch (IllegalArgumentException e) {
             return "redirect:/error/400";
         }
-        return "redirect:/diary";
+        return "redirect:/diary" + (redirectBookId == null ? "" : "/" + redirectBookId);
     }
 
     @PostMapping("/delete/{bookId}")

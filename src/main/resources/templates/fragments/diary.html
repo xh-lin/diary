@@ -8,7 +8,7 @@
             <!-- Book link -->
             <a
                 class="item flex-fill"
-                th:classappend="${bookId == book.id} ? active : ''"
+                th:classappend="${currentBookId == book.id} ? active : ''"
                 th:text="${book.title}"
                 th:href="@{/diary/} + ${book.id}"></a>
             <!-- Dropdown options -->
@@ -25,7 +25,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#updateBookDialogModal"
                             th:data-bs-title="${book.title}"
-                            th:data-bs-url="@{/diary/update/} + ${book.id}">Update</a></li>
+                            th:data-bs-url="@{/diary/update/} + ${book.id} + '?redirectBookId=' + ${currentBookId}">Update</a></li>
                     <li><a
                             class="dropdown-item"
                             data-bs-toggle="modal"
