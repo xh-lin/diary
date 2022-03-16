@@ -11,6 +11,8 @@
     <div class="sidebar d-flex flex-column">
         <!-- Book links -->
         <div th:each="book : ${books}" th:include="fragments/diary::book"></div>
+        <!-- Create book link -->
+        <div th:include="fragments/diary::create_book_link"></div>
         <!-- User related links -->
         <div class="flex-fill"></div>
         <span style="display: block; color:grey; padding: 16px;" th:text="${user.username}"></span>
@@ -26,6 +28,7 @@
             th:include="fragments/diary::record"></div>
     </div>
 
+    <div th:replace="fragments/diary::create_book_dialog"></div>
     <div th:replace="fragments/diary::update_book_dialog"></div>
     <div th:replace="fragments/diary::delete_book_dialog"></div>
 

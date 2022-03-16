@@ -37,6 +37,48 @@
         </div>
     </div>
 
+    <div th:fragment="create_book_link">
+        <a
+            class="item text-center"
+            role="button"
+            data-bs-toggle="modal"
+            data-bs-target="#createBookDialogModal"><strong>&plus;</strong></a>
+    </div>
+
+    <div th:fragment="create_book_dialog">
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="createBookDialogModal"
+            tabindex="-1"
+            aria-labelledby="createBookDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createBookDialogModalLabel">Enter information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="createBookForm" method="post" th:action="@{/diary/create}">
+                            <div class="mb-3">
+                                <label class="col-form-label" for="title">Title:</label>
+                                <input class="form-control" type="text" name="title" id="title" required>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success" type="submit" form="createBookForm">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div th:fragment="update_book_dialog">
         <!-- Modal -->
         <div

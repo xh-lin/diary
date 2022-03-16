@@ -83,6 +83,17 @@ public class DiaryController {
         return Template.DIARY.toString();
     }
 
+    @PostMapping("/create")
+    public String createBook(Model model, @RequestParam String title) {
+        Book book;
+        try {
+            book = diaryService.createBook(title);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/error/400";
+        }
+        return "redirect:/diary/" + book.getId();
+    }
+
     @PostMapping("/update/{bookId}")
     public String updateBook(Model model, @PathVariable Long bookId, @RequestParam(required = false) Long redirectBookId, @RequestParam String title) {
         try {
