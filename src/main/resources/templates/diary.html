@@ -10,7 +10,7 @@
     <!-- The sidebar -->
     <div class="sidebar d-flex flex-column">
         <!-- book links -->
-        <div th:each="book : ${books}" th:insert="fragments/diary::book"></div>
+        <div th:each="book : ${books}" th:include="fragments/diary::book"></div>
         <!-- user related links -->
         <div class="flex-fill"></div>
         <span style="display: block; color:grey; padding: 16px;" th:text="${user.username}"></span>
@@ -23,13 +23,14 @@
         <div
             th:if="${records}"
             th:each="record : ${records}"
-            th:insert="fragments/diary::record"></div>
+            th:include="fragments/diary::record"></div>
     </div>
 
+    <div th:replace="fragments/diary::update_diary_dialog"></div>
     <div th:replace="fragments/diary::delete_diary_dialog"></div>
 
     <div th:replace="fragments/global::scripts"></div>
-    <div th:replace="fragments/diary::delete_diary_dialog_scripts"></div>
+    <div th:replace="fragments/diary::scripts"></div>
 
 </body>
 </html>

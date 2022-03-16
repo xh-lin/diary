@@ -20,7 +20,12 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"></a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Update</a></li>
+                    <li><a
+                            class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateDiaryDialogModal"
+                            th:data-bs-title="${book.title}"
+                            th:data-bs-url="@{/diary/update/} + ${book.id}">Update</a></li>
                     <li><a
                             class="dropdown-item"
                             data-bs-toggle="modal"
@@ -32,8 +37,38 @@
         </div>
     </div>
 
-    <div th:fragment="record">
-        <div class="record" th:text="${record.text}"></div>
+    <div th:fragment="update_diary_dialog">
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="updateDiaryDialogModal"
+            tabindex="-1"
+            aria-labelledby="updateDiaryDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateDiaryDialogModalLabel">Enter new information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="updateDiaryForm" method="post">
+                            <div class="mb-3">
+                                <label class="col-form-label" for="title">Title:</label>
+                                <input class="form-control" type="text" name="title" id="title">
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="submit" form="updateDiaryForm">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:fragment="delete_diary_dialog">
@@ -67,7 +102,11 @@
         </div>
     </div>
 
-    <div th:fragment="delete_diary_dialog_scripts">
+    <div th:fragment="record">
+        <div class="record" th:text="${record.text}"></div>
+    </div>
+
+    <div th:fragment="scripts">
         <script type="text/javascript" th:src="@{/js/fragments/diary.js}"></script>
     </div>
 

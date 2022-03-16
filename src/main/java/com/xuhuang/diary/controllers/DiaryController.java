@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
 
@@ -80,6 +81,18 @@ public class DiaryController {
         model.addAttribute(RECORDS, recordPage == null ? null : recordPage.getContent());
         model.addAttribute(TOTAL_PAGES, recordPage == null ? null : recordPage.getTotalPages());
         return Template.DIARY.toString();
+    }
+
+    @PostMapping("/update/{bookId}")
+    public String updateDiary(Model model, @PathVariable Long bookId, @RequestParam String title) {
+        try {
+            diaryService.updateBook(bookId, title);
+        } catch (AuthException e) {
+            return "redirect:/error/403";
+        } catch (NoSuchElementException e) {
+            return "redirect:/error/404";
+        }
+        return "redirect:/diary";
     }
 
     @PostMapping("/delete/{bookId}")
