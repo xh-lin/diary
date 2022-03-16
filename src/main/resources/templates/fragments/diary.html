@@ -5,13 +5,13 @@
 
     <div th:fragment="book">
         <div class="d-flex flex-row">
-            <!-- book link -->
+            <!-- Book link -->
             <a
                 class="item flex-fill"
                 th:classappend="${bookId == book.id} ? active : ''"
                 th:text="${book.title}"
                 th:href="@{/diary/} + ${book.id}"></a>
-            <!-- dropdown options -->
+            <!-- Dropdown options -->
             <div class="dropdown">
                 <a
                     class="item dropdown-toggle"
@@ -23,13 +23,13 @@
                     <li><a
                             class="dropdown-item"
                             data-bs-toggle="modal"
-                            data-bs-target="#updateDiaryDialogModal"
+                            data-bs-target="#updateBookDialogModal"
                             th:data-bs-title="${book.title}"
                             th:data-bs-url="@{/diary/update/} + ${book.id}">Update</a></li>
                     <li><a
                             class="dropdown-item"
                             data-bs-toggle="modal"
-                            data-bs-target="#deleteDiaryDialogModal"
+                            data-bs-target="#deleteBookDialogModal"
                             th:data-bs-title="${book.title}"
                             th:data-bs-url="@{/diary/delete/} + ${book.id}">Delete</a></li>
                 </ul>
@@ -37,24 +37,24 @@
         </div>
     </div>
 
-    <div th:fragment="update_diary_dialog">
+    <div th:fragment="update_book_dialog">
         <!-- Modal -->
         <div
             class="modal fade"
-            id="updateDiaryDialogModal"
+            id="updateBookDialogModal"
             tabindex="-1"
-            aria-labelledby="updateDiaryDialogModalLabel"
+            aria-labelledby="updateBookDialogModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="updateDiaryDialogModalLabel">Enter new information</h5>
+                        <h5 class="modal-title" id="updateBookDialogModalLabel">Enter new information</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="updateDiaryForm" method="post">
+                        <form id="updateBookForm" method="post">
                             <div class="mb-3">
                                 <label class="col-form-label" for="title">Title:</label>
                                 <input class="form-control" type="text" name="title" id="title" required>
@@ -64,38 +64,38 @@
                     <!-- Footer -->
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button class="btn btn-primary" type="submit" form="updateDiaryForm">Update</button>
+                        <button class="btn btn-primary" type="submit" form="updateBookForm">Update</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div th:fragment="delete_diary_dialog">
+    <div th:fragment="delete_book_dialog">
         <!-- Modal -->
         <div
             class="modal fade"
-            id="deleteDiaryDialogModal"
+            id="deleteBookDialogModal"
             tabindex="-1"
-            aria-labelledby="deleteDiaryDialogModalLabel"
+            aria-labelledby="deleteBookDialogModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteDiaryDialogModalLabel">Are you sure?</h5>
+                        <h5 class="modal-title" id="deleteBookDialogModalLabel">Are you sure?</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="deleteDiaryForm" method="post">
-                            <div id="deleteDiaryMessage"></div>
+                        <form id="deleteBookForm" method="post">
+                            <div id="deleteBookMessage"></div>
                         </form>
                     </div>
                     <!-- Footer -->
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button class="btn btn-danger" type="submit" form="deleteDiaryForm">Delete</button>
+                        <button class="btn btn-danger" type="submit" form="deleteBookForm">Delete</button>
                     </div>
                 </div>
             </div>

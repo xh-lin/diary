@@ -84,7 +84,7 @@ public class DiaryController {
     }
 
     @PostMapping("/update/{bookId}")
-    public String updateDiary(Model model, @PathVariable Long bookId, @RequestParam String title) {
+    public String updateBook(Model model, @PathVariable Long bookId, @RequestParam String title) {
         try {
             diaryService.updateBook(bookId, title);
         } catch (AuthException e) {
@@ -98,7 +98,7 @@ public class DiaryController {
     }
 
     @PostMapping("/delete/{bookId}")
-    public String deleteDiary(Model model, @PathVariable Long bookId) {
+    public String deleteBook(Model model, @PathVariable Long bookId) {
         try {
             diaryService.deleteBook(bookId);
         } catch (AuthException e) {

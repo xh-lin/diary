@@ -1,6 +1,6 @@
-var updateDiaryDialogModal = document.getElementById('updateDiaryDialogModal');
+var updateBookDialogModal = document.getElementById('updateBookDialogModal');
 
-updateDiaryDialogModal.addEventListener('show.bs.modal', function (event) {
+updateBookDialogModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget;
     // Extract info from data-bs-* attributes
@@ -10,16 +10,16 @@ updateDiaryDialogModal.addEventListener('show.bs.modal', function (event) {
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var updateDiaryForm = updateDiaryDialogModal.querySelector('#updateDiaryForm');
-    var titleInput = updateDiaryDialogModal.querySelector('#updateDiaryForm #title');
+    var updateBookForm = updateBookDialogModal.querySelector('#updateBookForm');
+    var titleInput = updateBookDialogModal.querySelector('#updateBookForm #title');
 
-    updateDiaryForm.setAttribute('action', url);
+    updateBookForm.setAttribute('action', url);
     titleInput.value = title;
 });
 
-var deleteDiaryDialogModal = document.getElementById('deleteDiaryDialogModal');
+var deleteBookDialogModal = document.getElementById('deleteBookDialogModal');
 
-deleteDiaryDialogModal.addEventListener('show.bs.modal', function (event) {
+deleteBookDialogModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget;
     // Extract info from data-bs-* attributes
@@ -29,9 +29,9 @@ deleteDiaryDialogModal.addEventListener('show.bs.modal', function (event) {
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var deleteDiaryForm = deleteDiaryDialogModal.querySelector('#deleteDiaryForm');
-    var deleteDiaryMessage = deleteDiaryDialogModal.querySelector('#deleteDiaryMessage');
+    var deleteBookForm = deleteBookDialogModal.querySelector('#deleteBookForm');
+    var deleteBookMessage = deleteBookDialogModal.querySelector('#deleteBookMessage');
 
-    deleteDiaryForm.setAttribute('action', url);
-    deleteDiaryMessage.innerHTML = '<b>' + title + '</b> will be deleted.';
+    deleteBookForm.setAttribute('action', url);
+    deleteBookMessage.innerHTML = '<b>' + title + '</b> will be deleted.';
 });
