@@ -91,6 +91,8 @@ public class DiaryController {
             return "redirect:/error/403";
         } catch (NoSuchElementException e) {
             return "redirect:/error/404";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/error/400";
         }
         return "redirect:/diary";
     }

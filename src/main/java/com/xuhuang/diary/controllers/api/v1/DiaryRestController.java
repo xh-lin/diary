@@ -102,6 +102,9 @@ public class DiaryRestController {
         } catch (NoSuchElementException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            body.put(ERROR, e.getMessage());
+            return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
         }
 
         body.put(DATA, book);
