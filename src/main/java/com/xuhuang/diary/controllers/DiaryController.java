@@ -26,6 +26,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DiaryController {
 
+    private static final String REDIRECT_DIARY = "redirect:/diary";
+    private static final String REDIRECT_ERROR_400 = "redirect:/error/400";
+    private static final String REDIRECT_ERROR_404 = "redirect:/error/404";
+    private static final String REDIRECT_ERROR_403 = "redirect:/error/403";
+
     private static final Long BOOK_ID_UNDEFINED = -1L;
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 10;
@@ -52,11 +57,11 @@ public class DiaryController {
             try {
                 recordPage = diaryService.getRecords(bookId, page, size);
             } catch (AuthException e) {
-                return "redirect:/error/403";
+                return REDIRECT_ERROR_403;
             } catch (NoSuchElementException e) {
-                return "redirect:/error/404";
+                return REDIRECT_ERROR_404;
             } catch (IllegalArgumentException e) {
-                return "redirect:/error/400";
+                return REDIRECT_ERROR_400;
             }
         }
 
@@ -89,9 +94,9 @@ public class DiaryController {
         try {
             book = diaryService.createBook(title);
         } catch (IllegalArgumentException e) {
-            return "redirect:/error/400";
+            return REDIRECT_ERROR_400;
         }
-        return "redirect:/diary/" + book.getId();
+        return REDIRECT_DIARY + "/" + book.getId();
     }
 
     @PostMapping("/update/{bookId}")
@@ -99,13 +104,13 @@ public class DiaryController {
         try {
             diaryService.updateBook(bookId, title);
         } catch (AuthException e) {
-            return "redirect:/error/403";
+            return REDIRECT_ERROR_403;
         } catch (NoSuchElementException e) {
-            return "redirect:/error/404";
+            return REDIRECT_ERROR_404;
         } catch (IllegalArgumentException e) {
-            return "redirect:/error/400";
+            return REDIRECT_ERROR_400;
         }
-        return "redirect:/diary" + (redirectBookId == null ? "" : "/" + redirectBookId);
+        return REDIRECT_DIARY + (redirectBookId == null ? "" : "/" + redirectBookId);
     }
 
     @PostMapping("/delete/{bookId}")
@@ -113,11 +118,11 @@ public class DiaryController {
         try {
             diaryService.deleteBook(bookId);
         } catch (AuthException e) {
-            return "redirect:/error/403";
+            return REDIRECT_ERROR_403;
         } catch (NoSuchElementException e) {
-            return "redirect:/error/404";
+            return REDIRECT_ERROR_404;
         }
-        return "redirect:/diary";
+        return REDIRECT_DIARY;
     }
 
 }

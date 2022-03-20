@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppController {
 
+    private static final String REDIRECT_DIARY = "redirect:/diary";
+
     @GetMapping
     public String viewHomePage(Model model) {
-        return "redirect:/diary";
+        return REDIRECT_DIARY;
     }
 
 }
