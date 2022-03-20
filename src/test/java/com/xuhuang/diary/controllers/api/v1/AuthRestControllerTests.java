@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthRestControllerTests {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -105,7 +105,7 @@ class AuthRestControllerTests {
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
-    
+
     @Test
     void registerValidateEmail() throws Exception {
         // email format
@@ -253,7 +253,7 @@ class AuthRestControllerTests {
 
     @Test
     void registerConflict() throws Exception {
-        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER, null));
+        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER));
 
         doReturn(mockUser).when(mockUserRepository).findByUsername("test1");
         doReturn(mockUser).when(mockUserRepository).findByEmail("test1@test.com");
@@ -304,7 +304,7 @@ class AuthRestControllerTests {
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
-    
+
     @Test
     void registerSuccess() throws Exception {
         RegisterRequest requestBody = new RegisterRequest("test1", "test1@test.com", "Qwerty123.", "Qwerty123.");
