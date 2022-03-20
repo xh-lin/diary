@@ -39,21 +39,6 @@ public class DiaryController {
     private final UserService userService;
     private final DiaryService diaryService;
 
-    @GetMapping
-    public String viewDiary(Model model) {
-        return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
-    }
-
-    @GetMapping("/{bookId}")
-    public String viewDiary(Model model, @PathVariable Long bookId) {
-        return viewDiary(model, bookId, DEFAULT_PAGE, DEFAULT_SIZE);
-    }
-
-    @GetMapping("/{bookId}/record/{page}")
-    public String viewDiary(Model model, @PathVariable Long bookId, @PathVariable int page) {
-        return viewDiary(model, bookId, page, DEFAULT_SIZE);
-    }
-
     @GetMapping("/{bookId}/record/{page}/{size}")
     public String viewDiary(Model model, @PathVariable Long bookId, @PathVariable int page, @PathVariable int size) {
         List<Book> books = diaryService.getBooks();
@@ -81,6 +66,21 @@ public class DiaryController {
         model.addAttribute(RECORDS, recordPage == null ? null : recordPage.getContent());
         model.addAttribute(TOTAL_PAGES, recordPage == null ? null : recordPage.getTotalPages());
         return Template.DIARY.toString();
+    }
+
+    @GetMapping("/{bookId}/record/{page}")
+    public String viewDiary(Model model, @PathVariable Long bookId, @PathVariable int page) {
+        return viewDiary(model, bookId, page, DEFAULT_SIZE);
+    }
+
+    @GetMapping("/{bookId}")
+    public String viewDiary(Model model, @PathVariable Long bookId) {
+        return viewDiary(model, bookId, DEFAULT_PAGE, DEFAULT_SIZE);
+    }
+
+    @GetMapping
+    public String viewDiary(Model model) {
+        return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
     }
 
     @PostMapping("/create")
