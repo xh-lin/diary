@@ -1,5 +1,6 @@
 package com.xuhuang.diary.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,29 +20,35 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class Book extends BaseEntity {
-    
+
     @Column(nullable = false)
+    @NonNull
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     @JsonIdentityInfo( // Jackson only serialize id
-        generator = ObjectIdGenerators.PropertyGenerator.class, 
+        generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("user_id")
+    @NonNull
     private User user;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Record> records;
+    @NonNull
+    private Set<Record> records = new HashSet<>();
 
 }

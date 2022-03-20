@@ -38,7 +38,7 @@ public class DiaryService {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(TITLE_MUST_NOT_BE_BLANK);
         }
-        return bookRepository.save(new Book(title, userService.getCurrentUser(), null));
+        return bookRepository.save(new Book(title, userService.getCurrentUser()));
     }
 
     public List<Book> getBooks() {
