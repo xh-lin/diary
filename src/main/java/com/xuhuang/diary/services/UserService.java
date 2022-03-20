@@ -58,12 +58,11 @@ public class UserService implements UserDetailsService {
             throw new RegisterException(exceptionMessages);
         }
 
-        User user = new User (
+        User user = new User(
             request.getUsername(),
             request.getEmail(),
             bCryptPasswordEncoder.encode(request.getPassword()),
-            UserRole.USER,
-            null);
+            UserRole.USER);
 
         userRepository.save(user);
     }
@@ -74,7 +73,7 @@ public class UserService implements UserDetailsService {
         if (auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
-        
+
         return (User) auth.getPrincipal();
     }
 
@@ -89,7 +88,7 @@ public class UserService implements UserDetailsService {
 
         return user.getId().equals(getCurrentUser().getId());
     }
-    
+
     public boolean isLoggedIn() {
         return getCurrentUser() != null;
     }

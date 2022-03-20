@@ -22,39 +22,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
+    @NonNull
     private String username;
 
     @Column(nullable = false, unique = true)
+    @NonNull
     private String email;
 
     @Column(nullable = false)
     @JsonIgnore
+    @NonNull
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NonNull
     private UserRole userRole;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    @NonNull
     private Set<Book> books = new HashSet<>();
-
-    public User(String username, String email, String password, UserRole userRole) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.userRole = userRole;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
