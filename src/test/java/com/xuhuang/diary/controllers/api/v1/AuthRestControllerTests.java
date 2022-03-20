@@ -15,11 +15,13 @@ import com.xuhuang.diary.repositories.UserRepository;
 import com.xuhuang.diary.services.UserService;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,6 +29,9 @@ class AuthRestControllerTests extends RestControllerTests {
 
     private static final String API_V1_AUTH_LOGIN = "/api/v1/auth/login";
     private static final String API_V1_AUTH_REGISTER = "/api/v1/auth/register";
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @MockBean
     private UserRepository mockUserRepository;
@@ -177,10 +182,7 @@ class AuthRestControllerTests extends RestControllerTests {
 
     @Test
     void registerConflict() throws Exception {
-        Optional<User> mockUser = Optional.ofNullable(new User("test1", "test1@test.com", null, UserRole.USER));
-
-        doReturn(mockUser).when(mockUserRepository).findByUsername("test1");
-        doReturn(mockUser).when(mockUserRepository).findByEmail("test1@test.com");
+        setUpMockUser();
 
         // username and email taken
         RegisterRequest requestBody = new RegisterRequest("test1", "test1@test.com", "Qwerty123.", "Qwerty123.");
@@ -234,6 +236,37 @@ class AuthRestControllerTests extends RestControllerTests {
             HttpStatus.BAD_REQUEST, true,
             LoginRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK,
             LoginRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK);
+    }
+
+    @Test
+    void loginSuccess() throws Exception {
+        setUpMockUser();
+
+        LoginRequest requestBody = new LoginRequest("test1", "Qwerty123.");
+
+        mockMvcTest(
+            HttpMethod.POST, API_V1_AUTH_LOGIN, requestBody,
+            HttpStatus.OK);
+    }
+
+    @Test
+    void loginFailure() throws Exception {
+        setUpMockUser();
+
+        LoginRequest requestBody = new LoginRequest("test1", "123");
+
+        mockMvcTest(
+            HttpMethod.POST, API_V1_AUTH_LOGIN, requestBody,
+            HttpStatus.UNAUTHORIZED);
+    }
+
+    private void setUpMockUser() {
+        String encryptedPassword = bCryptPasswordEncoder.encode("Qwerty123.");
+        Optional<User> mockUser = Optional.ofNullable(
+            new User("test1", "test1@test.com", encryptedPassword, UserRole.USER));
+
+        doReturn(mockUser).when(mockUserRepository).findByUsername("test1");
+        doReturn(mockUser).when(mockUserRepository).findByEmail("test1@test.com");
     }
 
 }
