@@ -8,7 +8,7 @@
 <body>
 
     <!-- The sidebar -->
-    <div class="sidebar d-flex flex-column">
+    <nav class="sidebar d-flex flex-column">
         <!-- Book links -->
         <div th:each="book : ${books}" th:include="fragments/diary::book"></div>
         <!-- Create book link -->
@@ -17,7 +17,7 @@
         <div class="flex-fill"></div>
         <span style="display: block; color:grey; padding: 16px;" th:text="${user.username}"></span>
         <a class="item" th:href="@{/logout}">Logout</a>
-    </div>
+    </nav>
 
     <!-- Page content -->
     <div class="content">
