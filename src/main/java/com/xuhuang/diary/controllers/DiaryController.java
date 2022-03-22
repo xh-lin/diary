@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -88,17 +89,6 @@ public class DiaryController {
         return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
     }
 
-    @PostMapping("/create")
-    public String createBook(Model model, @RequestParam String title) {
-        Book book;
-        try {
-            book = diaryService.createBook(title);
-        } catch (IllegalArgumentException e) {
-            return REDIRECT_ERROR_400;
-        }
-        return REDIRECT_DIARY + "/" + book.getId();
-    }
-
     @PostMapping("/update/{bookId}")
     public String updateBook(Model model, @PathVariable Long bookId, @RequestParam(required = false) Long redirectBookId, @RequestParam String title) {
         try {
@@ -123,6 +113,13 @@ public class DiaryController {
             return REDIRECT_ERROR_404;
         }
         return REDIRECT_DIARY;
+    }
+
+
+    @PostMapping("/fragments/book")
+    public String loadBookFragment(Model model, @RequestBody Object book) {
+        model.addAttribute("book", book);
+        return "fragments/diary::book";
     }
 
 }

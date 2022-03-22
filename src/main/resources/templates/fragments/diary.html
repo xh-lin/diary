@@ -62,7 +62,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="createBookForm" method="post" th:action="@{/diary/create}">
+                        <form id="createBookForm" method="post" th:action="@{/api/v1/diary}" th:fragment-url="@{/diary/fragments/book}">
                             <div class="mb-3">
                                 <label class="col-form-label" for="title">Title:</label>
                                 <input class="form-control" type="text" name="title" id="title" required>
