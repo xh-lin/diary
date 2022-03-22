@@ -1,7 +1,13 @@
 const FRAGMENT_URL_ATTR_NAME = 'fragment-url';
 const BOOK_LINKS_ID = '#bookLinks';
+const TITLE_INPUT_ID = '#titleInput';
 const CREATE_BOOK_DIALOG_MODAL_ID = "#createBookDialogModal";
 const CREATE_BOOK_FORM_ID = '#createBookForm';
+const UPDATE_BOOK_DIALOG_MODAL_ID = "#updateBookDialogModal";
+const UPDATE_BOOK_FORM_ID = '#updateBookForm';
+const DELETE_BOOK_DIALOG_MODAL_ID = "#deleteBookDialogModal";
+const DELETE_BOOK_FORM_ID = '#deleteBookForm';
+const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 
 function errorHandler(jqXHR, textStatus, errorThrown) {
     console.error(jqXHR, textStatus, errorThrown);
@@ -50,20 +56,20 @@ ajaxSubmitForm(CREATE_BOOK_FORM_ID, function(res) {
     Update Book
 */
 
-var updateBookDialogModal = document.getElementById('updateBookDialogModal');
+const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID)[0];
 
 updateBookDialogModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
-    var button = event.relatedTarget;
+    const button = event.relatedTarget;
     // Extract info from data-bs-* attributes
-    var title = button.getAttribute('data-bs-title');
-    var url = button.getAttribute('data-bs-url');
+    const title = button.getAttribute('data-bs-title');
+    const url = button.getAttribute('data-bs-url');
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var updateBookForm = updateBookDialogModal.querySelector('#updateBookForm');
-    var titleInput = updateBookDialogModal.querySelector('#updateBookForm #title');
+    const updateBookForm = updateBookDialogModal.querySelector(UPDATE_BOOK_FORM_ID);
+    const titleInput = updateBookForm.querySelector(TITLE_INPUT_ID);
 
     updateBookForm.setAttribute('action', url);
     titleInput.value = title;
@@ -73,20 +79,20 @@ updateBookDialogModal.addEventListener('show.bs.modal', function (event) {
     Delete Book
 */
 
-var deleteBookDialogModal = document.getElementById('deleteBookDialogModal');
+const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID)[0];
 
 deleteBookDialogModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
-    var button = event.relatedTarget;
+    const button = event.relatedTarget;
     // Extract info from data-bs-* attributes
-    var title = button.getAttribute('data-bs-title');
-    var url = button.getAttribute('data-bs-url');
+    const title = button.getAttribute('data-bs-title');
+    const url = button.getAttribute('data-bs-url');
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var deleteBookForm = deleteBookDialogModal.querySelector('#deleteBookForm');
-    var deleteBookMessage = deleteBookDialogModal.querySelector('#deleteBookMessage');
+    const deleteBookForm = deleteBookDialogModal.querySelector(DELETE_BOOK_FORM_ID);
+    const deleteBookMessage = deleteBookDialogModal.querySelector(DELETE_BOOK_MESSAGE_ID);
 
     deleteBookForm.setAttribute('action', url);
     deleteBookMessage.innerHTML = '<b>' + title + '</b> will be deleted.';
