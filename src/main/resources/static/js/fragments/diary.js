@@ -1,10 +1,14 @@
-const FRAGMENT_URL_ATTR_NAME = 'fragment-url';
+/* const DIARY_BOOK_FRAGMENT_URL passed from Thymeleaf in fragments/diary.html */
+
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
+
 const CREATE_BOOK_DIALOG_MODAL_ID = "#createBookDialogModal";
 const CREATE_BOOK_FORM_ID = '#createBookForm';
+
 const UPDATE_BOOK_DIALOG_MODAL_ID = "#updateBookDialogModal";
 const UPDATE_BOOK_FORM_ID = '#updateBookForm';
+
 const DELETE_BOOK_DIALOG_MODAL_ID = "#deleteBookDialogModal";
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
@@ -18,7 +22,8 @@ function ajaxSubmitForm(formId, successHandler) {
     const form = $(formId);
 
     form.submit(function(e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+        // avoid to execute the actual submit of the form.
+        e.preventDefault();
 
         $.ajax({
             type: form.attr('method'),
@@ -40,7 +45,7 @@ ajaxSubmitForm(CREATE_BOOK_FORM_ID, function(res) {
 
     $.ajax({
         type: 'post',
-        url: form.attr(FRAGMENT_URL_ATTR_NAME),
+        url: DIARY_BOOK_FRAGMENT_URL,
         data: JSON.stringify(res.data),
         contentType: "application/json",
         error: errorHandler,

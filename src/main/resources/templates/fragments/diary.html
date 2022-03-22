@@ -62,7 +62,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="createBookForm" method="post" th:action="@{/api/v1/diary}" th:fragment-url="@{/diary/fragments/book}">
+                        <form id="createBookForm" method="post" th:action="@{/api/v1/diary}">
                             <div class="mb-3">
                                 <label class="col-form-label" for="title">Title:</label>
                                 <input class="form-control" type="text" name="title" id="titleInput" required>
@@ -149,6 +149,12 @@
     </div>
 
     <div th:fragment="scripts">
+        <!-- Passing Thymeleaf variable to JavaScript -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const DIARY_BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book}]]*/ '';
+            /*]]>*/
+        </script>
         <script type="text/javascript" th:src="@{/js/fragments/diary.js}"></script>
     </div>
 
