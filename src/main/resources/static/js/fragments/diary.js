@@ -1,5 +1,6 @@
 /* const DIARY_BOOK_FRAGMENT_URL passed from Thymeleaf in fragments/diary.html */
 
+const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
 
@@ -18,9 +19,7 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
     alert('Error - ' + jqXHR.status + ': ' + jqXHR.statusText);
 }
 
-function ajaxSubmitForm(formId, successHandler) {
-    const form = $(formId);
-
+function setupAjaxFormSubmit(form, successHandler) {
     form.submit(function(e) {
         // avoid to execute the actual submit of the form.
         e.preventDefault();
@@ -39,10 +38,13 @@ function ajaxSubmitForm(formId, successHandler) {
     Create Book
 */
 
-ajaxSubmitForm(CREATE_BOOK_FORM_ID, function(res) {
-    console.log(res);
-    const form = $(CREATE_BOOK_FORM_ID);
+const createBookDialogModal = $(CREATE_BOOK_DIALOG_MODAL_ID);
+const createBookForm = $(CREATE_BOOK_FORM_ID);
 
+setupAjaxFormSubmit(createBookForm, function(res) {
+    console.log(res);
+
+    // load book fragment
     $.ajax({
         type: 'post',
         url: DIARY_BOOK_FRAGMENT_URL,
@@ -50,9 +52,9 @@ ajaxSubmitForm(CREATE_BOOK_FORM_ID, function(res) {
         contentType: "application/json",
         error: errorHandler,
         success: function(bookFragment) {
-            form[0].reset(); // clear inputs
-            $(CREATE_BOOK_DIALOG_MODAL_ID).modal('hide');
-            $(BOOK_LINKS_ID).append(bookFragment);
+            createBookForm[0].reset(); // clear inputs
+            createBookDialogModal.modal('hide'); // close dialog
+            $(BOOK_LINKS_ID).append(bookFragment); // append new book fragment
         }
     });
 });
@@ -61,23 +63,40 @@ ajaxSubmitForm(CREATE_BOOK_FORM_ID, function(res) {
     Update Book
 */
 
-const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID)[0];
+const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
+const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
+const titleInput = updateBookForm.find(TITLE_INPUT_ID);
 
-updateBookDialogModal.addEventListener('show.bs.modal', function (event) {
+updateBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
+
     // Extract info from data-bs-* attributes
     const title = button.getAttribute('data-bs-title');
     const url = button.getAttribute('data-bs-url');
-    // If necessary, you could initiate an AJAX request here
-    // and then do the updating in a callback.
-    //
-    // Update the modal's content.
-    const updateBookForm = updateBookDialogModal.querySelector(UPDATE_BOOK_FORM_ID);
-    const titleInput = updateBookForm.querySelector(TITLE_INPUT_ID);
 
-    updateBookForm.setAttribute('action', url);
-    titleInput.value = title;
+    // Update the modal's content.
+    updateBookForm.attr('action', url);
+    titleInput.val(title);
+});
+
+setupAjaxFormSubmit(updateBookForm, function(res) {
+    console.log(res);
+
+    // load book fragment
+    $.ajax({
+        type: 'post',
+        url: DIARY_BOOK_FRAGMENT_URL,
+        data: JSON.stringify(res.data),
+        contentType: "application/json",
+        error: errorHandler,
+        success: function(bookFragment) {
+            updateBookDialogModal.modal('hide'); // close dialog
+            // replace book fragment
+            const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
+            $(BOOK_LINKS_ID).find(BOOK_FRAGMENT_ID)[0].replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID)[0]);
+        }
+    });
 });
 
 /*

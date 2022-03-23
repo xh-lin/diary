@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
 
@@ -89,20 +88,6 @@ public class DiaryController {
         return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
     }
 
-    @PostMapping("/update/{bookId}")
-    public String updateBook(Model model, @PathVariable Long bookId, @RequestParam(required = false) Long redirectBookId, @RequestParam String title) {
-        try {
-            diaryService.updateBook(bookId, title);
-        } catch (AuthException e) {
-            return REDIRECT_ERROR_403;
-        } catch (NoSuchElementException e) {
-            return REDIRECT_ERROR_404;
-        } catch (IllegalArgumentException e) {
-            return REDIRECT_ERROR_400;
-        }
-        return REDIRECT_DIARY + (redirectBookId == null ? "" : "/" + redirectBookId);
-    }
-
     @PostMapping("/delete/{bookId}")
     public String deleteBook(Model model, @PathVariable Long bookId) {
         try {
@@ -114,7 +99,6 @@ public class DiaryController {
         }
         return REDIRECT_DIARY;
     }
-
 
     @PostMapping("/fragments/book")
     public String loadBookFragment(Model model, @RequestBody Object book) {
