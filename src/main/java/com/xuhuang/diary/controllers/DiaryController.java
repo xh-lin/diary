@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DiaryController {
 
-    private static final String REDIRECT_DIARY = "redirect:/diary";
     private static final String REDIRECT_ERROR_400 = "redirect:/error/400";
     private static final String REDIRECT_ERROR_404 = "redirect:/error/404";
     private static final String REDIRECT_ERROR_403 = "redirect:/error/403";
@@ -86,18 +85,6 @@ public class DiaryController {
     @GetMapping
     public String viewDiary(Model model) {
         return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
-    }
-
-    @PostMapping("/delete/{bookId}")
-    public String deleteBook(Model model, @PathVariable Long bookId) {
-        try {
-            diaryService.deleteBook(bookId);
-        } catch (AuthException e) {
-            return REDIRECT_ERROR_403;
-        } catch (NoSuchElementException e) {
-            return REDIRECT_ERROR_404;
-        }
-        return REDIRECT_DIARY;
     }
 
     @PostMapping("/fragments/book")

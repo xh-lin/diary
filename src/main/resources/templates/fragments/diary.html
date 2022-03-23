@@ -31,7 +31,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#deleteBookDialogModal"
                             th:data-bs-title="${book.title}"
-                            th:data-bs-url="@{/diary/delete/} + ${book.id}">Delete</a></li>
+                            th:data-bs-url="@{/api/v1/diary/} + ${book.id}">Delete</a></li>
                 </ul>
             </div>
         </div>
@@ -130,7 +130,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="deleteBookForm" method="post">
+                        <form id="deleteBookForm" method="delete">
                             <div id="deleteBookMessage"></div>
                         </form>
                     </div>
