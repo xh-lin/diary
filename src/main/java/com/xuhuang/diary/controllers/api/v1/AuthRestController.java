@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/auth") // Spring Security permit all /api/v*/auth/**
+@RequestMapping("/api/v1/auth") // Spring Security permit all /api/v*/auth/**
 @RequiredArgsConstructor
 public class AuthRestController {
 
@@ -48,7 +48,7 @@ public class AuthRestController {
     @PostMapping("register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        
+
         try {
             userService.register(request);
         } catch (RegisterException e) {
@@ -63,7 +63,7 @@ public class AuthRestController {
     @PostMapping("login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        
+
         try {
             SecurityContextHolder.getContext().setAuthentication(
                 authenticationManager.authenticate(
@@ -78,10 +78,10 @@ public class AuthRestController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {    
+    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> body = new LinkedHashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (auth instanceof AnonymousAuthenticationToken) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -90,5 +90,5 @@ public class AuthRestController {
         body.put(MESSAGE, LOGGED_OUT_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
-    
+
 }

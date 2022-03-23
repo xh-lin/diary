@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("diary")
+@RequestMapping("/diary")
 @RequiredArgsConstructor
 public class DiaryController {
 

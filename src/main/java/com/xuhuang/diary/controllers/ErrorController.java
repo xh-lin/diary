@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("error")
+@RequestMapping("/error")
 @RequiredArgsConstructor
 public class ErrorController {
 
