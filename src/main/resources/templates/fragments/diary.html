@@ -149,12 +149,6 @@
     </div>
 
     <div th:fragment="scripts">
-        <!-- Passing Thymeleaf variable to JavaScript -->
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            const DIARY_BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book}]]*/ '';
-            /*]]>*/
-        </script>
         <script type="text/javascript" th:src="@{/js/fragments/diary.js}"></script>
     </div>
 

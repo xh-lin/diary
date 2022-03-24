@@ -1,4 +1,4 @@
-/* const DIARY_BOOK_FRAGMENT_URL passed from Thymeleaf in fragments/diary.html */
+const DIARY_BOOK_FRAGMENT_URL = '/diary/fragments/book';
 
 const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
