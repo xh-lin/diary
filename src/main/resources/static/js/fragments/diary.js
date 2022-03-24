@@ -49,8 +49,9 @@ function setupAjaxFormSubmit(form, successHandler) {
 }
 
 function errorHandler(jqXHR, textStatus, errorThrown) {
-    console.error(jqXHR, textStatus, errorThrown);
-    alert('Error - ' + jqXHR.status + ': ' + jqXHR.statusText);
+    console.error({'jqXHR': jqXHR, 'textStatus': textStatus, 'errorThrown': errorThrown});
+    alert('Error - ' + jqXHR.status + ': ' +
+        ((jqXHR.responseJSON.error !== undefined) ? jqXHR.responseJSON.error : jqXHR.statusText));
 }
 
 /*
