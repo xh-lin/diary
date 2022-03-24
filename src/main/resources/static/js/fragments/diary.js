@@ -1,5 +1,8 @@
 /* const DIARY_BOOK_FRAGMENT_URL passed from Thymeleaf in fragments/diary.html */
 
+const TOAST_ID = '#toast';
+const TOAST_DELAY = 2000; // milliseconds
+
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
@@ -13,6 +16,10 @@ const UPDATE_BOOK_FORM_ID = '#updateBookForm';
 const DELETE_BOOK_DIALOG_MODAL_ID = "#deleteBookDialogModal";
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
+
+const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
+const toastBody = $(TOAST_ID + ' .toast-body');
+const bookLinks = $(BOOK_LINKS_ID);
 
 function errorHandler(jqXHR, textStatus, errorThrown) {
     console.error(jqXHR, textStatus, errorThrown);
@@ -29,7 +36,12 @@ function setupAjaxFormSubmit(form, successHandler) {
             url: form.attr('action'),
             data: form.serialize(), // serializes the form's inputs.
             error: errorHandler,
-            success: successHandler
+            success: function(res) {
+                console.log(res);
+                toastBody.html(res.message);
+                toast.show();
+                successHandler(res);
+            }
         });
     });
 }
@@ -42,8 +54,6 @@ const createBookDialogModal = $(CREATE_BOOK_DIALOG_MODAL_ID);
 const createBookForm = $(CREATE_BOOK_FORM_ID);
 
 setupAjaxFormSubmit(createBookForm, function(res) {
-    console.log(res);
-
     // load book fragment
     $.ajax({
         type: 'post',
@@ -54,7 +64,7 @@ setupAjaxFormSubmit(createBookForm, function(res) {
         success: function(bookFragment) {
             createBookForm[0].reset(); // clear inputs
             createBookDialogModal.modal('hide'); // close dialog
-            $(BOOK_LINKS_ID).append(bookFragment); // append new book fragment
+            bookLinks.append(bookFragment); // append new book fragment
         }
     });
 });
@@ -81,8 +91,6 @@ updateBookDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(updateBookForm, function(res) {
-    console.log(res);
-
     // load book fragment
     $.ajax({
         type: 'post',
@@ -94,7 +102,7 @@ setupAjaxFormSubmit(updateBookForm, function(res) {
             updateBookDialogModal.modal('hide'); // close dialog
             // replace book fragment
             const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
-            $(BOOK_LINKS_ID).find(BOOK_FRAGMENT_ID).replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID));
+            bookLinks.find(BOOK_FRAGMENT_ID).replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID));
         }
     });
 });
@@ -121,10 +129,8 @@ deleteBookDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(deleteBookForm, function(res) {
-    console.log(res);
-
     deleteBookDialogModal.modal('hide'); // close dialog
     // delete book fragment
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
-    $(BOOK_LINKS_ID).find(BOOK_FRAGMENT_ID).parent().remove();
+    bookLinks.find(BOOK_FRAGMENT_ID).parent().remove();
 });
