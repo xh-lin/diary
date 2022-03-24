@@ -7,7 +7,6 @@ const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
 
-const CREATE_BOOK_DIALOG_MODAL_ID = "#createBookDialogModal";
 const CREATE_BOOK_FORM_ID = '#createBookForm';
 
 const UPDATE_BOOK_DIALOG_MODAL_ID = "#updateBookDialogModal";
@@ -21,11 +20,6 @@ const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
 const toastBody = $(TOAST_ID + ' .toast-body');
 const bookLinks = $(BOOK_LINKS_ID);
 
-function errorHandler(jqXHR, textStatus, errorThrown) {
-    console.error(jqXHR, textStatus, errorThrown);
-    alert('Error - ' + jqXHR.status + ': ' + jqXHR.statusText);
-}
-
 function setupAjaxFormSubmit(form, successHandler) {
     form.submit(function(e) {
         // avoid to execute the actual submit of the form.
@@ -38,19 +32,31 @@ function setupAjaxFormSubmit(form, successHandler) {
             error: errorHandler,
             success: function(res) {
                 console.log(res);
+
+                // toast message
                 toastBody.html(res.message);
                 toast.show();
+
+                // reset form and close dialog
+                form[0].reset();
+                form.closest('.modal').modal('hide');
+
+                // update page
                 successHandler(res);
             }
         });
     });
 }
 
+function errorHandler(jqXHR, textStatus, errorThrown) {
+    console.error(jqXHR, textStatus, errorThrown);
+    alert('Error - ' + jqXHR.status + ': ' + jqXHR.statusText);
+}
+
 /*
     Create Book
 */
 
-const createBookDialogModal = $(CREATE_BOOK_DIALOG_MODAL_ID);
 const createBookForm = $(CREATE_BOOK_FORM_ID);
 
 setupAjaxFormSubmit(createBookForm, function(res) {
@@ -62,9 +68,8 @@ setupAjaxFormSubmit(createBookForm, function(res) {
         contentType: "application/json",
         error: errorHandler,
         success: function(bookFragment) {
-            createBookForm[0].reset(); // clear inputs
-            createBookDialogModal.modal('hide'); // close dialog
-            bookLinks.append(bookFragment); // append new book fragment
+            // append new book fragment
+            bookLinks.append(bookFragment);
         }
     });
 });
@@ -99,7 +104,6 @@ setupAjaxFormSubmit(updateBookForm, function(res) {
         contentType: "application/json",
         error: errorHandler,
         success: function(bookFragment) {
-            updateBookDialogModal.modal('hide'); // close dialog
             // replace book fragment
             const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
             bookLinks.find(BOOK_FRAGMENT_ID).replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID));
@@ -129,7 +133,6 @@ deleteBookDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(deleteBookForm, function(res) {
-    deleteBookDialogModal.modal('hide'); // close dialog
     // delete book fragment
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
     bookLinks.find(BOOK_FRAGMENT_ID).parent().remove();
