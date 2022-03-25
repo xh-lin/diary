@@ -1,5 +1,6 @@
 package com.xuhuang.diary.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,6 +40,9 @@ public class DiaryController {
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
     private static final String TOTAL_PAGES = "totalPages";
+    private static final String PAGE_NUMBER = "pageNumber";
+    private static final String PAGE_SIZE = "pageSize";
+    private static final String BOOK = "book";
 
     private final UserService userService;
     private final DiaryService diaryService;
@@ -67,8 +71,10 @@ public class DiaryController {
         model.addAttribute(USER, userService.getCurrentUser());
         model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
-        model.addAttribute(RECORDS, recordPage == null ? null : recordPage.getContent());
-        model.addAttribute(TOTAL_PAGES, recordPage == null ? null : recordPage.getTotalPages());
+        model.addAttribute(RECORDS, recordPage == null ? new ArrayList<>() : recordPage.getContent());
+        model.addAttribute(TOTAL_PAGES, recordPage == null ? -1 : recordPage.getTotalPages());
+        model.addAttribute(PAGE_NUMBER, page);
+        model.addAttribute(PAGE_SIZE, size);
         return Template.DIARY.toString();
     }
 
@@ -89,8 +95,14 @@ public class DiaryController {
 
     @PostMapping("/fragments/book")
     public String loadBookFragment(Model model, @RequestBody Object book) {
-        model.addAttribute("book", book);
+        model.addAttribute(BOOK, book);
         return "fragments/diary::book";
+    }
+
+    @PostMapping("/fragments/records")
+    public String loadRecordsFragment(Model model, @RequestBody Object records) {
+        model.addAttribute(RECORDS, records);
+        return "fragments/diary::records";
     }
 
 }

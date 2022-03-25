@@ -1,4 +1,5 @@
 const DIARY_BOOK_FRAGMENT_URL = '/diary/fragments/book';
+const DIARY_RECORDS_FRAGMENT_URL = '/diary/fragments/records';
 
 const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
@@ -16,9 +17,13 @@ const DELETE_BOOK_DIALOG_MODAL_ID = '#deleteBookDialogModal';
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 
+const RECORDS_ID = '#records';
+const LOAD_RECORDS_BUTTON_ID = '#loadRecordsButton'
+
 const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
 const toastBody = $(`${TOAST_ID} .toast-body`);
 const bookLinks = $(BOOK_LINKS_ID);
+const records = $(RECORDS_ID);
 
 function setupAjaxFormSubmit(form, successHandler) {
     form.submit(function(event) {
@@ -141,4 +146,68 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
     // delete book fragment
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
     bookLinks.find(BOOK_FRAGMENT_ID).parent().remove();
+});
+
+/*
+    Load more records
+*/
+
+const loadRecordsButton = $(LOAD_RECORDS_BUTTON_ID);
+let currentBookId;
+let totalPages;
+let pageNumber;
+let pageSize;
+
+loadRecordsButton.on('click', function(event) {
+    const button = event.currentTarget;
+
+    // initialize
+    if (currentBookId === undefined) {
+        currentBookId = button.getAttribute('data-bs-current-book-id');
+    }
+    if (totalPages === undefined) {
+        totalPages = parseInt(button.getAttribute('data-bs-total-pages'));
+    }
+    if (pageNumber === undefined) {
+        pageNumber = parseInt(button.getAttribute('data-bs-page-number'));
+    }
+    if (pageSize === undefined) {
+        pageSize = button.getAttribute('data-bs-page-size');
+    }
+
+    // load next page
+    if (pageNumber+1 < totalPages) {
+        $.ajax({
+            type: 'GET',
+            url: `/api/v1/diary/${currentBookId}/record/${pageNumber+1}/${pageSize}`,
+            error: errorHandler,
+            success: function(res) {
+                console.log(res);
+
+                // update page
+                $.ajax({
+                    type: 'POST',
+                    url: DIARY_RECORDS_FRAGMENT_URL,
+                    data: JSON.stringify(res.data.content),
+                    contentType: 'application/json',
+                    error: errorHandler,
+                    success: function(recordsFragment) {
+                        records.append($(recordsFragment).children());
+                        pageNumber++;
+                        if (pageNumber+1 >= totalPages) {
+                            loadRecordsButton.hide();
+                        }
+                    }
+                });
+            }
+        });
+    } else {
+        alert('There\'s no more.');
+    }
+});
+
+loadRecordsButton.on('focus', function(event) {
+    setTimeout(function() {
+        event.currentTarget.blur();
+    }, 200);
 });

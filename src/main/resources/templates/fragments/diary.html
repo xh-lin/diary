@@ -62,7 +62,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="createBookForm" method="post" th:action="@{/api/v1/diary}">
+                        <form id="createBookForm" method="POST" th:action="@{/api/v1/diary}">
                             <div class="mb-3">
                                 <label class="col-form-label" for="title">Title:</label>
                                 <input class="form-control" type="text" name="title" id="titleInput" required>
@@ -96,7 +96,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="updateBookForm" method="put">
+                        <form id="updateBookForm" method="PUT">
                             <div class="mb-3">
                                 <label class="col-form-label" for="title">Title:</label>
                                 <input class="form-control" type="text" name="title" id="titleInput" required>
@@ -130,7 +130,7 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
-                        <form id="deleteBookForm" method="delete">
+                        <form id="deleteBookForm" method="DELETE">
                             <div id="deleteBookMessage"></div>
                         </form>
                     </div>
@@ -144,8 +144,20 @@
         </div>
     </div>
 
-    <div th:fragment="record">
-        <div class="record" th:text="${record.text}"></div>
+    <div th:fragment="records">
+        <div class="record" th:each="record : ${records}" th:text="${record.text}"></div>
+    </div>
+
+    <div th:fragment="load_records_button">
+        <button
+            id="loadRecordsButton"
+            type="button"
+            class="btn btn-primary btn-sm"
+            th:if="${pageNumber+1 < totalPages}"
+            th:data-bs-current-book-id="${currentBookId}"
+            th:data-bs-total-pages="${totalPages}"
+            th:data-bs-page-number="${pageNumber}"
+            th:data-bs-page-size="${pageSize}">Load More</button>
     </div>
 
     <div th:fragment="scripts">

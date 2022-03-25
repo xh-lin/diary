@@ -28,17 +28,19 @@
 }
 
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
-div.content {
+.content {
     margin-left: 200px;
     padding: 1px 16px;
-    height: 100%;
+}
+
+.record-container {
+    min-width: 200px;
+    max-width: 400px;
 }
 
 .record {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    min-width: 200px;
-    max-width: 400px;
     padding: 20px;
     margin-top: 20px;
 }
