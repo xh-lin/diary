@@ -9,21 +9,21 @@ const TITLE_INPUT_ID = '#titleInput';
 
 const CREATE_BOOK_FORM_ID = '#createBookForm';
 
-const UPDATE_BOOK_DIALOG_MODAL_ID = "#updateBookDialogModal";
+const UPDATE_BOOK_DIALOG_MODAL_ID = '#updateBookDialogModal';
 const UPDATE_BOOK_FORM_ID = '#updateBookForm';
 
-const DELETE_BOOK_DIALOG_MODAL_ID = "#deleteBookDialogModal";
+const DELETE_BOOK_DIALOG_MODAL_ID = '#deleteBookDialogModal';
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 
 const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
-const toastBody = $(TOAST_ID + ' .toast-body');
+const toastBody = $(`${TOAST_ID} .toast-body`);
 const bookLinks = $(BOOK_LINKS_ID);
 
 function setupAjaxFormSubmit(form, successHandler) {
-    form.submit(function(e) {
+    form.submit(function(event) {
         // avoid to execute the actual submit of the form.
-        e.preventDefault();
+        event.preventDefault();
 
         $.ajax({
             type: form.attr('method'),
@@ -49,9 +49,13 @@ function setupAjaxFormSubmit(form, successHandler) {
 }
 
 function errorHandler(jqXHR, textStatus, errorThrown) {
-    console.error({'jqXHR': jqXHR, 'textStatus': textStatus, 'errorThrown': errorThrown});
-    alert('Error - ' + jqXHR.status + ': ' +
-        ((jqXHR.responseJSON.error !== undefined) ? jqXHR.responseJSON.error : jqXHR.statusText));
+    console.error({
+        jqXHR: jqXHR,
+        textStatus: textStatus,
+        errorThrown: errorThrown
+    });
+    const errorMessage = (jqXHR.responseJSON.error !== undefined) ? jqXHR.responseJSON.error : jqXHR.statusText;
+    alert(`Error - ${jqXHR.status}: ${errorMessage}`);
 }
 
 /*
@@ -63,10 +67,10 @@ const createBookForm = $(CREATE_BOOK_FORM_ID);
 setupAjaxFormSubmit(createBookForm, function(res) {
     // load book fragment
     $.ajax({
-        type: 'post',
+        type: 'POST',
         url: DIARY_BOOK_FRAGMENT_URL,
         data: JSON.stringify(res.data),
-        contentType: "application/json",
+        contentType: 'application/json',
         error: errorHandler,
         success: function(bookFragment) {
             // append new book fragment
@@ -83,7 +87,7 @@ const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
 const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
 const updateBookFormTitleInput = updateBookForm.find(TITLE_INPUT_ID);
 
-updateBookDialogModal.on('show.bs.modal', function (event) {
+updateBookDialogModal.on('show.bs.modal', function(event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -99,10 +103,10 @@ updateBookDialogModal.on('show.bs.modal', function (event) {
 setupAjaxFormSubmit(updateBookForm, function(res) {
     // load book fragment
     $.ajax({
-        type: 'post',
+        type: 'POST',
         url: DIARY_BOOK_FRAGMENT_URL,
         data: JSON.stringify(res.data),
-        contentType: "application/json",
+        contentType: 'application/json',
         error: errorHandler,
         success: function(bookFragment) {
             // replace book fragment
@@ -120,7 +124,7 @@ const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID);
 const deleteBookForm = deleteBookDialogModal.find(DELETE_BOOK_FORM_ID);
 const deleteBookMessage = deleteBookDialogModal.find(DELETE_BOOK_MESSAGE_ID);
 
-deleteBookDialogModal.on('show.bs.modal', function (event) {
+deleteBookDialogModal.on('show.bs.modal', function(event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -130,7 +134,7 @@ deleteBookDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     deleteBookForm.attr('action', url);
-    deleteBookMessage.html('<b>' + title + '</b> will be deleted.');
+    deleteBookMessage.html(`<b>${title}</b> will be deleted.`);
 });
 
 setupAjaxFormSubmit(deleteBookForm, function(res) {
