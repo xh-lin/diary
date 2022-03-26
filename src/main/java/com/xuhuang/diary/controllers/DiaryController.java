@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,7 +95,8 @@ public class DiaryController {
     }
 
     @PostMapping("/fragments/book")
-    public String loadBookFragment(Model model, @RequestBody Object book) {
+    public String loadBookFragment(Model model, @RequestParam(required = false) Long currentBookId, @RequestBody Object book) {
+        model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOK, book);
         return "fragments/diary::book";
     }
