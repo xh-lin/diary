@@ -81,6 +81,22 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
 }
 
 /*
+    Toast on page loaded
+*/
+
+function getUrlParam(name){
+    if (name = (new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+        return decodeURIComponent(name[1]);
+}
+
+let toastMessage = getUrlParam('toast');
+
+if (toastMessage !== undefined) {
+    toastBody.html(toastMessage);
+    toast.show();
+}
+
+/*
     Create Book
 */
 
@@ -165,9 +181,8 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
     const bookLink = bookLinks.find(BOOK_FRAGMENT_ID);
     // if deleting a selected book
     if (res.data.id === currentBookId) {
-        setTimeout(function () {
-            window.location.href = DIARY_URL; // redirect to default book page
-        }, TOAST_DELAY);
+        // redirect to default book page with toast message on page loaded
+        window.location.href = `${DIARY_URL}?toast=${res.message}`;
     } else {
         bookLink.parent().remove();
     }
