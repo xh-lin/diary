@@ -48,15 +48,30 @@ public class DiaryController {
     private final UserService userService;
     private final DiaryService diaryService;
 
-    @GetMapping("/{bookId}/record/{page}/{size}")
-    public String viewDiary(Model model, @PathVariable Long bookId, @PathVariable int page, @PathVariable int size) {
+    @GetMapping({
+        "",
+        "/{bookId}",
+        "/{bookId}/record/{page}",
+        "/{bookId}/record/{page}/{size}"})
+    public String viewDiary(
+            Model model,
+            @PathVariable(required = false) Long bookId,
+            @PathVariable(required = false) Integer page,
+            @PathVariable(required = false) Integer size) {
+        // default variables
+        if (bookId == null) bookId = BOOK_ID_UNDEFINED;
+        if (page == null) page = DEFAULT_PAGE;
+        if (size == null) size = DEFAULT_SIZE;
+
         List<Book> books = diaryService.getBooks();
         Page<Record> recordPage = null;
 
+        // if have not selected a book and there are books
         if (bookId.equals(BOOK_ID_UNDEFINED) && !books.isEmpty()) {
             bookId = books.get(0).getId(); // default is the first book
         }
 
+        // if selected a book
         if (!bookId.equals(BOOK_ID_UNDEFINED)) {
             try {
                 recordPage = diaryService.getRecords(bookId, page, size);
@@ -79,23 +94,14 @@ public class DiaryController {
         return Template.DIARY.toString();
     }
 
-    @GetMapping("/{bookId}/record/{page}")
-    public String viewDiary(Model model, @PathVariable Long bookId, @PathVariable int page) {
-        return viewDiary(model, bookId, page, DEFAULT_SIZE);
-    }
-
-    @GetMapping("/{bookId}")
-    public String viewDiary(Model model, @PathVariable Long bookId) {
-        return viewDiary(model, bookId, DEFAULT_PAGE, DEFAULT_SIZE);
-    }
-
-    @GetMapping
-    public String viewDiary(Model model) {
-        return viewDiary(model, BOOK_ID_UNDEFINED, DEFAULT_PAGE, DEFAULT_SIZE);
-    }
-
     @PostMapping("/fragments/book")
-    public String loadBookFragment(Model model, @RequestParam(required = false) Long currentBookId, @RequestBody Object book) {
+    public String loadBookFragment(
+            Model model,
+            @RequestParam(required = false) Long currentBookId,
+            @RequestBody Object book) {
+        // default variables
+        if (currentBookId == null) currentBookId = BOOK_ID_UNDEFINED;
+
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOK, book);
         return "fragments/diary::book";
