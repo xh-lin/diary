@@ -161,6 +161,10 @@
     </div>
 
     <div th:fragment="scripts">
+        <script th:inline="javascript">
+            const DIARY_BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book}]]*/ undefined;
+            const DIARY_RECORDS_FRAGMENT_URL = /*[[@{/diary/fragments/records}]]*/ undefined;
+        </script>
         <script th:src="@{/js/fragments/diary.js}"></script>
     </div>
 

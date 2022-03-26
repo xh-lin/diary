@@ -1,5 +1,8 @@
-const DIARY_BOOK_FRAGMENT_URL = '/diary/fragments/book';
-const DIARY_RECORDS_FRAGMENT_URL = '/diary/fragments/records';
+/*
+    Variables pass from Thymeleaf in diary.js:
+    const DIARY_BOOK_FRAGMENT_URL;
+    const DIARY_RECORDS_FRAGMENT_URL;
+*/
 
 const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
