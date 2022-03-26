@@ -1,6 +1,7 @@
 /*
     Variables pass from Thymeleaf in fragments/diary::scripts:
 
+    const DIARY_URL;
     const DIARY_BOOK_FRAGMENT_URL;
     const DIARY_RECORDS_FRAGMENT_URL;
     let currentBookId;
@@ -8,6 +9,7 @@
     let pageNumber;
     let pageSize;
 */
+console.assert(DIARY_URL !== undefined);
 console.assert(DIARY_BOOK_FRAGMENT_URL !== undefined);
 console.assert(DIARY_RECORDS_FRAGMENT_URL !== undefined);
 console.assert(currentBookId !== undefined);
@@ -160,7 +162,15 @@ deleteBookDialogModal.on('show.bs.modal', function(event) {
 setupAjaxFormSubmit(deleteBookForm, function(res) {
     // delete book fragment
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
-    bookLinks.find(BOOK_FRAGMENT_ID).parent().remove();
+    const bookLink = bookLinks.find(BOOK_FRAGMENT_ID);
+    // if deleting a selected book
+    if (res.data.id === currentBookId) {
+        setTimeout(function () {
+            window.location.href = DIARY_URL; // redirect to default book page
+        }, TOAST_DELAY);
+    } else {
+        bookLink.parent().remove();
+    }
 });
 
 /*

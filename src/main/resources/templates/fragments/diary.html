@@ -158,6 +158,7 @@
 
     <div th:fragment="scripts">
         <script th:inline="javascript">
+            const DIARY_URL = /*[[@{/diary}]]*/ undefined;
             const DIARY_BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book(currentBookId=${currentBookId})}]]*/ undefined;
             const DIARY_RECORDS_FRAGMENT_URL = /*[[@{/diary/fragments/records}]]*/ undefined;
             let currentBookId = /*[[${currentBookId}]]*/ undefined;
