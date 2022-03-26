@@ -2,9 +2,20 @@
     get URL parameter
 */
 
-function getUrlParam(name){
+function getUrlParam(name) {
     if (name = (new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
         return decodeURIComponent(name[1]);
+}
+
+/*
+    Redirect page
+*/
+
+function redirect(url, params) {
+    $.each(params, function(k, v) {
+        url += `?${k}=${v}`;
+    });
+    window.location.href = url;
 }
 
 /*

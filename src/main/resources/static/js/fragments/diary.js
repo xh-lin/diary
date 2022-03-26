@@ -17,7 +17,6 @@ console.assert(totalPages !== undefined);
 console.assert(pageNumber !== undefined);
 console.assert(pageSize !== undefined);
 
-const TOAST_PARAM_NAME = 'toast';
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
@@ -79,7 +78,7 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
     Toast on page loaded
 */
 
-let toastMessage = getUrlParam(TOAST_PARAM_NAME);
+let toastMessage = getUrlParam('toast');
 
 if (toastMessage !== undefined) {
     showToast(toastMessage);
@@ -100,8 +99,12 @@ setupAjaxFormSubmit(createBookForm, function(res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function(bookFragment) {
-            // append new book fragment
-            bookLinks.append(bookFragment);
+            if (currentBookId === -1) {
+                redirect(DIARY_URL, { toast: res.message });
+            } else {
+                // append new book fragment
+                bookLinks.append(bookFragment);
+            }
         }
     });
 });
@@ -165,14 +168,14 @@ deleteBookDialogModal.on('show.bs.modal', function(event) {
 });
 
 setupAjaxFormSubmit(deleteBookForm, function(res) {
-    // delete book fragment
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
     const bookLink = bookLinks.find(BOOK_FRAGMENT_ID);
     // if deleting a selected book
     if (res.data.id === currentBookId) {
         // redirect to default book page with toast message on page loaded
-        window.location.href = `${DIARY_URL}?${TOAST_PARAM_NAME}=${res.message}`;
+        redirect(DIARY_URL, { toast: res.message });
     } else {
+        // delete book fragment
         bookLink.parent().remove();
     }
 });
