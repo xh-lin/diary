@@ -23,14 +23,16 @@
 
     <!-- Page content -->
     <div class="content">
-        <div class="record-container d-flex flex-column align-items-center mb-3">
+        <div class="container record-container d-flex flex-column align-items-center mb-3">
             <!-- If haven't created any book -->
             <div th:if="${books.isEmpty()}">Please create a diary book.</div>
-            <!-- Records -->
-            <div class="align-self-stretch mb-3" id="records" th:include="fragments/diary::records"></div>
-            <div th:include="fragments/diary::load_records_button"></div>
+            <div th:if="${!books.isEmpty()}" class="d-flex flex-column align-self-stretch align-items-center">
+                <!-- Records -->
+                <div class="align-self-stretch mb-3" id="records" th:include="fragments/diary::records"></div>
+                <!-- Load records button -->
+                <div th:include="fragments/diary::load_records_button"></div>
+            </div>
         </div>
-
     </div>
 
     <div th:replace="fragments/global::toast"></div>
