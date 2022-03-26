@@ -22,13 +22,19 @@ function redirect(url, params) {
     Toast
 */
 
+const TOAST_FRAGMENT_NOT_FOUUND = 'Toast fragment not found.';
 const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
 
-const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
-const toastBody = $(`${TOAST_ID} .toast-body`);
+const toastFragment = $(TOAST_ID);
+const toast = (toastFragment === undefined) ? undefined : new bootstrap.Toast(toastFragment, {delay: TOAST_DELAY});
+const toastBody = (toastFragment === undefined) ? undefined : toastFragment.find('.toast-body');
 
 function showToast(message) {
-    toastBody.html(message);
-    toast.show();
+    if (toast === undefined) {
+        alert(TOAST_FRAGMENT_NOT_FOUUND);
+    } else {
+        toastBody.html(message);
+        toast.show();
+    }
 }
