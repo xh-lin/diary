@@ -17,9 +17,7 @@ console.assert(totalPages !== undefined);
 console.assert(pageNumber !== undefined);
 console.assert(pageSize !== undefined);
 
-const TOAST_ID = '#toast';
-const TOAST_DELAY = 2000; // milliseconds
-
+const TOAST_PARAM_NAME = 'toast';
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
 const TITLE_INPUT_ID = '#titleInput';
@@ -36,8 +34,6 @@ const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 const RECORDS_ID = '#records';
 const LOAD_RECORDS_BUTTON_ID = '#loadRecordsButton'
 
-const toast = new bootstrap.Toast($(TOAST_ID), {delay: TOAST_DELAY});
-const toastBody = $(`${TOAST_ID} .toast-body`);
 const bookLinks = $(BOOK_LINKS_ID);
 const records = $(RECORDS_ID);
 
@@ -54,9 +50,8 @@ function setupAjaxFormSubmit(form, successHandler) {
             success: function(res) {
                 console.log(res);
 
-                // toast message
-                toastBody.html(res.message);
-                toast.show();
+                // success message
+                showToast(res.message);
 
                 // reset form and close dialog
                 form[0].reset();
@@ -84,16 +79,10 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
     Toast on page loaded
 */
 
-function getUrlParam(name){
-    if (name = (new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-        return decodeURIComponent(name[1]);
-}
-
-let toastMessage = getUrlParam('toast');
+let toastMessage = getUrlParam(TOAST_PARAM_NAME);
 
 if (toastMessage !== undefined) {
-    toastBody.html(toastMessage);
-    toast.show();
+    showToast(toastMessage);
 }
 
 /*
@@ -182,7 +171,7 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
     // if deleting a selected book
     if (res.data.id === currentBookId) {
         // redirect to default book page with toast message on page loaded
-        window.location.href = `${DIARY_URL}?toast=${res.message}`;
+        window.location.href = `${DIARY_URL}?${TOAST_PARAM_NAME}=${res.message}`;
     } else {
         bookLink.parent().remove();
     }
