@@ -10,7 +10,7 @@
                 class="item flex-fill"
                 th:classappend="${currentBookId == book.id} ? active : ''"
                 th:text="${book.title}"
-                th:href="@{/diary/} + ${book.id}"></a>
+                th:href="@{|/diary/${book.id}|}"></a>
             <!-- Dropdown options -->
             <div class="dropdown">
                 <a
@@ -25,13 +25,13 @@
                             data-bs-toggle="modal"
                             data-bs-target="#updateBookDialogModal"
                             th:data-bs-title="${book.title}"
-                            th:data-bs-url="@{/api/v1/diary/} + ${book.id}">Update</a></li>
+                            th:data-bs-url="@{|/api/v1/diary/${book.id}|}">Update</a></li>
                     <li><a
                             class="dropdown-item"
                             data-bs-toggle="modal"
                             data-bs-target="#deleteBookDialogModal"
                             th:data-bs-title="${book.title}"
-                            th:data-bs-url="@{/api/v1/diary/} + ${book.id}">Delete</a></li>
+                            th:data-bs-url="@{|/api/v1/diary/${book.id}|}">Delete</a></li>
                 </ul>
             </div>
         </div>
