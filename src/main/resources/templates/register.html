@@ -7,8 +7,8 @@
 <body>
 
     <h3>Register a new account</h3>
-    <form th:action="@{/register}" th:object="${request}" method="post">
-        <div class="alert alert-danger" th:if="${errors}">
+    <form th:object="${request}" th:action="@{/register}" method="POST">
+        <div th:if="${errors}" class="alert alert-danger">
             <div th:each="error : ${errors}">
                 <span th:text="${error}"></span>
             </div>
@@ -27,7 +27,7 @@
             <input type="password" th:field="*{passwordConfirm}" placeholder="Confirm password" required>
         </div>
         <div>
-            <button type="submit"  class="btn">Register</button>
+            <button type="submit" class="btn">Register</button>
         </div>
     </form>
 

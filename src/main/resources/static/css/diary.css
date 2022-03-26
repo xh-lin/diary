@@ -15,6 +15,13 @@
     text-decoration: none;
 }
 
+.sidebar .text-item {
+    display: block;
+    color: grey;
+    padding: 16px;
+    text-decoration: none;
+}
+
 /* Active/current item */
 .sidebar .item.active {
     background-color: #04AA6D;

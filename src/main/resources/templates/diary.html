@@ -17,7 +17,7 @@
         <div th:include="fragments/diary::create_book_link"></div>
         <!-- User related links -->
         <div class="flex-fill"></div>
-        <span style="display: block; color:grey; padding: 16px;" th:text="${user.username}"></span>
+        <span class="text-item" th:text="${user.username}"></span>
         <a class="item" th:href="@{/logout}">Logout</a>
     </nav>
 
@@ -27,7 +27,7 @@
             <!-- If haven't created any book -->
             <div th:if="${books.isEmpty()}">Please create a diary book.</div>
             <!-- Records -->
-            <div id="records" class="align-self-stretch mb-3" th:include="fragments/diary::records"></div>
+            <div class="align-self-stretch mb-3" id="records" th:include="fragments/diary::records"></div>
             <div th:include="fragments/diary::load_records_button"></div>
         </div>
 
