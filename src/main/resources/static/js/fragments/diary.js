@@ -1,8 +1,19 @@
 /*
-    Variables pass from Thymeleaf in diary.js:
+    Variables pass from Thymeleaf in fragments/diary::scripts:
+
     const DIARY_BOOK_FRAGMENT_URL;
     const DIARY_RECORDS_FRAGMENT_URL;
+    let currentBookId;
+    let totalPages;
+    let pageNumber;
+    let pageSize;
 */
+console.assert(DIARY_BOOK_FRAGMENT_URL !== undefined);
+console.assert(DIARY_RECORDS_FRAGMENT_URL !== undefined);
+console.assert(currentBookId !== undefined);
+console.assert(totalPages !== undefined);
+console.assert(pageNumber !== undefined);
+console.assert(pageSize !== undefined);
 
 const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
@@ -157,28 +168,8 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
 */
 
 const loadRecordsButton = $(LOAD_RECORDS_BUTTON_ID);
-let currentBookId;
-let totalPages;
-let pageNumber;
-let pageSize;
 
-loadRecordsButton.on('click', function(event) {
-    const button = event.currentTarget;
-
-    // initialize
-    if (currentBookId === undefined) {
-        currentBookId = button.getAttribute('data-bs-current-book-id');
-    }
-    if (totalPages === undefined) {
-        totalPages = parseInt(button.getAttribute('data-bs-total-pages'));
-    }
-    if (pageNumber === undefined) {
-        pageNumber = parseInt(button.getAttribute('data-bs-page-number'));
-    }
-    if (pageSize === undefined) {
-        pageSize = button.getAttribute('data-bs-page-size');
-    }
-
+loadRecordsButton.on('click', function() {
     // load next page
     if (pageNumber+1 < totalPages) {
         $.ajax({

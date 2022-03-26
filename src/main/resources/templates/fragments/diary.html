@@ -153,17 +153,17 @@
             th:if="${pageNumber+1 < totalPages}"
             type="button"
             class="btn btn-primary btn-sm"
-            id="loadRecordsButton"
-            th:data-bs-current-book-id="${currentBookId}"
-            th:data-bs-total-pages="${totalPages}"
-            th:data-bs-page-number="${pageNumber}"
-            th:data-bs-page-size="${pageSize}">Load More</button>
+            id="loadRecordsButton">Load More</button>
     </div>
 
     <div th:fragment="scripts">
         <script th:inline="javascript">
             const DIARY_BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book(currentBookId=${currentBookId})}]]*/ undefined;
             const DIARY_RECORDS_FRAGMENT_URL = /*[[@{/diary/fragments/records}]]*/ undefined;
+            let currentBookId = /*[[${currentBookId}]]*/ undefined;
+            let totalPages = /*[[${totalPages}]]*/ undefined;
+            let pageNumber = /*[[${pageNumber}]]*/ undefined;
+            let pageSize = /*[[${pageSize}]]*/ undefined;
         </script>
         <script th:src="@{/js/fragments/diary.js}"></script>
     </div>
