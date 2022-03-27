@@ -111,7 +111,7 @@ public class DiaryService {
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
         Pageable pageable = PageRequest.of(page, size);
-        return recordRepository.findByBook(book, pageable);
+        return recordRepository.findByBookOrderByCreatedAtDescIdDesc(book, pageable);
     }
 
     /*

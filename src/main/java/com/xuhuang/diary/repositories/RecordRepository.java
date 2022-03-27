@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecordRepository extends JpaRepository<Record, Long> {
-    
+
     List<Record> findByBook(Book book);
 
-    Page<Record> findByBook(Book book, Pageable pageable);
+    Page<Record> findByBookOrderByCreatedAtDescIdDesc(Book book, Pageable pageable);
 
 }
