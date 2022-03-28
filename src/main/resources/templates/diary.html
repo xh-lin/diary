@@ -26,7 +26,7 @@
         <div class="container record-container my-3">
             <!-- If haven't created any book -->
             <div th:if="${books.isEmpty()}">Please create a diary book.</div>
-            <div th:if="${!books.isEmpty()}">
+            <div th:unless="${books.isEmpty()}">
                 <!-- Create record editor -->
                 <div th:include="fragments/diary::create_record_editor"></div>
                 <!-- Records -->
