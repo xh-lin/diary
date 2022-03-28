@@ -33,6 +33,8 @@ const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 const RECORDS_ID = '#records';
 const LOAD_RECORDS_BUTTON_ID = '#loadRecordsButton'
 
+const CREATE_RECORD_FORM_ID = '#createRecordForm';
+
 const bookLinks = $(BOOK_LINKS_ID);
 const records = $(RECORDS_ID);
 
@@ -222,4 +224,24 @@ loadRecordsButton.on('focus', function(event) {
     setTimeout(function() {
         event.currentTarget.blur();
     }, 200);
+});
+
+/*
+    Create record
+*/
+
+const createRecordForm = $(CREATE_RECORD_FORM_ID);
+
+setupAjaxFormSubmit(createRecordForm, function(res) {
+    // update page
+    $.ajax({
+        type: 'POST',
+        url: DIARY_RECORDS_FRAGMENT_URL,
+        data: JSON.stringify([res.data]),
+        contentType: 'application/json',
+        error: errorHandler,
+        success: function(recordsFragment) {
+            records.prepend($(recordsFragment).children());
+        }
+    });
 });
