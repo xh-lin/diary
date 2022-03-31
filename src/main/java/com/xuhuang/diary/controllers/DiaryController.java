@@ -1,7 +1,11 @@
 package com.xuhuang.diary.controllers;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.security.auth.message.AuthException;
@@ -108,7 +112,32 @@ public class DiaryController {
     }
 
     @PostMapping("/fragments/records")
-    public String loadRecordsFragment(Model model, @RequestBody Object records) {
+    public String loadRecordsFragment(Model model, @RequestBody List<Map<String, Object>> recordsJson) {
+        List<Record> records = new ArrayList<>();
+
+        for (Map<String, Object> recordJson : recordsJson) {
+            Record recd = new Record();
+            Long id = Long.valueOf(((Integer) recordJson.get("id")).longValue());
+            Timestamp createdAt = Timestamp.valueOf(
+                LocalDateTime.parse((String) recordJson.get("createdAt"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            Timestamp updateddAt = Timestamp.valueOf(
+                LocalDateTime.parse((String) recordJson.get("updatedAt"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            Long bookId = Long.valueOf(((Integer) recordJson.get("book_id")).longValue());
+            Book book;
+            try {
+                book = diaryService.getBook(bookId);
+            } catch (AuthException e) {
+                book = null;
+            }
+
+            recd.setId(id);
+            recd.setCreatedAt(createdAt);
+            recd.setUpdatedAt(updateddAt);
+            recd.setText((String) recordJson.get("text"));
+            recd.setBook(book);
+            records.add(recd);
+        }
+
         model.addAttribute(RECORDS, records);
         return "fragments/diary::records";
     }
