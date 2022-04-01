@@ -159,6 +159,33 @@ public class DiaryService {
         }
     }
 
+    public Book parseBookJson(Map<String, Object> bookJson, boolean getRelated) {
+        Long id = Long.valueOf(((Integer) bookJson.get("id")).longValue());
+
+        if (getRelated) {
+            try {
+                return getBook(id);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        Timestamp createdAt = asTimestamp((String) bookJson.get("createdAt"));
+        Timestamp updateddAt = asTimestamp((String) bookJson.get("updatedAt"));
+        String title = (String) bookJson.get("title");
+        Book book = new Book();
+
+        book.setId(id);
+        book.setCreatedAt(createdAt);
+        book.setUpdatedAt(updateddAt);
+        book.setTitle(title);
+        return book;
+    }
+
+    public Book parseBookJson(Map<String, Object> bookJson) {
+        return parseBookJson(bookJson, false);
+    }
+
     public Record parseRecordJson(Map<String, Object> recordJson, boolean getRelated) {
         Long id = Long.valueOf(((Integer) recordJson.get("id")).longValue());
 

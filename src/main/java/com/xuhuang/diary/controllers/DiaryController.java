@@ -1,8 +1,5 @@
 package com.xuhuang.diary.controllers;
 
-import static com.xuhuang.diary.utils.Utils.asTimestamp;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,12 +99,12 @@ public class DiaryController {
     public String loadBookFragment(
             Model model,
             @RequestParam(required = false) Long currentBookId,
-            @RequestBody Object book) {
+            @RequestBody Map<String, Object> book) {
         // default variables
         if (currentBookId == null) currentBookId = BOOK_ID_UNDEFINED;
 
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
-        model.addAttribute(BOOK, book);
+        model.addAttribute(BOOK, diaryService.parseBookJson(book));
         return "fragments/diary::book";
     }
 
