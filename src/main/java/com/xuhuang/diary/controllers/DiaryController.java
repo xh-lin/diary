@@ -116,24 +116,7 @@ public class DiaryController {
         List<Record> records = new ArrayList<>();
 
         for (Map<String, Object> recordJson : recordsJson) {
-            Record recd = new Record();
-            Long id = Long.valueOf(((Integer) recordJson.get("id")).longValue());
-            Timestamp createdAt = asTimestamp((String) recordJson.get("createdAt"));
-            Timestamp updateddAt = asTimestamp((String) recordJson.get("updatedAt"));
-            Long bookId = Long.valueOf(((Integer) recordJson.get("book_id")).longValue());
-            Book book;
-            try {
-                book = diaryService.getBook(bookId);
-            } catch (AuthException e) {
-                book = null;
-            }
-
-            recd.setId(id);
-            recd.setCreatedAt(createdAt);
-            recd.setUpdatedAt(updateddAt);
-            recd.setText((String) recordJson.get("text"));
-            recd.setBook(book);
-            records.add(recd);
+            records.add(diaryService.parseRecordJson(recordJson));
         }
 
         model.addAttribute(RECORDS, records);

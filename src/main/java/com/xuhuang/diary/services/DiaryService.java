@@ -1,6 +1,10 @@
 package com.xuhuang.diary.services;
 
+import static com.xuhuang.diary.utils.Utils.asTimestamp;
+
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 
@@ -153,6 +157,33 @@ public class DiaryService {
         if (!userService.isCurrentUser(user)) {
             throw new AuthException(YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS);
         }
+    }
+
+    public Record parseRecordJson(Map<String, Object> recordJson, boolean getRelated) {
+        Long id = Long.valueOf(((Integer) recordJson.get("id")).longValue());
+
+        if (getRelated) {
+            try {
+                return getRecord(id);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        Timestamp createdAt = asTimestamp((String) recordJson.get("createdAt"));
+        Timestamp updateddAt = asTimestamp((String) recordJson.get("updatedAt"));
+        String text = (String) recordJson.get("text");
+        Record recd = new Record();
+
+        recd.setId(id);
+        recd.setCreatedAt(createdAt);
+        recd.setUpdatedAt(updateddAt);
+        recd.setText(text);
+        return recd;
+    }
+
+    public Record parseRecordJson(Map<String, Object> recordJson) {
+        return parseRecordJson(recordJson, false);
     }
 
 }
