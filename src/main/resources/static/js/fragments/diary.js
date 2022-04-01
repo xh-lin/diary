@@ -39,14 +39,19 @@ const bookLinks = $(BOOK_LINKS_ID);
 const records = $(RECORDS_ID);
 
 /*
-    Toast on page loaded
+    Toast in the beginning
 */
 
-let toastMessage = getUrlParam('toast');
-
+const toastMessage = getUrlParam('toast');
 if (toastMessage !== undefined) {
     showToast(toastMessage);
 }
+
+/*
+    Convert records timestamps to local timezone
+*/
+
+convertTimestampsToLocalTimezone(records);
 
 /*
     Create Book
@@ -168,7 +173,9 @@ loadRecordsButton.on('click', function() {
                     contentType: 'application/json',
                     error: errorHandler,
                     success: function(recordsFragment) {
-                        records.append($(recordsFragment).children());
+                        const recordsHtml = $($.parseHTML(recordsFragment));
+                        convertTimestampsToLocalTimezone(recordsHtml);
+                        records.append(recordsHtml.children());
                         pageNumber++;
                         if (pageNumber+1 >= totalPages) {
                             loadRecordsButton.hide();
@@ -203,7 +210,9 @@ setupAjaxFormSubmit(createRecordForm, function(res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function(recordsFragment) {
-            records.prepend($(recordsFragment).children());
+            const recordsHtml = $($.parseHTML(recordsFragment));
+            convertTimestampsToLocalTimezone(recordsHtml);
+            records.prepend(recordsHtml.children());
         }
     });
 });

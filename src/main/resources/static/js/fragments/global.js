@@ -84,3 +84,14 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
         ? jqXHR.responseJSON.error : jqXHR.statusText;
     alert(`Error - ${jqXHR.status}: ${errorMessage}`);
 }
+
+/*
+    Convert and format timestamps to local timezone
+*/
+
+function convertTimestampsToLocalTimezone(parent, selector = '.timestamp') {
+    parent.find(selector).each(function() {
+        const date = new Date($(this).text());
+        $(this).text(date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
+    });
+}

@@ -147,13 +147,13 @@
     <div th:fragment="records">
         <div th:each="record : ${records}" class="card mt-4">
             <div class="card-header">
-                <div th:text="${record.createdAt}"></div>
+                <div class="timestamp" th:text="${#dates.formatISO(record.createdAt)}"></div>
             </div>
             <div class="card-body">
                 <div class="card-text" th:utext="${record.text}"></div>
             </div>
             <div class="card-footer text-muted">
-                <small th:text="${record.updatedAt}"></small>
+                <small class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></small>
             </div>
         </div>
     </div>
