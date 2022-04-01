@@ -38,3 +38,49 @@ function showToast(message) {
         toast.show();
     }
 }
+
+/*
+    Use AJAX to submit a form
+*/
+
+function setupAjaxFormSubmit(form, successHandler) {
+    form.submit(function(event) {
+        // avoid to execute the actual submit of the form.
+        event.preventDefault();
+
+        $.ajax({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize(), // serializes the form's inputs.
+            error: errorHandler,
+            success: function(res) {
+                console.log(res);
+
+                // success message
+                showToast(res.message);
+
+                // reset form and close dialog
+                form[0].reset();
+                form.closest('.modal').modal('hide');
+
+                // update page
+                successHandler(res);
+            }
+        });
+    });
+}
+
+/*
+    Error handler
+*/
+
+function errorHandler(jqXHR, textStatus, errorThrown) {
+    console.error({
+        jqXHR: jqXHR,
+        textStatus: textStatus,
+        errorThrown: errorThrown
+    });
+    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.error !== undefined)
+        ? jqXHR.responseJSON.error : jqXHR.statusText;
+    alert(`Error - ${jqXHR.status}: ${errorMessage}`);
+}
