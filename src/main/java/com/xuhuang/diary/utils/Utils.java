@@ -2,9 +2,9 @@ package com.xuhuang.diary.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class JsonUtil {
+public final class Utils {
 
-    private JsonUtil() {}
+    private Utils() {}
 
     public static String asJsonString(final Object obj) {
         try {
@@ -13,5 +13,5 @@ public final class JsonUtil {
             throw new RuntimeException(e);
         }
     }
-    
+
 }

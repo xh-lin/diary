@@ -1,6 +1,6 @@
 package com.xuhuang.diary.controllers.api.v1;
 
-import static com.xuhuang.diary.utils.JsonUtil.asJsonString;
+import static com.xuhuang.diary.utils.Utils.asJsonString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
