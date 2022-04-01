@@ -1,8 +1,8 @@
 package com.xuhuang.diary.controllers;
 
+import static com.xuhuang.diary.utils.Utils.asTimestamp;
+
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,10 +118,8 @@ public class DiaryController {
         for (Map<String, Object> recordJson : recordsJson) {
             Record recd = new Record();
             Long id = Long.valueOf(((Integer) recordJson.get("id")).longValue());
-            Timestamp createdAt = Timestamp.valueOf(
-                LocalDateTime.parse((String) recordJson.get("createdAt"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            Timestamp updateddAt = Timestamp.valueOf(
-                LocalDateTime.parse((String) recordJson.get("updatedAt"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            Timestamp createdAt = asTimestamp((String) recordJson.get("createdAt"));
+            Timestamp updateddAt = asTimestamp((String) recordJson.get("updatedAt"));
             Long bookId = Long.valueOf(((Integer) recordJson.get("book_id")).longValue());
             Book book;
             try {
