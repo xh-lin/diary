@@ -16,14 +16,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 public class Record extends BaseEntity {
-    
+
     @Lob
     @Column(nullable = false)
     private String text;
@@ -31,10 +33,11 @@ public class Record extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     @JsonIdentityInfo( // Jackson only serialize id
-        generator = ObjectIdGenerators.PropertyGenerator.class, 
+        generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("book_id")
+    @ToString.Exclude
     private Book book;
 
 }

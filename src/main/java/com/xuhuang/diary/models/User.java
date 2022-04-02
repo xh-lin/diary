@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -32,6 +33,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
@@ -44,6 +46,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     @NonNull
     private String password;
 
@@ -54,6 +57,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    @ToString.Exclude
     @NonNull
     private Set<Book> books = new HashSet<>();
 

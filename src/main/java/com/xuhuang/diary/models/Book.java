@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -30,6 +31,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 public class Book extends BaseEntity {
 
     @Column(nullable = false)
@@ -43,11 +45,13 @@ public class Book extends BaseEntity {
         property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("user_id")
+    @ToString.Exclude
     @NonNull
     private User user;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    @ToString.Exclude
     @NonNull
     private Set<Record> records = new HashSet<>();
 
