@@ -5,17 +5,13 @@
     const DIARY_BOOK_FRAGMENT_URL;
     const DIARY_RECORDS_FRAGMENT_URL;
     let currentBookId;
-    let totalPages;
-    let pageNumber;
-    let pageSize;
+    let nextPageUrl;
 */
 console.assert(DIARY_URL !== undefined);
 console.assert(DIARY_BOOK_FRAGMENT_URL !== undefined);
 console.assert(DIARY_RECORDS_FRAGMENT_URL !== undefined);
 console.assert(currentBookId !== undefined);
-console.assert(totalPages !== undefined);
-console.assert(pageNumber !== undefined);
-console.assert(pageSize !== undefined);
+console.assert(nextPageUrl !== undefined);
 
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
@@ -157,10 +153,10 @@ const loadRecordsButton = $(LOAD_RECORDS_BUTTON_ID);
 
 loadRecordsButton.on('click', function() {
     // load next page
-    if (pageNumber+1 < totalPages) {
+    if (nextPageUrl !== null) {
         $.ajax({
             type: 'GET',
-            url: `/api/v1/diary/${currentBookId}/record/${pageNumber+1}/${pageSize}`,
+            url: nextPageUrl,
             error: errorHandler,
             success: function(res) {
                 console.log(res);
@@ -176,16 +172,15 @@ loadRecordsButton.on('click', function() {
                         const recordsHtml = $($.parseHTML(recordsFragment));
                         convertTimestampsToLocalTimezone(recordsHtml);
                         records.append(recordsHtml.children());
-                        pageNumber++;
-                        if (pageNumber+1 >= totalPages) {
+
+                        nextPageUrl = res.data.nextPageUrl;
+                        if (nextPageUrl === null) {
                             loadRecordsButton.hide();
                         }
                     }
                 });
             }
         });
-    } else {
-        alert('There\'s no more.');
     }
 });
 

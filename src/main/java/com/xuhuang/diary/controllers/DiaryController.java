@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,9 +41,7 @@ public class DiaryController {
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
-    private static final String TOTAL_PAGES = "totalPages";
-    private static final String PAGE_NUMBER = "pageNumber";
-    private static final String PAGE_SIZE = "pageSize";
+    private static final String NEXT_PAGE_URL = "nextPageUrl";
     private static final String BOOK = "book";
 
     private final UserService userService;
@@ -85,10 +85,16 @@ public class DiaryController {
             } catch (IllegalArgumentException e) {
                 return REDIRECT_ERROR_400;
             }
+
+            int totalPages = recordPage.getTotalPages();
+            page = recordPage.getPageable().getPageNumber();
+            size = recordPage.getPageable().getPageSize();
+            UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
+            int nextPage = Math.max(page + 1, 0);
+
             model.addAttribute(RECORDS, recordPage.getContent());
-            model.addAttribute(TOTAL_PAGES, recordPage.getTotalPages());
-            model.addAttribute(PAGE_NUMBER, recordPage.getPageable().getPageNumber());
-            model.addAttribute(PAGE_SIZE, recordPage.getPageable().getPageSize());
+            model.addAttribute(NEXT_PAGE_URL, (nextPage < totalPages) ? uriBuilder.build(bookId, nextPage, size) : null);
         }
 
         model.addAttribute(USER, userService.getCurrentUser());
