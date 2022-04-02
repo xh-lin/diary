@@ -152,13 +152,25 @@ public class DiaryRestController {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    @GetMapping("/{bookId}/record/{page}/{size}")
-    public ResponseEntity<Object> getRecords(@PathVariable Long bookId, @PathVariable int page, @PathVariable int size) {
+    @GetMapping({
+        "/{bookId}/record",
+        "/{bookId}/record/{page}",
+        "/{bookId}/record/{page}/{size}"})
+    public ResponseEntity<Object> getRecords(
+            @PathVariable Long bookId,
+            @PathVariable(required = false) Integer page,
+            @PathVariable(required = false) Integer size) {
         Map<String, Object> body = new LinkedHashMap<>();
         Page<Record> recordPage;
 
         try {
-            recordPage = diaryService.getRecords(bookId, page, size);
+            if (page == null) {
+                recordPage = diaryService.getRecords(bookId);
+            } else if (size == null) {
+                recordPage = diaryService.getRecords(bookId, page);
+            } else {
+                recordPage = diaryService.getRecords(bookId, page, size);
+            }
         } catch (AuthException e) {
             body.put(ERROR, e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
@@ -173,8 +185,8 @@ public class DiaryRestController {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put(CONTENT, recordPage.getContent());
         data.put(TOTAL_PAGES, recordPage.getTotalPages());
-        data.put(PAGE_NUMBER, page);
-        data.put(PAGE_SIZE, size);
+        data.put(PAGE_NUMBER, recordPage.getPageable().getPageNumber());
+        data.put(PAGE_SIZE, recordPage.getPageable().getPageSize());
 
         body.put(DATA, data);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);

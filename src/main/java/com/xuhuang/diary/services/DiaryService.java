@@ -30,6 +30,9 @@ public class DiaryService {
     public static final String PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO = "Page must be greater than or equal to zero.";
     public static final String SIZE_MUST_BE_GREATER_THAN_ZERO = "Size must be greater than zero.";
 
+    private static final int DEFAULT_PAGE = 0;
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private final BookRepository bookRepository;
     private final RecordRepository recordRepository;
     private final UserService userService;
@@ -116,6 +119,14 @@ public class DiaryService {
         throwIfIsNotCurrentUser(book.getUser());
         Pageable pageable = PageRequest.of(page, size);
         return recordRepository.findByBookOrderByCreatedAtDescIdDesc(book, pageable);
+    }
+
+    public Page<Record> getRecords(Long bookId, int page) throws AuthException {
+        return getRecords(bookId, page, DEFAULT_PAGE_SIZE);
+    }
+
+    public Page<Record> getRecords(Long bookId) throws AuthException {
+        return getRecords(bookId, DEFAULT_PAGE, DEFAULT_PAGE_SIZE);
     }
 
     /*

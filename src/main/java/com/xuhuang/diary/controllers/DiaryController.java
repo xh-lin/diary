@@ -34,8 +34,6 @@ public class DiaryController {
     private static final String REDIRECT_ERROR_403 = "redirect:/error/403";
 
     private static final Long BOOK_ID_UNDEFINED = -1L;
-    private static final int DEFAULT_PAGE = 0;
-    private static final int DEFAULT_SIZE = 10;
 
     private static final String USER = "user";
     private static final String CURRENT_BOOK_ID = "currentBookId";
@@ -61,11 +59,8 @@ public class DiaryController {
             @PathVariable(required = false) Integer size) {
         // default variables
         if (bookId == null) bookId = BOOK_ID_UNDEFINED;
-        if (page == null) page = DEFAULT_PAGE;
-        if (size == null) size = DEFAULT_SIZE;
 
         List<Book> books = diaryService.getBooks();
-        Page<Record> recordPage = null;
 
         // if have not selected a book and there are books
         if (bookId.equals(BOOK_ID_UNDEFINED) && !books.isEmpty()) {
@@ -74,8 +69,15 @@ public class DiaryController {
 
         // if selected a book
         if (!bookId.equals(BOOK_ID_UNDEFINED)) {
+            Page<Record> recordPage;
             try {
-                recordPage = diaryService.getRecords(bookId, page, size);
+                if (page == null) {
+                    recordPage = diaryService.getRecords(bookId);
+                } else if (size == null) {
+                    recordPage = diaryService.getRecords(bookId, page);
+                } else {
+                    recordPage = diaryService.getRecords(bookId, page, size);
+                }
             } catch (AuthException e) {
                 return REDIRECT_ERROR_403;
             } catch (NoSuchElementException e) {
@@ -83,15 +85,15 @@ public class DiaryController {
             } catch (IllegalArgumentException e) {
                 return REDIRECT_ERROR_400;
             }
+            model.addAttribute(RECORDS, recordPage.getContent());
+            model.addAttribute(TOTAL_PAGES, recordPage.getTotalPages());
+            model.addAttribute(PAGE_NUMBER, recordPage.getPageable().getPageNumber());
+            model.addAttribute(PAGE_SIZE, recordPage.getPageable().getPageSize());
         }
 
         model.addAttribute(USER, userService.getCurrentUser());
         model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
-        model.addAttribute(RECORDS, recordPage == null ? new ArrayList<>() : recordPage.getContent());
-        model.addAttribute(TOTAL_PAGES, recordPage == null ? -1 : recordPage.getTotalPages());
-        model.addAttribute(PAGE_NUMBER, page);
-        model.addAttribute(PAGE_SIZE, size);
         return Template.DIARY.toString();
     }
 
