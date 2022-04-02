@@ -35,8 +35,6 @@ public class DiaryController {
     private static final String REDIRECT_ERROR_404 = "redirect:/error/404";
     private static final String REDIRECT_ERROR_403 = "redirect:/error/403";
 
-    private static final Long BOOK_ID_UNDEFINED = -1L;
-
     private static final String USER = "user";
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
@@ -57,18 +55,16 @@ public class DiaryController {
             @PathVariable(required = false) Long bookId,
             @PathVariable(required = false) Integer page,
             @PathVariable(required = false) Integer size) {
-        // default variables
-        if (bookId == null) bookId = BOOK_ID_UNDEFINED;
 
         List<Book> books = diaryService.getBooks();
 
         // if have not selected a book and there are books
-        if (bookId.equals(BOOK_ID_UNDEFINED) && !books.isEmpty()) {
+        if (bookId == null && !books.isEmpty()) {
             bookId = books.get(0).getId(); // default is the first book
         }
 
         // if selected a book
-        if (!bookId.equals(BOOK_ID_UNDEFINED)) {
+        if (bookId != null) {
             Page<Record> recordPage;
             try {
                 if (page == null) {
@@ -108,8 +104,6 @@ public class DiaryController {
             Model model,
             @RequestParam(required = false) Long currentBookId,
             @RequestBody Map<String, Object> book) {
-        // default variables
-        if (currentBookId == null) currentBookId = BOOK_ID_UNDEFINED;
 
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOK, diaryService.parseBookJson(book));

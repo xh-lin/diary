@@ -64,7 +64,7 @@ setupAjaxFormSubmit(createBookForm, function(res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function(bookFragment) {
-            if (currentBookId === -1) {
+            if (currentBookId === null) {
                 redirect(DIARY_URL, { toast: res.message });
             } else {
                 // append new book fragment
