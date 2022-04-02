@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,10 +39,13 @@ public class DiaryRestController {
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
     private static final String ERROR = "error";
-    private static final String CONTENT = "content";
+
+    private static final String PREV_PAGE_URL = "prevPageUrl";
+    private static final String NEXT_PAGE_URL = "nextPageUrl";
     private static final String TOTAL_PAGES = "totalPages";
     private static final String PAGE_NUMBER = "pageNumber";
     private static final String PAGE_SIZE = "pageSize";
+    private static final String CONTENT = "content";
 
     private final DiaryService diaryService;
 
@@ -183,10 +188,20 @@ public class DiaryRestController {
         }
 
         Map<String, Object> data = new LinkedHashMap<>();
+        int totalPages = recordPage.getTotalPages();
+        page = recordPage.getPageable().getPageNumber();
+        size = recordPage.getPageable().getPageSize();
+        UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
+        int prevPage = Math.min(page - 1, totalPages - 1);
+        int nextPage = Math.max(page + 1, 0);
+
+        data.put(PREV_PAGE_URL, (prevPage >= 0) ? uriBuilder.build(bookId, prevPage, size) : null);
+        data.put(NEXT_PAGE_URL, (nextPage < totalPages) ? uriBuilder.build(bookId, nextPage, size) : null);
+        data.put(TOTAL_PAGES, totalPages);
+        data.put(PAGE_NUMBER, page);
+        data.put(PAGE_SIZE, size);
         data.put(CONTENT, recordPage.getContent());
-        data.put(TOTAL_PAGES, recordPage.getTotalPages());
-        data.put(PAGE_NUMBER, recordPage.getPageable().getPageNumber());
-        data.put(PAGE_SIZE, recordPage.getPageable().getPageSize());
 
         body.put(DATA, data);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
