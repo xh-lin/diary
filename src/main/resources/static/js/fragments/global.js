@@ -27,8 +27,8 @@ const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
 
 const toastFragment = $(TOAST_ID);
-const toast = (toastFragment === undefined) ? undefined : new bootstrap.Toast(toastFragment, {delay: TOAST_DELAY});
-const toastBody = (toastFragment === undefined) ? undefined : toastFragment.find('.toast-body');
+const toast = (toastFragment[0] === undefined) ? undefined : new bootstrap.Toast(toastFragment, {delay: TOAST_DELAY});
+const toastBody = (toastFragment[0] === undefined) ? undefined : toastFragment.find('.toast-body');
 
 function showToast(message) {
     if (toast === undefined) {
@@ -93,5 +93,29 @@ function convertTimestampsToLocalTimezone(parent, selector = '.timestamp') {
     parent.find(selector).each(function() {
         const date = new Date($(this).text());
         $(this).text(date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
+    });
+}
+
+/*
+    Back to top button
+*/
+
+const BACK_TO_TOP_BUTTON_DISPLAY_THRESHOLD = 20;
+const BACK_TO_TOP_BUTTON_ID = '#backToTopButton';
+const backToTopButton = $(BACK_TO_TOP_BUTTON_ID);
+
+if (backToTopButton[0] !== undefined) {
+    window.onscroll = function () {
+        if (document.body.scrollTop > BACK_TO_TOP_BUTTON_DISPLAY_THRESHOLD
+            || document.documentElement.scrollTop > BACK_TO_TOP_BUTTON_DISPLAY_THRESHOLD) {
+            backToTopButton.show()
+        } else {
+            backToTopButton.hide()
+        }
+    };
+
+    backToTopButton.click(function() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     });
 }
