@@ -21,12 +21,14 @@
                     aria-expanded="false"></a>
                 <ul class="dropdown-menu" aria-labelledby="bookDropdownMenuLink">
                     <li><a
+                            type="button"
                             class="dropdown-item"
                             data-bs-toggle="modal"
                             data-bs-target="#updateBookDialogModal"
                             th:data-bs-title="${book.title}"
                             th:data-bs-url="@{|/api/v1/diary/${book.id}|}">Update</a></li>
                     <li><a
+                            type="button"
                             class="dropdown-item"
                             data-bs-toggle="modal"
                             data-bs-target="#deleteBookDialogModal"
@@ -164,6 +166,7 @@
                         aria-expanded="false"></a>
                     <ul class="dropdown-menu" aria-labelledby="recordDropdownMenuLink">
                         <li><a
+                                type="button"
                                 class="dropdown-item"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteRecordDialogModal"
