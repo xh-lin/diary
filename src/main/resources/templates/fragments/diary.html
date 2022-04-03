@@ -155,7 +155,10 @@
                 <div class="card-text" style="white-space: pre-wrap;" th:utext="${record.text}"></div>
             </div>
             <div class="card-footer text-muted d-flex">
-                <small class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></small>
+                <small th:if="${record.createdAt != record.updatedAt}">
+                    Last edited
+                    <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
+                </small>
                 <!-- Record dropdown menu -->
                 <div class="dropdown ms-auto">
                     <a
