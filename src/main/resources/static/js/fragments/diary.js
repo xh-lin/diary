@@ -5,13 +5,11 @@
     const DIARY_BOOK_FRAGMENT_URL;
     const DIARY_RECORDS_FRAGMENT_URL;
     let currentBookId;
-    let nextPageUrl;
 */
 console.assert(DIARY_URL !== undefined);
 console.assert(DIARY_BOOK_FRAGMENT_URL !== undefined);
 console.assert(DIARY_RECORDS_FRAGMENT_URL !== undefined);
 console.assert(currentBookId !== undefined);
-console.assert(nextPageUrl !== undefined);
 
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
@@ -27,7 +25,7 @@ const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 
 const RECORDS_ID = '#records';
-const LOAD_RECORDS_BUTTON_ID = '#loadRecordsButton'
+const LOAD_RECORDS_FORM_ID = '#loadRecordsForm'
 
 const CREATE_RECORD_FORM_ID = '#createRecordForm';
 
@@ -149,42 +147,30 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
     Load more records
 */
 
-const loadRecordsButton = $(LOAD_RECORDS_BUTTON_ID);
+const loadRecordsForm = $(LOAD_RECORDS_FORM_ID);
 
-loadRecordsButton.on('click', function() {
-    // load next page
-    if (nextPageUrl !== null) {
-        $.ajax({
-            type: 'GET',
-            url: nextPageUrl,
-            error: errorHandler,
-            success: function(res) {
-                console.log(res);
+setupAjaxFormSubmit(loadRecordsForm, function(res) {
+    // load records fragment
+    $.ajax({
+        type: 'POST',
+        url: DIARY_RECORDS_FRAGMENT_URL,
+        data: JSON.stringify(res.data.content),
+        contentType: 'application/json',
+        error: errorHandler,
+        success: function(recordsFragment) {
+            const recordsHtml = $($.parseHTML(recordsFragment));
+            convertTimestampsToLocalTimezone(recordsHtml);
+            records.append(recordsHtml.children());
 
-                // update page
-                $.ajax({
-                    type: 'POST',
-                    url: DIARY_RECORDS_FRAGMENT_URL,
-                    data: JSON.stringify(res.data.content),
-                    contentType: 'application/json',
-                    error: errorHandler,
-                    success: function(recordsFragment) {
-                        const recordsHtml = $($.parseHTML(recordsFragment));
-                        convertTimestampsToLocalTimezone(recordsHtml);
-                        records.append(recordsHtml.children());
-
-                        nextPageUrl = res.data.nextPageUrl;
-                        if (nextPageUrl === null) {
-                            loadRecordsButton.hide();
-                        }
-                    }
-                });
+            loadRecordsForm.attr('action', res.data.nextPageUrl);
+            if (loadRecordsForm.attr('action') === undefined) {
+                loadRecordsForm.hide();
             }
-        });
-    }
+        }
+    });
 });
 
-loadRecordsButton.on('focus', function(event) {
+loadRecordsForm.find('button:submit').on('focus', function(event) {
     setTimeout(function() {
         event.currentTarget.blur();
     }, 200);
