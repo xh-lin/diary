@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -85,12 +83,11 @@ public class DiaryController {
             int totalPages = recordPage.getTotalPages();
             page = recordPage.getPageable().getPageNumber();
             size = recordPage.getPageable().getPageSize();
-            UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
             int nextPage = Math.max(page + 1, 0);
+            String nextPageUrl = String.format("/api/v1/diary/%d/record/%d/%d", bookId, nextPage, size);
 
             model.addAttribute(RECORDS, recordPage.getContent());
-            model.addAttribute(NEXT_PAGE_URL, (nextPage < totalPages) ? uriBuilder.build(bookId, nextPage, size) : null);
+            model.addAttribute(NEXT_PAGE_URL, (nextPage < totalPages) ? nextPageUrl : null);
         }
 
         model.addAttribute(USER, userService.getCurrentUser());
