@@ -24,10 +24,15 @@ const DELETE_BOOK_DIALOG_MODAL_ID = '#deleteBookDialogModal';
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
 
+const RECORD_ID_PREFIX = '#record_';
 const RECORDS_ID = '#records';
 const LOAD_RECORDS_FORM_ID = '#loadRecordsForm'
 
 const CREATE_RECORD_FORM_ID = '#createRecordForm';
+
+const DELETE_RECORD_DIALOG_MODAL_ID = '#deleteRecordDialogModal';
+const DELETE_RECORD_FORM_ID = '#deleteRecordForm';
+const DELETE_RECORD_MESSAGE_ID = '#deleteRecordMessage';
 
 const bookLinks = $(BOOK_LINKS_ID);
 const records = $(RECORDS_ID);
@@ -196,4 +201,36 @@ setupAjaxFormSubmit(createRecordForm, function(res) {
             records.prepend(recordsHtml.children());
         }
     });
+});
+
+/*
+    Delete record
+*/
+
+const deleteRecordDialogModal = $(DELETE_RECORD_DIALOG_MODAL_ID);
+const deleteRecordForm = deleteRecordDialogModal.find(DELETE_RECORD_FORM_ID);
+const deleteRecordMessage = deleteRecordDialogModal.find(DELETE_RECORD_MESSAGE_ID);
+
+deleteRecordDialogModal.on('show.bs.modal', function(event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+
+    // Extract info from data-bs-* attributes
+    const text = button.getAttribute('data-bs-text');
+    const url = button.getAttribute('data-bs-url');
+
+    // Update the modal's content.
+    deleteRecordForm.attr('action', url);
+    deleteRecordMessage.html(`
+        <span class="d-inline-block text-truncate align-bottom" style="max-width: 50%;">
+            <b>${text}</b>
+        </span>
+        will be deleted.
+    `);
+});
+
+setupAjaxFormSubmit(deleteRecordForm, function(res) {
+    const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
+    const record = records.find(RECORD_FRAGMENT_ID);
+    record.remove();
 });
