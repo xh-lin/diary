@@ -89,10 +89,18 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
     Convert and format timestamps to local timezone
 */
 
-function convertTimestampsToLocalTimezone(parent, selector = '.timestamp') {
+function formatTimestamps(parent, selector = '.timestamp') {
     parent.find(selector).each(function() {
         const date = new Date($(this).text());
-        $(this).text(date.toLocaleDateString() + ' ' + date.toLocaleTimeString());
+        const momentDate = moment(date);
+
+        $(this).attr('title', momentDate.format('LLLL'))
+
+        if (moment().diff(momentDate, 'days') < 3) {
+            $(this).text(momentDate.fromNow());
+        } else {
+            $(this).text(momentDate.format('llll'));
+        }
     });
 }
 

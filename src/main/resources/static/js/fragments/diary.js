@@ -53,7 +53,7 @@ if (toastMessage !== undefined) {
     Convert records timestamps to local timezone
 */
 
-convertTimestampsToLocalTimezone(records);
+formatTimestamps(records);
 
 /*
     Create Book
@@ -167,7 +167,7 @@ setupAjaxFormSubmit(loadRecordsForm, function(res) {
         error: errorHandler,
         success: function(recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
-            convertTimestampsToLocalTimezone(recordsHtml);
+            formatTimestamps(recordsHtml);
             records.append(recordsHtml.children());
 
             loadRecordsForm.attr('action', res.data.nextPageUrl);
@@ -200,7 +200,7 @@ setupAjaxFormSubmit(createRecordForm, function(res) {
         error: errorHandler,
         success: function(recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
-            convertTimestampsToLocalTimezone(recordsHtml);
+            formatTimestamps(recordsHtml);
             records.prepend(recordsHtml.children());
         }
     });
@@ -237,7 +237,7 @@ setupAjaxFormSubmit(updateRecordForm, function(res) {
         error: errorHandler,
         success: function(recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
-            convertTimestampsToLocalTimezone(recordsHtml);
+            formatTimestamps(recordsHtml);
             // replace record fragment
             const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
             records.find(RECORD_FRAGMENT_ID).replaceWith(recordsHtml.find(RECORD_FRAGMENT_ID));
