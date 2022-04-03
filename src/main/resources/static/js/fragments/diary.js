@@ -30,6 +30,9 @@ const LOAD_RECORDS_FORM_ID = '#loadRecordsForm'
 
 const CREATE_RECORD_FORM_ID = '#createRecordForm';
 
+const UPDATE_RECORD_DIALOG_MODAL_ID = '#updateRecordDialogModal';
+const UPDATE_RECORD_FORM_ID = '#updateRecordForm';
+
 const DELETE_RECORD_DIALOG_MODAL_ID = '#deleteRecordDialogModal';
 const DELETE_RECORD_FORM_ID = '#deleteRecordForm';
 const DELETE_RECORD_MESSAGE_ID = '#deleteRecordMessage';
@@ -188,7 +191,7 @@ loadRecordsForm.find('button:submit').on('focus', function(event) {
 const createRecordForm = $(CREATE_RECORD_FORM_ID);
 
 setupAjaxFormSubmit(createRecordForm, function(res) {
-    // update page
+    // load records fragment
     $.ajax({
         type: 'POST',
         url: DIARY_RECORDS_FRAGMENT_URL,
@@ -199,6 +202,45 @@ setupAjaxFormSubmit(createRecordForm, function(res) {
             const recordsHtml = $($.parseHTML(recordsFragment));
             convertTimestampsToLocalTimezone(recordsHtml);
             records.prepend(recordsHtml.children());
+        }
+    });
+});
+
+/*
+    Update record
+*/
+
+const updateRecordDialogModal = $(UPDATE_RECORD_DIALOG_MODAL_ID);
+const updateRecordForm = updateRecordDialogModal.find(UPDATE_RECORD_FORM_ID);
+const updateRecordFormTextarea = updateRecordForm.find('textarea');
+
+updateRecordDialogModal.on('show.bs.modal', function(event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+
+    // Extract info from data-bs-* attributes
+    const text = button.getAttribute('data-bs-text');
+    const url = button.getAttribute('data-bs-url');
+
+    // Update the modal's content.
+    updateRecordForm.attr('action', url);
+    updateRecordFormTextarea.val(text);
+});
+
+setupAjaxFormSubmit(updateRecordForm, function(res) {
+    // load records fragment
+    $.ajax({
+        type: 'POST',
+        url: DIARY_RECORDS_FRAGMENT_URL,
+        data: JSON.stringify([res.data]),
+        contentType: 'application/json',
+        error: errorHandler,
+        success: function(recordsFragment) {
+            const recordsHtml = $($.parseHTML(recordsFragment));
+            convertTimestampsToLocalTimezone(recordsHtml);
+            // replace record fragment
+            const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
+            records.find(RECORD_FRAGMENT_ID).replaceWith(recordsHtml.find(RECORD_FRAGMENT_ID));
         }
     });
 });

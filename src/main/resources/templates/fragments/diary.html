@@ -169,6 +169,13 @@
                                 type="button"
                                 class="dropdown-item"
                                 data-bs-toggle="modal"
+                                data-bs-target="#updateRecordDialogModal"
+                                th:data-bs-text="${record.text}"
+                                th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Update</a></li>
+                        <li><a
+                                type="button"
+                                class="dropdown-item"
+                                data-bs-toggle="modal"
                                 data-bs-target="#deleteRecordDialogModal"
                                 th:data-bs-text="${record.text}"
                                 th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Delete</a></li>
@@ -188,11 +195,44 @@
         <div class="card">
             <div class="card-body">
                 <form class="d-flex flex-column" id="createRecordForm" th:action="@{|/api/v1/diary/${currentBookId}/record|}" method="POST">
-                    <div class="form-group mb-1">
+                    <div class="mb-1">
                         <textarea class="w-100" name="text" placeholder="Say something..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm ms-auto">Submit</button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="update_record_dialog">
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="updateRecordDialogModal"
+            tabindex="-1"
+            aria-labelledby="updateRecordDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateRecordDialogModalLabel">Enter new information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="updateRecordForm" method="PUT">
+                            <div class="mb-3">
+                                <textarea class="w-100" style="height: 200px;" name="text" placeholder="Say something..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="updateRecordForm">Update</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
