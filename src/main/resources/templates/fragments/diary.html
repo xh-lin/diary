@@ -152,7 +152,7 @@
                 <div class="timestamp" th:text="${#dates.formatISO(record.createdAt)}"></div>
             </div>
             <div class="card-body">
-                <div class="card-text" th:utext="${record.text}"></div>
+                <div class="card-text" style="white-space: pre-wrap;" th:utext="${record.text}"></div>
             </div>
             <div class="card-footer text-muted d-flex">
                 <small class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></small>
