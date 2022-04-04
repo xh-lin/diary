@@ -63,7 +63,7 @@ public class DiaryRestController {
 
         body.put(DATA, book);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     @GetMapping()
@@ -154,7 +154,7 @@ public class DiaryRestController {
 
         body.put(DATA, recd);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     @GetMapping({
