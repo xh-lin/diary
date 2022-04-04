@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
+    private static final String ERROR = "$.error";
     private static final String ERRORS = "$.errors";
     protected static final String MOCK_USERNAME = "mockUser";
     protected static final String MOCK_EMAIL = "mock@user.com";
@@ -39,7 +40,7 @@ public abstract class RestControllerTests {
 
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams, Object requestBody, User user,
-            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
+            HttpStatus httpStatus, String error, boolean checkErrorsSize, String... errors) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate);
 
         if (requestParams != null) {
@@ -60,6 +61,10 @@ public abstract class RestControllerTests {
             .andDo(print())
             .andExpect(status().is(httpStatus.value()));
 
+        if (error != null) {
+            resultActions.andExpect(jsonPath(ERROR).value(error));
+        }
+
         if (errors.length > 0) {
             resultActions.andExpect(jsonPath(ERRORS).isArray());
             resultActions.andExpect(jsonPath(ERRORS, hasItems(errors)));
@@ -70,7 +75,7 @@ public abstract class RestControllerTests {
     }
 
     /*
-        No requestParams, user
+        httpMethod, urlTemplate, requestBody, httpStatus, errors
     */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             Object requestBody,
@@ -78,23 +83,11 @@ public abstract class RestControllerTests {
         mockMvcTest(
             httpMethod, urlTemplate,
             null, requestBody, null,
-            httpStatus, checkErrorsSize, errors);
+            httpStatus, null, checkErrorsSize, errors);
     }
 
     /*
-        No requestBody, checkErrorsSize, errors
-    */
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
-            MultiValueMap<String, String> requestParams, User user,
-            HttpStatus httpStatus) throws Exception {
-        mockMvcTest(
-            httpMethod, urlTemplate,
-            requestParams, null, user,
-            httpStatus, false);
-    }
-
-    /*
-        No requestParams, user, checkErrorsSize, errors
+        httpMethod, urlTemplate, requestBody, httpStatus
     */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             Object requestBody,
@@ -102,7 +95,31 @@ public abstract class RestControllerTests {
         mockMvcTest(
             httpMethod, urlTemplate,
             null, requestBody, null,
-            httpStatus, false);
+            httpStatus, null, false);
+    }
+
+    /*
+        httpMethod, urlTemplate, requestParams, user, httpStatus, error
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams, User user,
+            HttpStatus httpStatus, String error) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, user,
+            httpStatus, error, false);
+    }
+
+    /*
+        httpMethod, urlTemplate, requestParams, user, httpStatus
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams, User user,
+            HttpStatus httpStatus) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, user,
+            httpStatus, null, false);
     }
 
 }
