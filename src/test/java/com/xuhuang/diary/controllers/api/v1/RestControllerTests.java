@@ -3,6 +3,7 @@ package com.xuhuang.diary.controllers.api.v1;
 import static com.xuhuang.diary.utils.Utils.asJsonString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,7 +38,7 @@ public abstract class RestControllerTests {
     private MockMvc mockMvc;
 
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
-            MultiValueMap<String, String> requestParams, Object requestBody,
+            MultiValueMap<String, String> requestParams, Object requestBody, User user,
             HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate);
 
@@ -49,6 +50,10 @@ public abstract class RestControllerTests {
             requestBuilder
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(requestBody));
+        }
+
+        if (user != null) {
+            requestBuilder.with(user(user));
         }
 
         ResultActions resultActions = mockMvc.perform(requestBuilder)
@@ -64,28 +69,100 @@ public abstract class RestControllerTests {
         }
     }
 
+    /*
+        No requestBody
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams, User user,
+            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, user,
+            httpStatus, checkErrorsSize, errors);
+    }
+
+    /*
+        No requestParams
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            Object requestBody, User user,
+            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            null, requestBody, user,
+            httpStatus, checkErrorsSize, errors);
+    }
+
+    /*
+        No requestBody, user
+    */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams,
             HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
-        mockMvcTest(httpMethod, urlTemplate, requestParams, null, httpStatus, checkErrorsSize, errors);
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, null,
+            httpStatus, checkErrorsSize, errors);
     }
 
+    /*
+        No requestParams, user
+    */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             Object requestBody,
             HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
-        mockMvcTest(httpMethod, urlTemplate, null, requestBody, httpStatus, checkErrorsSize, errors);
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            null, requestBody, null,
+            httpStatus, checkErrorsSize, errors);
     }
 
+    /*
+        No requestBody, checkErrorsSize, errors
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams, User user,
+            HttpStatus httpStatus) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, user,
+            httpStatus, false);
+    }
+
+    /*
+        No requestParams, checkErrorsSize, errors
+    */
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            Object requestBody, User user,
+            HttpStatus httpStatus) throws Exception {
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            null, requestBody, user,
+            httpStatus, false);
+    }
+
+    /*
+        No requestBody, user, checkErrorsSize, errors
+    */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams,
             HttpStatus httpStatus) throws Exception {
-        mockMvcTest(httpMethod, urlTemplate, requestParams, null, httpStatus, false);
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            requestParams, null, null,
+            httpStatus, false);
     }
 
+    /*
+        No requestParams, user, checkErrorsSize, errors
+    */
     protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
             Object requestBody,
             HttpStatus httpStatus) throws Exception {
-        mockMvcTest(httpMethod, urlTemplate, null, requestBody, httpStatus, false);
+        mockMvcTest(
+            httpMethod, urlTemplate,
+            null, requestBody, null,
+            httpStatus, false);
     }
 
 }
