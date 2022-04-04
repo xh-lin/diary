@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
@@ -22,12 +24,22 @@ public abstract class RestControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate, Object requestBody,
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams, Object requestBody,
             HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
-        ResultActions resultActions = mockMvc.perform(
-            request(httpMethod, urlTemplate)
+        MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate);
+
+        if (requestParams != null) {
+            requestBuilder.params(requestParams);
+        }
+
+        if (requestBody != null) {
+            requestBuilder
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(requestBody)))
+                .content(asJsonString(requestBody));
+        }
+
+        ResultActions resultActions = mockMvc.perform(requestBuilder)
             .andDo(print())
             .andExpect(status().is(httpStatus.value()));
 
@@ -40,9 +52,28 @@ public abstract class RestControllerTests {
         }
     }
 
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate, Object requestBody,
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams,
+            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
+        mockMvcTest(httpMethod, urlTemplate, requestParams, null, httpStatus, checkErrorsSize, errors);
+    }
+
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            Object requestBody,
+            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
+        mockMvcTest(httpMethod, urlTemplate, null, requestBody, httpStatus, checkErrorsSize, errors);
+    }
+
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            MultiValueMap<String, String> requestParams,
             HttpStatus httpStatus) throws Exception {
-        mockMvcTest(httpMethod, urlTemplate, requestBody, httpStatus, false);
+        mockMvcTest(httpMethod, urlTemplate, requestParams, null, httpStatus, false);
+    }
+
+    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+            Object requestBody,
+            HttpStatus httpStatus) throws Exception {
+        mockMvcTest(httpMethod, urlTemplate, null, requestBody, httpStatus, false);
     }
 
 }
