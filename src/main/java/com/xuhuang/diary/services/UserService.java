@@ -89,7 +89,4 @@ public class UserService implements UserDetailsService {
         return user.getId().equals(getCurrentUser().getId());
     }
 
-    public boolean isLoggedIn() {
-        return getCurrentUser() != null;
-    }
 }
