@@ -24,11 +24,11 @@ import org.springframework.util.MultiValueMap;
 public class DiaryRestControllerTests extends RestControllerTests {
 
     private static final String API_V1_DIARY = "/api/v1/diary";
-    private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/%d";
-    private static final String API_V1_DIARY_BOOKID_RECORD = "/api/v1/diary/%d/record";
-    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/%d/record/%d";
-    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/%d/record/%d/%d";
-    private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/%d";
+    private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/{bookId}";
+    private static final String API_V1_DIARY_BOOKID_RECORD = "/api/v1/diary/{bookId}/record";
+    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/{bookId}/record/{page}";
+    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
+    private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
     @MockBean
     private UserRepository mockUserRepository;
@@ -42,10 +42,13 @@ public class DiaryRestControllerTests extends RestControllerTests {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My Diary");
 
-        mockMvcTest(
-            HttpMethod.POST, API_V1_DIARY,
-            requestParams, mockUser,
-            HttpStatus.CREATED);
+        expectValue(
+            mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY,
+                requestParams, mockUser,
+                HttpStatus.CREATED),
+            MESSAGE_JPEXP,
+            DiaryRestController.CREATED_SUCCESSFULLY);
 
         verify(mockBookRepository, times(1)).save(any(Book.class));
     }
@@ -55,10 +58,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "");
 
-        mockMvcTest(
-            HttpMethod.POST, API_V1_DIARY,
-            requestParams, mockUser,
-            HttpStatus.BAD_REQUEST,
+        expectValue(
+            mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY,
+                requestParams, mockUser,
+                HttpStatus.BAD_REQUEST),
+            ERROR_JPEXP,
             DiaryService.TITLE_MUST_NOT_BE_BLANK);
 
         verify(mockBookRepository, times(0)).save(any(Book.class));

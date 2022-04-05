@@ -24,8 +24,10 @@ import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
-    private static final String ERROR = "$.error";
-    private static final String ERRORS = "$.errors";
+    protected static final String ERROR_JPEXP = "$.error";
+    protected static final String ERRORS_JPEXP = "$.errors";
+    protected static final String MESSAGE_JPEXP = "$.message";
+
     protected static final String MOCK_USERNAME = "mockUser";
     protected static final String MOCK_EMAIL = "mock@user.com";
     protected static final String MOCK_PASSWORD = "Qwerty123.";
@@ -38,9 +40,9 @@ public abstract class RestControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams, Object requestBody, User user,
-            HttpStatus httpStatus, String error, boolean checkErrorsSize, String... errors) throws Exception {
+            HttpStatus httpStatus) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate);
 
         if (requestParams != null) {
@@ -57,69 +59,61 @@ public abstract class RestControllerTests {
             requestBuilder.with(user(user));
         }
 
-        ResultActions resultActions = mockMvc.perform(requestBuilder)
+        return mockMvc.perform(requestBuilder)
             .andDo(print())
             .andExpect(status().is(httpStatus.value()));
-
-        if (error != null) {
-            resultActions.andExpect(jsonPath(ERROR).value(error));
-        }
-
-        if (errors.length > 0) {
-            resultActions.andExpect(jsonPath(ERRORS).isArray());
-            resultActions.andExpect(jsonPath(ERRORS, hasItems(errors)));
-            if (checkErrorsSize) {
-                resultActions.andExpect(jsonPath(ERRORS, hasSize(errors.length)));
-            }
-        }
-    }
-
-    /*
-        httpMethod, urlTemplate, requestBody, httpStatus, errors
-    */
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
-            Object requestBody,
-            HttpStatus httpStatus, boolean checkErrorsSize, String... errors) throws Exception {
-        mockMvcTest(
-            httpMethod, urlTemplate,
-            null, requestBody, null,
-            httpStatus, null, checkErrorsSize, errors);
-    }
-
-    /*
-        httpMethod, urlTemplate, requestBody, httpStatus
-    */
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
-            Object requestBody,
-            HttpStatus httpStatus) throws Exception {
-        mockMvcTest(
-            httpMethod, urlTemplate,
-            null, requestBody, null,
-            httpStatus, null, false);
-    }
-
-    /*
-        httpMethod, urlTemplate, requestParams, user, httpStatus, error
-    */
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
-            MultiValueMap<String, String> requestParams, User user,
-            HttpStatus httpStatus, String error) throws Exception {
-        mockMvcTest(
-            httpMethod, urlTemplate,
-            requestParams, null, user,
-            httpStatus, error, false);
     }
 
     /*
         httpMethod, urlTemplate, requestParams, user, httpStatus
     */
-    protected void mockMvcTest(HttpMethod httpMethod, String urlTemplate,
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams, User user,
             HttpStatus httpStatus) throws Exception {
-        mockMvcTest(
+        return mockMvcPerform(
             httpMethod, urlTemplate,
             requestParams, null, user,
-            httpStatus, null, false);
+            httpStatus);
+    }
+
+    /*
+        httpMethod, urlTemplate, requestBody, httpStatus
+    */
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
+            Object requestBody,
+            HttpStatus httpStatus) throws Exception {
+        return mockMvcPerform(
+            httpMethod, urlTemplate,
+            null, requestBody, null,
+            httpStatus);
+    }
+
+    protected void expectValue(ResultActions resultActions,
+            String jsonPathExpression, Object expectedValue) throws Exception {
+        resultActions.andExpect(jsonPath(jsonPathExpression).value(expectedValue));
+    }
+
+    protected void expectArray(ResultActions resultActions,
+            Integer size, boolean exactSize,
+            String jsonPathExpression, Object... items) throws Exception {
+        resultActions.andExpect(jsonPath(jsonPathExpression).isArray());
+        resultActions.andExpect(jsonPath(jsonPathExpression, hasItems(items)));
+        if (exactSize) {
+            resultActions.andExpect(jsonPath(jsonPathExpression, hasSize(items.length)));
+        } else if (size != null) {
+            resultActions.andExpect(jsonPath(jsonPathExpression, hasSize(size)));
+        }
+    }
+
+    /*
+        resultActions, jsonPathExpression, items
+    */
+    protected void expectArray(ResultActions resultActions,
+            String jsonPathExpression,  Object... items) throws Exception {
+        expectArray(
+            resultActions,
+            null, true,
+            jsonPathExpression, items);
     }
 
 }
