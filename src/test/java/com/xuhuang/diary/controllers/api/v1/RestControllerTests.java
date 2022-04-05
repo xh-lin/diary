@@ -28,17 +28,25 @@ public abstract class RestControllerTests {
     protected static final String ERRORS_JPEXP = "$.errors";
     protected static final String MESSAGE_JPEXP = "$.message";
 
+    protected static final Long MOCK_USER_ID = 1L;
     protected static final String MOCK_USERNAME = "mockUser";
     protected static final String MOCK_EMAIL = "mock@user.com";
     protected static final String MOCK_PASSWORD = "Qwerty123.";
-    protected static final User mockUser = new User(
-        MOCK_USERNAME,
-        MOCK_EMAIL,
-        new BCryptPasswordEncoder().encode(MOCK_PASSWORD),
-        UserRole.USER);
+    protected static final String MOCK_PASSWORD_ENCRYPTED = new BCryptPasswordEncoder().encode(MOCK_PASSWORD);
+    protected static final UserRole MOCK_USER_ROLE = UserRole.USER;
 
     @Autowired
     private MockMvc mockMvc;
+
+    protected static User mockUser() {
+        User user = new User(
+            MOCK_USERNAME,
+            MOCK_EMAIL,
+            MOCK_PASSWORD_ENCRYPTED,
+            MOCK_USER_ROLE);
+        user.setId(MOCK_USER_ID);
+        return user;
+    }
 
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams, Object requestBody, User user,

@@ -331,6 +331,7 @@ class AuthRestControllerTests extends RestControllerTests {
     }
 
     private void setupMockUserRepository() {
+        User mockUser = mockUser();
         Optional<User> optionalMockUser = Optional.ofNullable(mockUser);
         doReturn(optionalMockUser).when(mockUserRepository).findByUsername(MOCK_USERNAME);
         doReturn(optionalMockUser).when(mockUserRepository).findByEmail(MOCK_EMAIL);
