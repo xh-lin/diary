@@ -42,7 +42,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String MOCK_BOOK_TITLE = "Mock Diary";
     private static final Long ANOTHER_MOCK_BOOK_ID = 2L;
     private static final String ANOTHER_MOCK_BOOK_TITLE = "Another Mock Diary";
-    private static final Long NOTFOUND_BOOK_ID = 3L;
+    private static final Long NOT_FOUND_BOOK_ID = 3L;
 
     private static User mockUser;
     private static User anotherMockUser;
@@ -103,6 +103,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @Test
     void getBookSuccess() throws Exception {
         setupMockBookRepository();
+
         Object[] uriVars = {MOCK_BOOK_ID};
 
         mockMvcPerform(
@@ -116,25 +117,29 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @Test
     void getBookFailure() throws Exception {
         setupMockBookRepository();
-        Object[] uriVars = {NOTFOUND_BOOK_ID};
 
-        mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
-
-        uriVars = new Object[] {ANOTHER_MOCK_BOOK_ID};
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY_BOOKID,
             uriVars, mockUser,
             HttpStatus.FORBIDDEN)
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+
+        // not found
+        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
     }
 
     @Test
     void updateBookSuccess() throws Exception {
         setupMockBookRepository();
+
         Object[] uriVars = {MOCK_BOOK_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My New Diary");
@@ -168,4 +173,5 @@ public class DiaryRestControllerTests extends RestControllerTests {
         doReturn(anotherMockBooks).when(mockBookRepository).findByUser(anotherMockUser);
         doReturn(optionalAnotherMockBook).when(mockBookRepository).findById(ANOTHER_MOCK_BOOK_ID);
     }
+
 }
