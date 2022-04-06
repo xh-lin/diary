@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -35,8 +40,6 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY = "/api/v1/diary";
     private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/{bookId}";
     private static final String API_V1_DIARY_BOOKID_RECORD = "/api/v1/diary/{bookId}/record";
-    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/{bookId}/record/{page}";
-    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
     private static final Long MOCK_BOOK_ID = 1L;
@@ -44,6 +47,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final Long ANOTHER_MOCK_BOOK_ID = 2L;
     private static final String ANOTHER_MOCK_BOOK_TITLE = "Another Mock Diary";
     private static final Long NOT_FOUND_BOOK_ID = 3L;
+
+    private static final Long MOCK_RECORD_ID = 1L;
+    private static final String MOCK_RECORD_TEXT = "Mock Record";
+    private static final Long ANOTHER_MOCK_RECORD_ID = 2L;
+    private static final String ANOTHER_MOCK_RECORD_TEXT = "Another Mock Record";
+    private static final Long NOT_FOUND_RECORD_ID = 3L;
 
     private static User mockUser;
     private static User anotherMockUser;
@@ -274,26 +283,61 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
 
+    @Test
+    void getRecordsSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = {MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, mockUser,
+            HttpStatus.OK)
+            .andExpect(jsonPath("$.data.content[0].text").value(MOCK_RECORD_TEXT));
+    }
+
     private void setupMockRepository() {
+        Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
+
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
         mockBook.setId(MOCK_BOOK_ID);
+        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
         List<Book> mockBooks = new ArrayList<>();
         mockBooks.add(mockBook);
-        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
 
-        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
         doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
+        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+
+        // record of mockUser
+        Record mockRecord = new Record(MOCK_RECORD_TEXT, mockBook);
+        mockRecord.setId(MOCK_RECORD_ID);
+        Optional<Record> optionalMockRecord = Optional.ofNullable(mockRecord);
+        List<Record> mockRecords = Arrays.asList(mockRecord);
+        Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
+
+        doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
+        doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
 
         // book of anotherMockUser
         Book anotherMockBook = new Book(ANOTHER_MOCK_BOOK_TITLE, anotherMockUser);
         anotherMockBook.setId(ANOTHER_MOCK_BOOK_ID);
+        Optional<Book> optionalAnotherMockBook = Optional.ofNullable(anotherMockBook);
         List<Book> anotherMockBooks = new ArrayList<>();
         anotherMockBooks.add(anotherMockBook);
-        Optional<Book> optionalAnotherMockBook = Optional.ofNullable(anotherMockBook);
 
-        doReturn(anotherMockBooks).when(mockBookRepository).findByUser(anotherMockUser);
         doReturn(optionalAnotherMockBook).when(mockBookRepository).findById(ANOTHER_MOCK_BOOK_ID);
+        doReturn(anotherMockBooks).when(mockBookRepository).findByUser(anotherMockUser);
+
+        // record of mockUser
+        Record anotherMockRecord = new Record(ANOTHER_MOCK_RECORD_TEXT, anotherMockBook);
+        anotherMockRecord.setId(ANOTHER_MOCK_RECORD_ID);
+        Optional<Record> optionalAnotherMockRecord = Optional.ofNullable(anotherMockRecord);
+        List<Record> anotherMockRecords = Arrays.asList(anotherMockRecord);
+        Page<Record> anotherMockRecordPage = new PageImpl<>(anotherMockRecords, pageable, anotherMockRecords.size());
+
+        doReturn(optionalAnotherMockRecord).when(mockRecordRepository).findById(ANOTHER_MOCK_RECORD_ID);
+        doReturn(anotherMockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(anotherMockBook, pageable);
     }
 
 }
