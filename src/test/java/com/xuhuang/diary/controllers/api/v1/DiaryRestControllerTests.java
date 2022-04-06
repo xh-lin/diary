@@ -40,6 +40,8 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY = "/api/v1/diary";
     private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/{bookId}";
     private static final String API_V1_DIARY_BOOKID_RECORD = "/api/v1/diary/{bookId}/record";
+    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/{bookId}/record/{page}";
+    private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
     private static final Long MOCK_BOOK_ID = 1L;
@@ -294,6 +296,45 @@ public class DiaryRestControllerTests extends RestControllerTests {
             uriVars, mockUser,
             HttpStatus.OK)
             .andExpect(jsonPath("$.data.content[0].text").value(MOCK_RECORD_TEXT));
+    }
+
+    @Test
+    void getRecordsFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, mockUser,
+            HttpStatus.FORBIDDEN);
+
+        // not found
+        uriVars[0] = NOT_FOUND_BOOK_ID;
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        // bad request page
+        uriVars = new Object[] {MOCK_BOOK_ID, -1};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
+            uriVars, mockUser,
+            HttpStatus.BAD_REQUEST)
+            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+
+        // bad request page size
+        uriVars = new Object[] {MOCK_BOOK_ID, 0, 0};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
+            uriVars, mockUser,
+            HttpStatus.BAD_REQUEST)
+            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
     private void setupMockRepository() {
