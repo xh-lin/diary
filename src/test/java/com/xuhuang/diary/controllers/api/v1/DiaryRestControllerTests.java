@@ -152,6 +152,45 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockBookRepository, times(1)).save(any(Book.class));
     }
 
+    @Test
+    void updateBookFailure() throws Exception {
+        setupMockBookRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("title", "My New Diary");
+
+        mockMvcPerform(
+            HttpMethod.PUT, API_V1_DIARY_BOOKID,
+            uriVars, requestParams, mockUser,
+            HttpStatus.FORBIDDEN);
+
+        verify(mockBookRepository, times(0)).save(any(Book.class));
+
+        // not found
+        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.PUT, API_V1_DIARY_BOOKID,
+            uriVars, requestParams, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        verify(mockBookRepository, times(0)).save(any(Book.class));
+
+        // bad request
+        uriVars = new Object[] {MOCK_BOOK_ID};
+        requestParams.clear();
+        requestParams.add("title", "");
+
+        mockMvcPerform(
+            HttpMethod.PUT, API_V1_DIARY_BOOKID,
+            uriVars, requestParams, mockUser,
+            HttpStatus.BAD_REQUEST);
+
+        verify(mockBookRepository, times(0)).save(any(Book.class));
+    }
+
     private void setupMockBookRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
