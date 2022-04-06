@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.xuhuang.diary.models.Book;
+import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
@@ -228,6 +229,22 @@ public class DiaryRestControllerTests extends RestControllerTests {
             HttpStatus.NOT_FOUND);
 
         verify(mockBookRepository, times(0)).deleteById(any(Long.class));
+    }
+
+    @Test
+    void createRecordSuccess() throws Exception {
+        setupMockBookRepository();
+
+        Object[] uriVars = {MOCK_BOOK_ID};
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("text", "My Record");
+
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, requestParams, mockUser,
+            HttpStatus.CREATED);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
     }
 
     private void setupMockBookRepository() {
