@@ -29,9 +29,6 @@ public abstract class RestControllerTests {
     protected static final String ERRORS_JPEXP = "$.errors";
     protected static final String MESSAGE_JPEXP = "$.message";
 
-    protected static final Long MOCK_USER_ID = 1L;
-    protected static final String MOCK_USERNAME = "mockUser";
-    protected static final String MOCK_EMAIL = "mock@user.com";
     protected static final String MOCK_PASSWORD = "Qwerty123.";
     protected static final String MOCK_PASSWORD_ENCRYPTED = new BCryptPasswordEncoder().encode(MOCK_PASSWORD);
     protected static final UserRole MOCK_USER_ROLE = UserRole.USER;
@@ -39,13 +36,16 @@ public abstract class RestControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    protected static User mockUser() {
+    protected static User mockUser(long id) {
+        if (id <= 0L) {
+            throw new IllegalArgumentException("id must be greater than 0");
+        }
         User user = new User(
-            MOCK_USERNAME,
-            MOCK_EMAIL,
+            String.format("mockUser%d", id),
+            String.format("mockUser%d@user.com", id),
             MOCK_PASSWORD_ENCRYPTED,
             MOCK_USER_ROLE);
-        user.setId(MOCK_USER_ID);
+        user.setId(id);
         return user;
     }
 

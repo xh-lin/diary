@@ -14,6 +14,7 @@ import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.UserRepository;
 import com.xuhuang.diary.services.UserService;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +29,24 @@ class AuthRestControllerTests extends RestControllerTests {
     private static final String API_V1_AUTH_LOGIN = "/api/v1/auth/login";
     private static final String API_V1_AUTH_REGISTER = "/api/v1/auth/register";
 
+    private static User mockUser;
+
+    @BeforeAll
+    static void setup() {
+        mockUser = mockUser(1L);
+    }
+
     @MockBean
     private UserRepository mockUserRepository;
 
     @Test
     void registerValidateUsername() throws Exception {
         // only -, _, letters or numbers
-        RegisterRequest requestBody = new RegisterRequest("user:)", MOCK_EMAIL, MOCK_PASSWORD, MOCK_PASSWORD);
+        RegisterRequest requestBody = new RegisterRequest(
+            "user:)",
+            mockUser.getEmail(),
+            MOCK_PASSWORD,
+            MOCK_PASSWORD);
 
         expectArray(
             mockMvcPerform(
@@ -91,7 +103,11 @@ class AuthRestControllerTests extends RestControllerTests {
     @Test
     void registerValidateEmail() throws Exception {
         // email format
-        RegisterRequest requestBody = new RegisterRequest(MOCK_USERNAME, "badEmail", MOCK_PASSWORD, MOCK_PASSWORD);
+        RegisterRequest requestBody = new RegisterRequest(
+            mockUser.getUsername(),
+            "badEmail",
+            MOCK_PASSWORD,
+            MOCK_PASSWORD);
 
         expectArray(
             mockMvcPerform(
@@ -121,7 +137,11 @@ class AuthRestControllerTests extends RestControllerTests {
     void registerValidatePassword() throws Exception {
         // at least one lowercase letter
         String password = "QWERTY123.";
-        RegisterRequest requestBody = new RegisterRequest(MOCK_USERNAME, MOCK_EMAIL, password, password);
+        RegisterRequest requestBody = new RegisterRequest(
+            mockUser.getUsername(),
+            mockUser.getEmail(),
+            password,
+            password);
 
         expectArray(
             mockMvcPerform(
@@ -231,7 +251,11 @@ class AuthRestControllerTests extends RestControllerTests {
         setupMockUserRepository();
 
         // username and email taken
-        RegisterRequest requestBody = new RegisterRequest(MOCK_USERNAME, MOCK_EMAIL, MOCK_PASSWORD, MOCK_PASSWORD);
+        RegisterRequest requestBody = new RegisterRequest(
+            mockUser.getUsername(),
+            mockUser.getEmail(),
+            MOCK_PASSWORD,
+            MOCK_PASSWORD);
 
         expectArray(
             mockMvcPerform(
@@ -245,7 +269,7 @@ class AuthRestControllerTests extends RestControllerTests {
         verify(mockUserRepository, times(0)).save(any(User.class));
 
         // username taken
-        requestBody = new RegisterRequest(MOCK_USERNAME, "another@user.com", MOCK_PASSWORD, MOCK_PASSWORD);
+        requestBody.setEmail("another@user.com");
 
         expectArray(
             mockMvcPerform(
@@ -258,7 +282,8 @@ class AuthRestControllerTests extends RestControllerTests {
         verify(mockUserRepository, times(0)).save(any(User.class));
 
         // email taken
-        requestBody = new RegisterRequest("anotherUser", MOCK_EMAIL, MOCK_PASSWORD, MOCK_PASSWORD);
+        requestBody.setEmail(mockUser.getEmail());
+        requestBody.setUsername("anotherUser");
 
         expectArray(
             mockMvcPerform(
@@ -273,7 +298,11 @@ class AuthRestControllerTests extends RestControllerTests {
 
     @Test
     void registerSuccess() throws Exception {
-        RegisterRequest requestBody = new RegisterRequest(MOCK_USERNAME, MOCK_EMAIL, MOCK_PASSWORD, MOCK_PASSWORD);
+        RegisterRequest requestBody = new RegisterRequest(
+            mockUser.getUsername(),
+            mockUser.getEmail(),
+            MOCK_PASSWORD,
+            MOCK_PASSWORD);
 
         mockMvcPerform(
             HttpMethod.POST, API_V1_AUTH_REGISTER,
@@ -303,7 +332,7 @@ class AuthRestControllerTests extends RestControllerTests {
     void loginSuccess() throws Exception {
         setupMockUserRepository();
 
-        LoginRequest requestBody = new LoginRequest(MOCK_USERNAME, MOCK_PASSWORD);
+        LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), MOCK_PASSWORD);
 
         mockMvcPerform(
             HttpMethod.POST, API_V1_AUTH_LOGIN,
@@ -316,7 +345,7 @@ class AuthRestControllerTests extends RestControllerTests {
     void loginFailure() throws Exception {
         setupMockUserRepository();
 
-        LoginRequest requestBody = new LoginRequest(MOCK_USERNAME, "wrongPassword");
+        LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), "wrongPassword");
 
         mockMvcPerform(
             HttpMethod.POST, API_V1_AUTH_LOGIN,
@@ -326,10 +355,9 @@ class AuthRestControllerTests extends RestControllerTests {
     }
 
     private void setupMockUserRepository() {
-        User mockUser = mockUser();
         Optional<User> optionalMockUser = Optional.ofNullable(mockUser);
-        doReturn(optionalMockUser).when(mockUserRepository).findByUsername(MOCK_USERNAME);
-        doReturn(optionalMockUser).when(mockUserRepository).findByEmail(MOCK_EMAIL);
+        doReturn(optionalMockUser).when(mockUserRepository).findByUsername(mockUser.getUsername());
+        doReturn(optionalMockUser).when(mockUserRepository).findByEmail(mockUser.getEmail());
     }
 
 }

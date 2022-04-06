@@ -52,7 +52,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @BeforeAll
     static void setup() {
-        mockUser = mockUser();
+        mockUser = mockUser(1L);
     }
 
     @Test
