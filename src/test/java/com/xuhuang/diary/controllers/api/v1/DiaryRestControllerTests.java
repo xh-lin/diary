@@ -132,6 +132,21 @@ public class DiaryRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
     }
 
+    @Test
+    void updateBookSuccess() throws Exception {
+        setupMockBookRepository();
+        Object[] uriVars = {MOCK_BOOK_ID};
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("title", "My New Diary");
+
+        mockMvcPerform(
+            HttpMethod.PUT, API_V1_DIARY_BOOKID,
+            uriVars, requestParams, mockUser,
+            HttpStatus.OK);
+
+        verify(mockBookRepository, times(1)).save(any(Book.class));
+    }
+
     private void setupMockBookRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);

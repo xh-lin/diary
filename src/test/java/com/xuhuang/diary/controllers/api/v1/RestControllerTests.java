@@ -74,6 +74,18 @@ public abstract class RestControllerTests {
     }
 
     /*
+        httpMethod, urlTemplate, uriVars, requestParams, user, httpStatus
+    */
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
+            Object[] uriVars, MultiValueMap<String, String> requestParams, User user,
+            HttpStatus httpStatus) throws Exception {
+        return mockMvcPerform(
+            httpMethod, urlTemplate,
+            uriVars, requestParams, null, user,
+            httpStatus);
+    }
+
+    /*
         httpMethod, urlTemplate, uriVars, user, httpStatus
     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
