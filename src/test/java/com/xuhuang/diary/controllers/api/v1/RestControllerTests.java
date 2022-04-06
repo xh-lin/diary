@@ -50,9 +50,9 @@ public abstract class RestControllerTests {
     }
 
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
-            MultiValueMap<String, String> requestParams, Object requestBody, User user,
+            Object[] uriVars, MultiValueMap<String, String> requestParams, Object requestBody, User user,
             HttpStatus httpStatus) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate);
+        MockHttpServletRequestBuilder requestBuilder = request(httpMethod, urlTemplate, uriVars);
 
         if (requestParams != null) {
             requestBuilder.params(requestParams);
@@ -74,6 +74,18 @@ public abstract class RestControllerTests {
     }
 
     /*
+        httpMethod, urlTemplate, uriVars, user, httpStatus
+    */
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
+            Object[] uriVars, User user,
+            HttpStatus httpStatus) throws Exception {
+        return mockMvcPerform(
+            httpMethod, urlTemplate,
+            uriVars, null, null, user,
+            httpStatus);
+    }
+
+    /*
         httpMethod, urlTemplate, requestParams, user, httpStatus
     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
@@ -81,7 +93,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            requestParams, null, user,
+            new Object[]{}, requestParams, null, user,
             httpStatus);
     }
 
@@ -93,7 +105,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            null, null, user,
+            new Object[]{}, null, null, user,
             httpStatus);
     }
 
@@ -105,7 +117,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            null, requestBody, null,
+            new Object[]{}, null, requestBody, null,
             httpStatus);
     }
 

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.User;
@@ -37,6 +38,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
+    private static final Long MOCK_BOOK_ID = 1L;
     private static final String MOCK_BOOK_TITLE = "Mock Diary";
 
     private static User mockUser;
@@ -83,9 +85,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void getBooksSuccess() throws Exception {
-        List<Book> books = new ArrayList<>();
-        books.add(new Book(MOCK_BOOK_TITLE, mockUser));
-        doReturn(books).when(mockBookRepository).findByUser(mockUser);
+        setupMockBookRepository();
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY,
@@ -95,4 +95,29 @@ public class DiaryRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath("$.data[0].title").value(MOCK_BOOK_TITLE));
     }
 
+    @Test
+    void getBookSuccess() throws Exception {
+        setupMockBookRepository();
+        Object[] uriVars = {MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.OK)
+            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
+            .andExpect(jsonPath("$.data.title").value(MOCK_BOOK_TITLE));;
+    }
+
+    private void setupMockBookRepository() {
+        Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
+        mockBook.setId(MOCK_BOOK_ID);
+
+        List<Book> mockBooks = new ArrayList<>();
+        mockBooks.add(mockBook);
+
+        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
+
+        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+        doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
+    }
 }
