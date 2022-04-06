@@ -191,6 +191,20 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
 
+    @Test
+    void deleteBookSuccess() throws Exception {
+        setupMockBookRepository();
+
+        Object[] uriVars = {MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.OK);
+
+        verify(mockBookRepository, times(1)).deleteById(MOCK_BOOK_ID);
+    }
+
     private void setupMockBookRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
