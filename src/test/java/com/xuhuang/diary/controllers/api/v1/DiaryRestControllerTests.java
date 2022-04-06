@@ -350,6 +350,28 @@ public class DiaryRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath("$.data.text").value(MOCK_RECORD_TEXT));
     }
 
+    @Test
+    void getRecordFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_RECORD_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, mockUser,
+            HttpStatus.FORBIDDEN)
+            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+
+        // not found
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
+    }
+
     private void setupMockRepository() {
         Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
 
