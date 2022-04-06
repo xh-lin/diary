@@ -31,13 +31,13 @@ class AuthRestControllerTests extends RestControllerTests {
 
     private static User mockUser;
 
+    @MockBean
+    private UserRepository mockUserRepository;
+
     @BeforeAll
     static void setup() {
         mockUser = mockUser(1L);
     }
-
-    @MockBean
-    private UserRepository mockUserRepository;
 
     @Test
     void registerValidateUsername() throws Exception {
