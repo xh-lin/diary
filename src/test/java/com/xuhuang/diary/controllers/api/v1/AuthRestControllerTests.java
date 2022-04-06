@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.Optional;
 
@@ -81,8 +82,8 @@ class AuthRestControllerTests extends RestControllerTests {
                 HttpMethod.POST, API_V1_AUTH_REGISTER,
                 requestBody,
                 HttpStatus.BAD_REQUEST),
-                ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK);
+            ERRORS_JPEXP,
+            RegisterRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -274,13 +275,11 @@ class AuthRestControllerTests extends RestControllerTests {
     void registerSuccess() throws Exception {
         RegisterRequest requestBody = new RegisterRequest(MOCK_USERNAME, MOCK_EMAIL, MOCK_PASSWORD, MOCK_PASSWORD);
 
-        expectValue(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.CREATED),
-            MESSAGE_JPEXP,
-            AuthRestController.REGISTERED_SUCCESSFULLY);
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_AUTH_REGISTER,
+            requestBody,
+            HttpStatus.CREATED)
+            .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.REGISTERED_SUCCESSFULLY));
 
         verify(mockUserRepository, times(1)).save(any(User.class));
     }
@@ -306,13 +305,11 @@ class AuthRestControllerTests extends RestControllerTests {
 
         LoginRequest requestBody = new LoginRequest(MOCK_USERNAME, MOCK_PASSWORD);
 
-        expectValue(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_LOGIN,
-                requestBody,
-                HttpStatus.OK),
-            MESSAGE_JPEXP,
-            AuthRestController.LOGGED_IN_SUCCESSFULLY);
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_AUTH_LOGIN,
+            requestBody,
+            HttpStatus.OK)
+            .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.LOGGED_IN_SUCCESSFULLY));
     }
 
     @Test
@@ -321,13 +318,11 @@ class AuthRestControllerTests extends RestControllerTests {
 
         LoginRequest requestBody = new LoginRequest(MOCK_USERNAME, "wrongPassword");
 
-        expectValue(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_LOGIN,
-                requestBody,
-                HttpStatus.UNAUTHORIZED),
-            ERROR_JPEXP,
-            AuthRestController.INVALID_USERNAME_AND_PASSWORD);
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_AUTH_LOGIN,
+            requestBody,
+            HttpStatus.UNAUTHORIZED)
+            .andExpect(jsonPath(ERROR_JPEXP).value(AuthRestController.INVALID_USERNAME_AND_PASSWORD));
     }
 
     private void setupMockUserRepository() {

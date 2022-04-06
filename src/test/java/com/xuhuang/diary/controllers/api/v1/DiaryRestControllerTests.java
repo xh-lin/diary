@@ -37,6 +37,8 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
+    private static final String MOCK_BOOK_TITLE = "Mock Diary";
+
     private static User mockUser;
 
     @MockBean
@@ -56,13 +58,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My Diary");
 
-        expectValue(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_DIARY,
-                requestParams, mockUser,
-                HttpStatus.CREATED),
-            MESSAGE_JPEXP,
-            DiaryRestController.CREATED_SUCCESSFULLY);
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_DIARY,
+            requestParams, mockUser,
+            HttpStatus.CREATED)
+            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.CREATED_SUCCESSFULLY));
 
         verify(mockBookRepository, times(1)).save(any(Book.class));
     }
@@ -72,13 +72,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "");
 
-        expectValue(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_DIARY,
-                requestParams, mockUser,
-                HttpStatus.BAD_REQUEST),
-            ERROR_JPEXP,
-            DiaryService.TITLE_MUST_NOT_BE_BLANK);
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_DIARY,
+            requestParams, mockUser,
+            HttpStatus.BAD_REQUEST)
+            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -86,19 +84,15 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @Test
     void getBooksSuccess() throws Exception {
         List<Book> books = new ArrayList<>();
-        books.add(new Book("My Diary", mockUser));
+        books.add(new Book(MOCK_BOOK_TITLE, mockUser));
         doReturn(books).when(mockBookRepository).findByUser(mockUser);
 
-        expectValue(
-            expectValue(
-                mockMvcPerform(
-                    HttpMethod.GET, API_V1_DIARY,
-                    mockUser,
-                    HttpStatus.OK),
-                MESSAGE_JPEXP,
-                DiaryRestController.FETCHED_SUCCESSFULLY),
-            "$.data[0].title",
-            "My Diary");
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY,
+            mockUser,
+            HttpStatus.OK)
+            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
+            .andExpect(jsonPath("$.data[0].title").value(MOCK_BOOK_TITLE));
     }
 
 }

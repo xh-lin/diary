@@ -109,11 +109,6 @@ public abstract class RestControllerTests {
             httpStatus);
     }
 
-    protected ResultActions expectValue(ResultActions resultActions,
-            String jsonPathExpression, Object expectedValue) throws Exception {
-        return resultActions.andExpect(jsonPath(jsonPathExpression).value(expectedValue));
-    }
-
     protected ResultActions expectArray(ResultActions resultActions,
             Integer size, boolean exactSize,
             String jsonPathExpression, Object... items) throws Exception {
