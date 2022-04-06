@@ -53,7 +53,6 @@ public class DiaryController {
             @PathVariable(required = false) Long bookId,
             @PathVariable(required = false) Integer page,
             @PathVariable(required = false) Integer size) {
-
         List<Book> books = diaryService.getBooks();
 
         // if have not selected a book and there are books
@@ -101,7 +100,6 @@ public class DiaryController {
             Model model,
             @RequestParam(required = false) Long currentBookId,
             @RequestBody Map<String, Object> book) {
-
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOK, diaryService.parseBookJson(book));
         return "fragments/diary::book";
