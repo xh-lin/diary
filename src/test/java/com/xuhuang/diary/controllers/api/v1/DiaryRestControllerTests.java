@@ -40,8 +40,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     private static final Long MOCK_BOOK_ID = 1L;
     private static final String MOCK_BOOK_TITLE = "Mock Diary";
+    private static final Long ANOTHER_MOCK_BOOK_ID = 2L;
+    private static final String ANOTHER_MOCK_BOOK_TITLE = "Another Mock Diary";
+    private static final Long NOTFOUND_BOOK_ID = 3L;
 
     private static User mockUser;
+    private static User anotherMockUser;
 
     @MockBean
     private UserRepository mockUserRepository;
@@ -53,6 +57,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @BeforeAll
     static void setup() {
         mockUser = mockUser(1L);
+        anotherMockUser = mockUser(2L);
     }
 
     @Test
@@ -105,19 +110,47 @@ public class DiaryRestControllerTests extends RestControllerTests {
             uriVars, mockUser,
             HttpStatus.OK)
             .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
-            .andExpect(jsonPath("$.data.title").value(MOCK_BOOK_TITLE));;
+            .andExpect(jsonPath("$.data.title").value(MOCK_BOOK_TITLE));
+    }
+
+    @Test
+    void getBookFailure() throws Exception {
+        setupMockBookRepository();
+        Object[] uriVars = {NOTFOUND_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        uriVars = new Object[] {ANOTHER_MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.FORBIDDEN)
+            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
     }
 
     private void setupMockBookRepository() {
+        // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
         mockBook.setId(MOCK_BOOK_ID);
-
         List<Book> mockBooks = new ArrayList<>();
         mockBooks.add(mockBook);
-
         Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
 
         doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
         doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
+
+        // book of anotherMockUser
+        Book anotherMockBook = new Book(ANOTHER_MOCK_BOOK_TITLE, anotherMockUser);
+        anotherMockBook.setId(ANOTHER_MOCK_BOOK_ID);
+        List<Book> anotherMockBooks = new ArrayList<>();
+        anotherMockBooks.add(anotherMockBook);
+        Optional<Book> optionalAnotherMockBook = Optional.ofNullable(anotherMockBook);
+
+        doReturn(anotherMockBooks).when(mockBookRepository).findByUser(anotherMockUser);
+        doReturn(optionalAnotherMockBook).when(mockBookRepository).findById(ANOTHER_MOCK_BOOK_ID);
     }
 }
