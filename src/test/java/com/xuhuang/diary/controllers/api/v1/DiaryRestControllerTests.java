@@ -247,6 +247,33 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockRecordRepository, times(1)).save(any(Record.class));
     }
 
+    @Test
+    void createRecordFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("text", "My Record");
+
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, requestParams, mockUser,
+            HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found
+        uriVars[0] = NOT_FOUND_BOOK_ID;
+
+        mockMvcPerform(
+            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+            uriVars, requestParams, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+    }
+
     private void setupMockRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
