@@ -128,7 +128,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
-        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+        uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY_BOOKID,
@@ -169,7 +169,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockBookRepository, times(0)).save(any(Book.class));
 
         // not found
-        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+        uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
             HttpMethod.PUT, API_V1_DIARY_BOOKID,
@@ -179,7 +179,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockBookRepository, times(0)).save(any(Book.class));
 
         // bad request
-        uriVars = new Object[] {MOCK_BOOK_ID};
+        uriVars[0] = MOCK_BOOK_ID;
         requestParams.clear();
         requestParams.add("title", "");
 
@@ -220,7 +220,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockBookRepository, times(0)).deleteById(any(Long.class));
 
         // not found
-        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+        uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
             HttpMethod.DELETE, API_V1_DIARY_BOOKID,

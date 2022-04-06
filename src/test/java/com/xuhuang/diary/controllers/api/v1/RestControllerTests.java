@@ -105,7 +105,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            new Object[]{}, requestParams, null, user,
+            new Object[] {}, requestParams, null, user,
             httpStatus);
     }
 
@@ -117,7 +117,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            new Object[]{}, null, null, user,
+            new Object[] {}, null, null, user,
             httpStatus);
     }
 
@@ -129,7 +129,7 @@ public abstract class RestControllerTests {
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
             httpMethod, urlTemplate,
-            new Object[]{}, null, requestBody, null,
+            new Object[] {}, null, requestBody, null,
             httpStatus);
     }
 
