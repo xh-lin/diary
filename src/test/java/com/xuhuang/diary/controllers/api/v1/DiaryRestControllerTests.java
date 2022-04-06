@@ -372,6 +372,22 @@ public class DiaryRestControllerTests extends RestControllerTests {
             HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void updateRecordSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = {MOCK_RECORD_ID};
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("text", "My New Record");
+
+        mockMvcPerform(
+            HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, requestParams, mockUser,
+            HttpStatus.OK);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
+    }
+
     private void setupMockRepository() {
         Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
 
