@@ -337,6 +337,19 @@ public class DiaryRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
+    @Test
+    void getRecordSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = {MOCK_RECORD_ID};
+
+        mockMvcPerform(
+            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, mockUser,
+            HttpStatus.OK)
+            .andExpect(jsonPath("$.data.text").value(MOCK_RECORD_TEXT));
+    }
+
     private void setupMockRepository() {
         Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
 
