@@ -202,7 +202,32 @@ public class DiaryRestControllerTests extends RestControllerTests {
             uriVars, mockUser,
             HttpStatus.OK);
 
-        verify(mockBookRepository, times(1)).deleteById(MOCK_BOOK_ID);
+        verify(mockBookRepository, times(1)).deleteById(any(Long.class));
+    }
+
+    @Test
+    void deleteBookFailure() throws Exception {
+        setupMockBookRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.FORBIDDEN);
+
+        verify(mockBookRepository, times(0)).deleteById(any(Long.class));
+
+        // not found
+        uriVars = new Object[] {NOT_FOUND_BOOK_ID};
+
+        mockMvcPerform(
+            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        verify(mockBookRepository, times(0)).deleteById(any(Long.class));
     }
 
     private void setupMockBookRepository() {
