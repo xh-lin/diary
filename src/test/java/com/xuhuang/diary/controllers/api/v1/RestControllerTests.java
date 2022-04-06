@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
+    protected static final String DATA_JPEXP = "$.data";
     protected static final String ERROR_JPEXP = "$.error";
     protected static final String ERRORS_JPEXP = "$.errors";
     protected static final String MESSAGE_JPEXP = "$.message";
@@ -85,6 +86,18 @@ public abstract class RestControllerTests {
     }
 
     /*
+        httpMethod, urlTemplate, user, httpStatus
+    */
+    protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
+            User user,
+            HttpStatus httpStatus) throws Exception {
+        return mockMvcPerform(
+            httpMethod, urlTemplate,
+            null, null, user,
+            httpStatus);
+    }
+
+    /*
         httpMethod, urlTemplate, requestBody, httpStatus
     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
@@ -96,29 +109,32 @@ public abstract class RestControllerTests {
             httpStatus);
     }
 
-    protected void expectValue(ResultActions resultActions,
+    protected ResultActions expectValue(ResultActions resultActions,
             String jsonPathExpression, Object expectedValue) throws Exception {
-        resultActions.andExpect(jsonPath(jsonPathExpression).value(expectedValue));
+        return resultActions.andExpect(jsonPath(jsonPathExpression).value(expectedValue));
     }
 
-    protected void expectArray(ResultActions resultActions,
+    protected ResultActions expectArray(ResultActions resultActions,
             Integer size, boolean exactSize,
             String jsonPathExpression, Object... items) throws Exception {
         resultActions.andExpect(jsonPath(jsonPathExpression).isArray());
         resultActions.andExpect(jsonPath(jsonPathExpression, hasItems(items)));
+
         if (exactSize) {
             resultActions.andExpect(jsonPath(jsonPathExpression, hasSize(items.length)));
         } else if (size != null) {
             resultActions.andExpect(jsonPath(jsonPathExpression, hasSize(size)));
         }
+
+        return resultActions;
     }
 
     /*
         resultActions, jsonPathExpression, items
     */
-    protected void expectArray(ResultActions resultActions,
+    protected ResultActions expectArray(ResultActions resultActions,
             String jsonPathExpression,  Object... items) throws Exception {
-        expectArray(
+        return expectArray(
             resultActions,
             null, true,
             jsonPathExpression, items);
