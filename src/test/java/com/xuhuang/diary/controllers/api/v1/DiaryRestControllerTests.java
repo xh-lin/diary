@@ -91,7 +91,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void getBooksSuccess() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY,
@@ -103,7 +103,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void getBookSuccess() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         Object[] uriVars = {MOCK_BOOK_ID};
 
@@ -117,7 +117,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void getBookFailure() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         // forbidden
         Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
@@ -139,7 +139,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void updateBookSuccess() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         Object[] uriVars = {MOCK_BOOK_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -155,7 +155,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void updateBookFailure() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         // forbidden
         Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
@@ -194,7 +194,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void deleteBookSuccess() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         Object[] uriVars = {MOCK_BOOK_ID};
 
@@ -208,7 +208,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void deleteBookFailure() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         // forbidden
         Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
@@ -233,7 +233,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void createRecordSuccess() throws Exception {
-        setupMockBookRepository();
+        setupMockRepository();
 
         Object[] uriVars = {MOCK_BOOK_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -247,7 +247,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockRecordRepository, times(1)).save(any(Record.class));
     }
 
-    private void setupMockBookRepository() {
+    private void setupMockRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
         mockBook.setId(MOCK_BOOK_ID);

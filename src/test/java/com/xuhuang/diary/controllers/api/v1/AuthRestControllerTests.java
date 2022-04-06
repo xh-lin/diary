@@ -248,7 +248,7 @@ class AuthRestControllerTests extends RestControllerTests {
 
     @Test
     void registerConflict() throws Exception {
-        setupMockUserRepository();
+        setupMockRepository();
 
         // username and email taken
         RegisterRequest requestBody = new RegisterRequest(
@@ -330,7 +330,7 @@ class AuthRestControllerTests extends RestControllerTests {
 
     @Test
     void loginSuccess() throws Exception {
-        setupMockUserRepository();
+        setupMockRepository();
 
         LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), MOCK_PASSWORD);
 
@@ -343,7 +343,7 @@ class AuthRestControllerTests extends RestControllerTests {
 
     @Test
     void loginFailure() throws Exception {
-        setupMockUserRepository();
+        setupMockRepository();
 
         LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), "wrongPassword");
 
@@ -354,7 +354,7 @@ class AuthRestControllerTests extends RestControllerTests {
             .andExpect(jsonPath(ERROR_JPEXP).value(AuthRestController.INVALID_USERNAME_AND_PASSWORD));
     }
 
-    private void setupMockUserRepository() {
+    private void setupMockRepository() {
         Optional<User> optionalMockUser = Optional.ofNullable(mockUser);
         doReturn(optionalMockUser).when(mockUserRepository).findByUsername(mockUser.getUsername());
         doReturn(optionalMockUser).when(mockUserRepository).findByEmail(mockUser.getEmail());
