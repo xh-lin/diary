@@ -1,38 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><title></title></head>
+
+<head>
+    <title></title>
+</head>
+
 <body>
 
     <div th:fragment="book">
         <div class="d-flex flex-row" th:id="book_ + ${book.id}">
             <!-- Book link -->
-            <a
-                class="item flex-fill"
-                th:classappend="${currentBookId == book.id} ? active : ''"
-                th:text="${book.title}"
+            <a class="item flex-fill" th:classappend="${currentBookId == book.id} ? active : ''" th:text="${book.title}"
                 th:href="@{|/diary/${book.id}|}"></a>
             <!-- Book dropdown menu -->
             <div class="dropdown">
-                <a
-                    class="item dropdown-toggle"
-                    id="bookDropdownMenuLink"
-                    role="button"
-                    data-bs-toggle="dropdown"
+                <a class="item dropdown-toggle" id="bookDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"></a>
                 <ul class="dropdown-menu" aria-labelledby="bookDropdownMenuLink">
-                    <li><a
-                            type="button"
-                            class="dropdown-item"
-                            data-bs-toggle="modal"
-                            data-bs-target="#updateBookDialogModal"
-                            th:data-bs-title="${book.title}"
+                    <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                            data-bs-target="#updateBookDialogModal" th:data-bs-title="${book.title}"
                             th:data-bs-url="@{|/api/v1/diary/${book.id}|}">Update</a></li>
-                    <li><a
-                            type="button"
-                            class="dropdown-item"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteBookDialogModal"
-                            th:data-bs-title="${book.title}"
+                    <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                            data-bs-target="#deleteBookDialogModal" th:data-bs-title="${book.title}"
                             th:data-bs-url="@{|/api/v1/diary/${book.id}|}">Delete</a></li>
                 </ul>
             </div>
@@ -40,20 +29,13 @@
     </div>
 
     <div th:fragment="create_book_link">
-        <a
-            class="item text-center"
-            role="button"
-            data-bs-toggle="modal"
+        <a class="item text-center" role="button" data-bs-toggle="modal"
             data-bs-target="#createBookDialogModal"><strong>&plus;</strong></a>
     </div>
 
     <div th:fragment="create_book_dialog">
         <!-- Modal -->
-        <div
-            class="modal fade"
-            id="createBookDialogModal"
-            tabindex="-1"
-            aria-labelledby="createBookDialogModalLabel"
+        <div class="modal fade" id="createBookDialogModal" tabindex="-1" aria-labelledby="createBookDialogModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -83,11 +65,7 @@
 
     <div th:fragment="update_book_dialog">
         <!-- Modal -->
-        <div
-            class="modal fade"
-            id="updateBookDialogModal"
-            tabindex="-1"
-            aria-labelledby="updateBookDialogModalLabel"
+        <div class="modal fade" id="updateBookDialogModal" tabindex="-1" aria-labelledby="updateBookDialogModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -117,11 +95,7 @@
 
     <div th:fragment="delete_book_dialog">
         <!-- Modal -->
-        <div
-            class="modal fade"
-            id="deleteBookDialogModal"
-            tabindex="-1"
-            aria-labelledby="deleteBookDialogModalLabel"
+        <div class="modal fade" id="deleteBookDialogModal" tabindex="-1" aria-labelledby="deleteBookDialogModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -161,26 +135,14 @@
                 </small>
                 <!-- Record dropdown menu -->
                 <div class="dropdown ms-auto">
-                    <a
-                        class="item dropdown-toggle text-dark"
-                        id="recordDropdownMenuLink"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"></a>
+                    <a class="item dropdown-toggle text-dark" id="recordDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false"></a>
                     <ul class="dropdown-menu" aria-labelledby="recordDropdownMenuLink">
-                        <li><a
-                                type="button"
-                                class="dropdown-item"
-                                data-bs-toggle="modal"
-                                data-bs-target="#updateRecordDialogModal"
-                                th:data-bs-text="${record.text}"
+                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#updateRecordDialogModal" th:data-bs-text="${record.text}"
                                 th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Update</a></li>
-                        <li><a
-                                type="button"
-                                class="dropdown-item"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteRecordDialogModal"
-                                th:data-bs-text="${record.text}"
+                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#deleteRecordDialogModal" th:data-bs-text="${record.text}"
                                 th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Delete</a></li>
                     </ul>
                 </div>
@@ -197,7 +159,8 @@
     <div th:fragment="create_record_editor">
         <div class="card">
             <div class="card-body">
-                <form class="d-flex flex-column" id="createRecordForm" th:action="@{|/api/v1/diary/${currentBookId}/record|}" method="POST">
+                <form class="d-flex flex-column" id="createRecordForm"
+                    th:action="@{|/api/v1/diary/${currentBookId}/record|}" method="POST">
                     <div class="mb-1">
                         <textarea class="w-100" name="text" placeholder="Say something..."></textarea>
                     </div>
@@ -209,12 +172,8 @@
 
     <div th:fragment="update_record_dialog">
         <!-- Modal -->
-        <div
-            class="modal fade"
-            id="updateRecordDialogModal"
-            tabindex="-1"
-            aria-labelledby="updateRecordDialogModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="updateRecordDialogModal" tabindex="-1"
+            aria-labelledby="updateRecordDialogModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Header -->
@@ -226,7 +185,8 @@
                     <div class="modal-body">
                         <form id="updateRecordForm" method="PUT">
                             <div class="mb-3">
-                                <textarea class="w-100" style="height: 200px;" name="text" placeholder="Say something..."></textarea>
+                                <textarea class="w-100" style="height: 200px;" name="text"
+                                    placeholder="Say something..."></textarea>
                             </div>
                         </form>
                     </div>
@@ -242,12 +202,8 @@
 
     <div th:fragment="delete_record_dialog">
         <!-- Modal -->
-        <div
-            class="modal fade"
-            id="deleteRecordDialogModal"
-            tabindex="-1"
-            aria-labelledby="deleteRecordDialogModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="deleteRecordDialogModal" tabindex="-1"
+            aria-labelledby="deleteRecordDialogModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Header -->
@@ -282,4 +238,5 @@
     </div>
 
 </body>
+
 </html>

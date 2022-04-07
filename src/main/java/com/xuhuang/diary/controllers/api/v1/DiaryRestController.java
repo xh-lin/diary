@@ -158,9 +158,9 @@ public class DiaryRestController {
     }
 
     @GetMapping({
-        "/{bookId}/record",
-        "/{bookId}/record/{page}",
-        "/{bookId}/record/{page}/{size}"})
+            "/{bookId}/record",
+            "/{bookId}/record/{page}",
+            "/{bookId}/record/{page}/{size}" })
     public ResponseEntity<Object> getRecords(
             @PathVariable Long bookId,
             @PathVariable(required = false) Integer page,
@@ -192,7 +192,7 @@ public class DiaryRestController {
         page = recordPage.getPageable().getPageNumber();
         size = recordPage.getPageable().getPageSize();
         UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
+                .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
         int prevPage = Math.min(page - 1, totalPages - 1);
         int nextPage = Math.max(page + 1, 0);
 

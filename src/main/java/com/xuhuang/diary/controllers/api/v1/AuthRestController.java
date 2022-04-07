@@ -65,8 +65,7 @@ public class AuthRestController {
         Map<String, Object> body = new LinkedHashMap<>();
 
         try {
-            SecurityContextHolder.getContext().setAuthentication(
-                authenticationManager.authenticate(
+            SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
             body.put(ERROR, INVALID_USERNAME_AND_PASSWORD);

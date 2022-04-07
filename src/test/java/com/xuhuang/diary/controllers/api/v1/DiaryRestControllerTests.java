@@ -74,10 +74,10 @@ public class DiaryRestControllerTests extends RestControllerTests {
         requestParams.add("title", "My Diary");
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_DIARY,
-            requestParams, mockUser,
-            HttpStatus.CREATED)
-            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.CREATED_SUCCESSFULLY));
+                HttpMethod.POST, API_V1_DIARY,
+                requestParams, mockUser,
+                HttpStatus.CREATED)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.CREATED_SUCCESSFULLY));
 
         verify(mockBookRepository, times(1)).save(any(Book.class));
     }
@@ -88,10 +88,10 @@ public class DiaryRestControllerTests extends RestControllerTests {
         requestParams.add("title", "");
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_DIARY,
-            requestParams, mockUser,
-            HttpStatus.BAD_REQUEST)
-            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
+                HttpMethod.POST, API_V1_DIARY,
+                requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -101,25 +101,25 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY,
-            mockUser,
-            HttpStatus.OK)
-            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
-            .andExpect(jsonPath("$.data[0].title").value(MOCK_BOOK_TITLE));
+                HttpMethod.GET, API_V1_DIARY,
+                mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
+                .andExpect(jsonPath("$.data[0].title").value(MOCK_BOOK_TITLE));
     }
 
     @Test
     void getBookSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
-            HttpStatus.OK)
-            .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
-            .andExpect(jsonPath("$.data.title").value(MOCK_BOOK_TITLE));
+                HttpMethod.GET, API_V1_DIARY_BOOKID,
+                uriVars, mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryRestController.FETCHED_SUCCESSFULLY))
+                .andExpect(jsonPath("$.data.title").value(MOCK_BOOK_TITLE));
     }
 
     @Test
@@ -127,35 +127,35 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID,
-            uriVars, anotherMockUser,
-            HttpStatus.FORBIDDEN)
-            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                HttpMethod.GET, API_V1_DIARY_BOOKID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN)
+                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.GET, API_V1_DIARY_BOOKID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
     }
 
     @Test
     void updateBookSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My New Diary");
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_BOOKID,
-            uriVars, requestParams, mockUser,
-            HttpStatus.OK);
+                HttpMethod.PUT, API_V1_DIARY_BOOKID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.OK);
 
         verify(mockBookRepository, times(1)).save(any(Book.class));
     }
@@ -165,14 +165,14 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My New Diary");
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_BOOKID,
-            uriVars, requestParams, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.PUT, API_V1_DIARY_BOOKID,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
 
@@ -180,9 +180,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
         uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_BOOKID,
-            uriVars, requestParams, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.PUT, API_V1_DIARY_BOOKID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.NOT_FOUND);
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
 
@@ -192,9 +192,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
         requestParams.add("title", "");
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_BOOKID,
-            uriVars, requestParams, mockUser,
-            HttpStatus.BAD_REQUEST);
+                HttpMethod.PUT, API_V1_DIARY_BOOKID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST);
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -203,12 +203,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
     void deleteBookSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
-            HttpStatus.OK);
+                HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+                uriVars, mockUser,
+                HttpStatus.OK);
 
         verify(mockBookRepository, times(1)).deleteById(any(Long.class));
     }
@@ -218,12 +218,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
-            uriVars, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         verify(mockBookRepository, times(0)).deleteById(any(Long.class));
 
@@ -231,9 +231,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
         uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.DELETE, API_V1_DIARY_BOOKID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
 
         verify(mockBookRepository, times(0)).deleteById(any(Long.class));
     }
@@ -242,14 +242,14 @@ public class DiaryRestControllerTests extends RestControllerTests {
     void createRecordSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My Record");
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, requestParams, mockUser,
-            HttpStatus.CREATED);
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, mockUser,
+                HttpStatus.CREATED);
 
         verify(mockRecordRepository, times(1)).save(any(Record.class));
     }
@@ -259,14 +259,14 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My Record");
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, requestParams, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
 
@@ -274,9 +274,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
         uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, requestParams, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, mockUser,
+                HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
@@ -285,13 +285,13 @@ public class DiaryRestControllerTests extends RestControllerTests {
     void getRecordsSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, mockUser,
-            HttpStatus.OK)
-            .andExpect(jsonPath("$.data.content[0].text").value(MOCK_RECORD_TEXT));
+                HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath("$.data.content[0].text").value(MOCK_RECORD_TEXT));
     }
 
     @Test
@@ -299,51 +299,51 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_BOOK_ID};
+        Object[] uriVars = { MOCK_BOOK_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         // not found
         uriVars[0] = NOT_FOUND_BOOK_ID;
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
 
         // bad request page
-        uriVars = new Object[] {MOCK_BOOK_ID, -1};
+        uriVars = new Object[] { MOCK_BOOK_ID, -1 };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
-            uriVars, mockUser,
-            HttpStatus.BAD_REQUEST)
-            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
+                uriVars, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
 
         // bad request page size
-        uriVars = new Object[] {MOCK_BOOK_ID, 0, 0};
+        uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
-            uriVars, mockUser,
-            HttpStatus.BAD_REQUEST)
-            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
+                uriVars, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
     @Test
     void getRecordSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
-            HttpStatus.OK)
-            .andExpect(jsonPath("$.data.text").value(MOCK_RECORD_TEXT));
+                HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath("$.data.text").value(MOCK_RECORD_TEXT));
     }
 
     @Test
@@ -351,35 +351,35 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, anotherMockUser,
-            HttpStatus.FORBIDDEN)
-            .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN)
+                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
 
         mockMvcPerform(
-            HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
     }
 
     @Test
     void updateRecordSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My New Record");
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, requestParams, mockUser,
-            HttpStatus.OK);
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.OK);
 
         verify(mockRecordRepository, times(1)).save(any(Record.class));
     }
@@ -389,14 +389,14 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My New Record");
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, requestParams, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
 
@@ -404,9 +404,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
         uriVars[0] = NOT_FOUND_RECORD_ID;
 
         mockMvcPerform(
-            HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, requestParams, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
@@ -415,12 +415,12 @@ public class DiaryRestControllerTests extends RestControllerTests {
     void deleteRecordSuccess() throws Exception {
         setupMockRepository();
 
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
-            HttpStatus.OK);
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, mockUser,
+                HttpStatus.OK);
 
         verify(mockRecordRepository, times(1)).deleteById(any(Long.class));
     }
@@ -430,21 +430,21 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {MOCK_RECORD_ID};
+        Object[] uriVars = { MOCK_RECORD_ID };
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, anotherMockUser,
-            HttpStatus.FORBIDDEN);
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
 
         uriVars[0] = NOT_FOUND_RECORD_ID;
 
         mockMvcPerform(
-            HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
-            HttpStatus.NOT_FOUND);
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
     }

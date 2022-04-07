@@ -15,7 +15,7 @@ public class LoginRequest {
 
     public static final String VALIDATION_MESSAGE_USERNAME_NOTBLANK = "Username must not be blank.";
     public static final String VALIDATION_MESSAGE_PASSWORD_NOTBLANK = "Password must not be blank.";
-    
+
     @NotBlank(message = VALIDATION_MESSAGE_USERNAME_NOTBLANK)
     private String username;
 

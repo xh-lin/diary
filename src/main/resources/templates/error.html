@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <div th:replace="fragments/global::header"></div>
     <title th:text="${title} ? ${title} : 'Error'"></title>
 </head>
+
 <body class="d-flex flex-column">
 
     <div class="d-flex justify-content-center my-auto">
@@ -19,4 +21,5 @@
     <div th:replace="fragments/global::external_scripts"></div>
 
 </body>
+
 </html>

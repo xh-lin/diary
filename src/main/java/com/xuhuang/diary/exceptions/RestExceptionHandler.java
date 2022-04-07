@@ -21,7 +21,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     // error handle for @Valid
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
         // LinkedHashMap maintains insertion order
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
@@ -29,10 +30,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         // get all errors
         List<String> errors = ex.getAllErrors()
-            .stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .collect(Collectors.toList());
-        
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
         Collections.sort(errors);
         body.put("errors", errors);
 

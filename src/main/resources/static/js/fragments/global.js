@@ -3,7 +3,8 @@
 */
 
 function getUrlParam(name) {
-    if (name = (new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+    name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search);
+    if (name)
         return decodeURIComponent(name[1]);
 }
 
@@ -12,7 +13,7 @@ function getUrlParam(name) {
 */
 
 function redirect(url, params) {
-    $.each(params, function(k, v) {
+    $.each(params, function (k, v) {
         url += `?${k}=${v}`;
     });
     window.location.href = url;
@@ -27,7 +28,7 @@ const TOAST_ID = '#toast';
 const TOAST_DELAY = 2000; // milliseconds
 
 const toastFragment = $(TOAST_ID);
-const toast = (toastFragment[0] === undefined) ? undefined : new bootstrap.Toast(toastFragment, {delay: TOAST_DELAY});
+const toast = (toastFragment[0] === undefined) ? undefined : new bootstrap.Toast(toastFragment, { delay: TOAST_DELAY });
 const toastBody = (toastFragment[0] === undefined) ? undefined : toastFragment.find('.toast-body');
 
 function showToast(message) {
@@ -44,7 +45,7 @@ function showToast(message) {
 */
 
 function setupAjaxFormSubmit(form, successHandler) {
-    form.submit(function(event) {
+    form.submit(function (event) {
         // avoid to execute the actual submit of the form.
         event.preventDefault();
 
@@ -53,7 +54,7 @@ function setupAjaxFormSubmit(form, successHandler) {
             url: form.attr('action'),
             data: form.serialize(), // serializes the form's inputs.
             error: errorHandler,
-            success: function(res) {
+            success: function (res) {
                 console.log(res);
 
                 // success message
@@ -90,7 +91,7 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
 */
 
 function formatTimestamps(parent, selector = '.timestamp') {
-    parent.find(selector).each(function() {
+    parent.find(selector).each(function () {
         const date = new Date($(this).text());
         const momentDate = moment(date);
 
@@ -122,7 +123,7 @@ if (backToTopButton[0] !== undefined) {
         }
     };
 
-    backToTopButton.click(function() {
+    backToTopButton.click(function () {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     });

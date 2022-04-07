@@ -37,9 +37,9 @@ public class AuthController {
     public String submitRegistration(@Valid RegisterRequest request, BindingResult br, Model model) {
         if (br.hasErrors()) {
             List<String> errors = br.getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
 
             model.addAttribute(REQUEST, request);
             model.addAttribute(ERRORS, errors);

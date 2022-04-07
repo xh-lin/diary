@@ -44,10 +44,10 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @GetMapping({
-        "",
-        "/{bookId}",
-        "/{bookId}/record/{page}",
-        "/{bookId}/record/{page}/{size}"})
+            "",
+            "/{bookId}",
+            "/{bookId}/record/{page}",
+            "/{bookId}/record/{page}/{size}" })
     public String viewDiary(
             Model model,
             @PathVariable(required = false) Long bookId,

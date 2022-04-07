@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -25,15 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeRequests()
+                .authorizeRequests()
                 .antMatchers("/api/v*/auth/*", "/register", "/error", "/error/*", "/css/global.css").permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .formLogin()
-                .loginPage("/login").permitAll()
+                .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout()
-                .logoutSuccessUrl("/login?logout").permitAll();
+                .logout().logoutSuccessUrl("/login?logout").permitAll();
     }
 
     @Override

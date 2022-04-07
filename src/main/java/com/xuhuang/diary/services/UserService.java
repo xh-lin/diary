@@ -34,13 +34,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(
-            () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
+                () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
     /*
-        Throws:
-            RegisterException - if either username or email is taken
-    */
+     * Throws:
+     * RegisterException - if either username or email is taken
+     */
     public void register(RegisterRequest request) throws RegisterException {
         List<String> exceptionMessages = new ArrayList<>();
         boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
@@ -59,10 +59,10 @@ public class UserService implements UserDetailsService {
         }
 
         User user = new User(
-            request.getUsername(),
-            request.getEmail(),
-            bCryptPasswordEncoder.encode(request.getPassword()),
-            UserRole.USER);
+                request.getUsername(),
+                request.getEmail(),
+                bCryptPasswordEncoder.encode(request.getPassword()),
+                UserRole.USER);
 
         userRepository.save(user);
     }
