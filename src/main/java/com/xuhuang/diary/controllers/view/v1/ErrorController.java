@@ -1,4 +1,6 @@
-package com.xuhuang.diary.controllers;
+package com.xuhuang.diary.controllers.view.v1;
+
+import com.xuhuang.diary.controllers.view.Template;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

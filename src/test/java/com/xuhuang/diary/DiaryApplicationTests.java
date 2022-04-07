@@ -1,11 +1,11 @@
 package com.xuhuang.diary;
 
-import com.xuhuang.diary.controllers.AppController;
-import com.xuhuang.diary.controllers.AuthController;
-import com.xuhuang.diary.controllers.DiaryController;
-import com.xuhuang.diary.controllers.ErrorController;
 import com.xuhuang.diary.controllers.api.v1.AuthRestController;
 import com.xuhuang.diary.controllers.api.v1.DiaryRestController;
+import com.xuhuang.diary.controllers.view.v1.AppController;
+import com.xuhuang.diary.controllers.view.v1.AuthController;
+import com.xuhuang.diary.controllers.view.v1.DiaryController;
+import com.xuhuang.diary.controllers.view.v1.ErrorController;
 import com.xuhuang.diary.services.DiaryService;
 import com.xuhuang.diary.services.UserService;
 

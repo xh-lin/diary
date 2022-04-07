@@ -1,10 +1,11 @@
-package com.xuhuang.diary.controllers;
+package com.xuhuang.diary.controllers.view.v1;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.services.UserService;

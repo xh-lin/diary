@@ -1,4 +1,4 @@
-package com.xuhuang.diary.controllers;
+package com.xuhuang.diary.controllers.view.v1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 import javax.security.auth.message.AuthException;
 
+import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.services.DiaryService;
