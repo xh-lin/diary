@@ -2,8 +2,11 @@ package com.xuhuang.diary.controllers;
 
 public enum Template {
 
-    INDEX("index"), LOGIN("login"), REGISTER("register");
-    
+    LOGIN("login"),
+    REGISTER("register"),
+    ERROR("error"),
+    DIARY("diary");
+
     private String name;
 
     Template(String name) {
@@ -14,5 +17,5 @@ public enum Template {
     public String toString() {
         return name;
     }
-    
+
 }

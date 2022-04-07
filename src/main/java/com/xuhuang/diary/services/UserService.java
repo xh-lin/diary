@@ -9,6 +9,8 @@ import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,6 +37,10 @@ public class UserService implements UserDetailsService {
             () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
+    /*
+        Throws:
+            RegisterException - if either username or email is taken
+    */
     public void register(RegisterRequest request) throws RegisterException {
         List<String> exceptionMessages = new ArrayList<>();
         boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
@@ -52,7 +58,7 @@ public class UserService implements UserDetailsService {
             throw new RegisterException(exceptionMessages);
         }
 
-        User user = new User (
+        User user = new User(
             request.getUsername(),
             request.getEmail(),
             bCryptPasswordEncoder.encode(request.getPassword()),
@@ -62,11 +68,25 @@ public class UserService implements UserDetailsService {
     }
 
     public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
+        return (User) auth.getPrincipal();
     }
 
     public boolean isCurrentUser(User user) {
+        User currentUser = getCurrentUser();
+
+        if (user == null) {
+            return currentUser == null;
+        } else if (currentUser == null) {
+            return false;
+        }
+
         return user.getId().equals(getCurrentUser().getId());
     }
-    
+
 }

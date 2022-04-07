@@ -3,6 +3,7 @@ package com.xuhuang.diary.models;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,10 +14,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @MappedSuperclass
 @Getter
 @Setter
+@ToString
 public abstract class BaseEntity implements Serializable {
 
     @Id
@@ -24,9 +27,11 @@ public abstract class BaseEntity implements Serializable {
     private Long id;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private Timestamp updatedAt;
 
- }
+}

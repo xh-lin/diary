@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-                .antMatchers("/api/v*/auth/**", "/register").permitAll()
+                .antMatchers("/api/v*/auth/*", "/register", "/error", "/error/*", "/css/global.css").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -54,5 +54,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
+
 }

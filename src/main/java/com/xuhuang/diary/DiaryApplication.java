@@ -1,5 +1,9 @@
 package com.xuhuang.diary;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,5 +20,11 @@ public class DiaryApplication {
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
+	@PostConstruct
+    void started() {
+        // set JVM timezone as UTC
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
+
 }
