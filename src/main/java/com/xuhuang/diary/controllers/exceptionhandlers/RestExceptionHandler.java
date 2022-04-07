@@ -1,4 +1,4 @@
-package com.xuhuang.diary.exceptions;
+package com.xuhuang.diary.controllers.exceptionhandlers;
 
 import java.util.Collections;
 import java.util.Date;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+@ControllerAdvice("com.xuhuang.diary.controllers.api")
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // error handle for @Valid
+    // error handle for bean validations
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
