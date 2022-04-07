@@ -46,15 +46,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     private static final Long MOCK_BOOK_ID = 1L;
     private static final String MOCK_BOOK_TITLE = "Mock Diary";
-    private static final Long ANOTHER_MOCK_BOOK_ID = 2L;
-    private static final String ANOTHER_MOCK_BOOK_TITLE = "Another Mock Diary";
-    private static final Long NOT_FOUND_BOOK_ID = 3L;
+    private static final Long NOT_FOUND_BOOK_ID = 2L;
 
     private static final Long MOCK_RECORD_ID = 1L;
     private static final String MOCK_RECORD_TEXT = "Mock Record";
-    private static final Long ANOTHER_MOCK_RECORD_ID = 2L;
-    private static final String ANOTHER_MOCK_RECORD_TEXT = "Another Mock Record";
-    private static final Long NOT_FOUND_RECORD_ID = 3L;
+    private static final Long NOT_FOUND_RECORD_ID = 2L;
 
     private static User mockUser;
     private static User anotherMockUser;
@@ -131,11 +127,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        Object[] uriVars = {MOCK_BOOK_ID};
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
+            uriVars, anotherMockUser,
             HttpStatus.FORBIDDEN)
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
@@ -169,13 +165,13 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        Object[] uriVars = {MOCK_BOOK_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "My New Diary");
 
         mockMvcPerform(
             HttpMethod.PUT, API_V1_DIARY_BOOKID,
-            uriVars, requestParams, mockUser,
+            uriVars, requestParams, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
@@ -222,11 +218,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        Object[] uriVars = {MOCK_BOOK_ID};
 
         mockMvcPerform(
             HttpMethod.DELETE, API_V1_DIARY_BOOKID,
-            uriVars, mockUser,
+            uriVars, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         verify(mockBookRepository, times(0)).deleteById(any(Long.class));
@@ -263,13 +259,13 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        Object[] uriVars = {MOCK_BOOK_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My Record");
 
         mockMvcPerform(
             HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, requestParams, mockUser,
+            uriVars, requestParams, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
@@ -303,11 +299,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_BOOK_ID};
+        Object[] uriVars = {MOCK_BOOK_ID};
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD,
-            uriVars, mockUser,
+            uriVars, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         // not found
@@ -355,11 +351,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_RECORD_ID};
+        Object[] uriVars = {MOCK_RECORD_ID};
 
         mockMvcPerform(
             HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
+            uriVars, anotherMockUser,
             HttpStatus.FORBIDDEN)
             .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
@@ -393,13 +389,13 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_RECORD_ID};
+        Object[] uriVars = {MOCK_RECORD_ID};
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "My New Record");
 
         mockMvcPerform(
             HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, requestParams, mockUser,
+            uriVars, requestParams, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
@@ -434,11 +430,11 @@ public class DiaryRestControllerTests extends RestControllerTests {
         setupMockRepository();
 
         // forbidden
-        Object[] uriVars = {ANOTHER_MOCK_RECORD_ID};
+        Object[] uriVars = {MOCK_RECORD_ID};
 
         mockMvcPerform(
             HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
-            uriVars, mockUser,
+            uriVars, anotherMockUser,
             HttpStatus.FORBIDDEN);
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
@@ -475,26 +471,6 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
-
-        // book of anotherMockUser
-        Book anotherMockBook = new Book(ANOTHER_MOCK_BOOK_TITLE, anotherMockUser);
-        anotherMockBook.setId(ANOTHER_MOCK_BOOK_ID);
-        Optional<Book> optionalAnotherMockBook = Optional.ofNullable(anotherMockBook);
-        List<Book> anotherMockBooks = new ArrayList<>();
-        anotherMockBooks.add(anotherMockBook);
-
-        doReturn(optionalAnotherMockBook).when(mockBookRepository).findById(ANOTHER_MOCK_BOOK_ID);
-        doReturn(anotherMockBooks).when(mockBookRepository).findByUser(anotherMockUser);
-
-        // record of mockUser
-        Record anotherMockRecord = new Record(ANOTHER_MOCK_RECORD_TEXT, anotherMockBook);
-        anotherMockRecord.setId(ANOTHER_MOCK_RECORD_ID);
-        Optional<Record> optionalAnotherMockRecord = Optional.ofNullable(anotherMockRecord);
-        List<Record> anotherMockRecords = Arrays.asList(anotherMockRecord);
-        Page<Record> anotherMockRecordPage = new PageImpl<>(anotherMockRecords, pageable, anotherMockRecords.size());
-
-        doReturn(optionalAnotherMockRecord).when(mockRecordRepository).findById(ANOTHER_MOCK_RECORD_ID);
-        doReturn(anotherMockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(anotherMockBook, pageable);
     }
 
 }
