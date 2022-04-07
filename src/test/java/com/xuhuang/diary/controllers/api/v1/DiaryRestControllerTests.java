@@ -429,6 +429,30 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockRecordRepository, times(1)).deleteById(any(Long.class));
     }
 
+    @Test
+    void deleteRecordFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = {ANOTHER_MOCK_RECORD_ID};
+
+        mockMvcPerform(
+            HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, mockUser,
+            HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
+
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+            HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID,
+            uriVars, mockUser,
+            HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
+    }
+
     private void setupMockRepository() {
         Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
 
