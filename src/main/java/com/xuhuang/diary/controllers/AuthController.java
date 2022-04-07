@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final String REDIRECT_ROOT = "redirect:/";
     private static final String REQUEST = "request";
     private static final String ERRORS = "errors";
 
@@ -29,6 +30,10 @@ public class AuthController {
 
     @GetMapping("/register")
     public String viewRegistration(Model model) {
+        if (userService.getCurrentUser() != null) {
+            // redirect to home page if logged in already
+            return REDIRECT_ROOT;
+        }
         model.addAttribute(REQUEST, new RegisterRequest());
         return Template.REGISTER.toString();
     }
@@ -61,6 +66,10 @@ public class AuthController {
 
     @GetMapping("/login")
     public String viewLogin() {
+        if (userService.getCurrentUser() != null) {
+            // redirect to home page if logged in already
+            return REDIRECT_ROOT;
+        }
         return Template.LOGIN.toString();
     }
 
