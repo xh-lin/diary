@@ -44,6 +44,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
+    private static final String TEXT = "text";
+    private static final String TITLE = "title";
+
     private static final Long MOCK_BOOK_ID = 1L;
     private static final String MOCK_BOOK_TITLE = "Mock Diary";
     private static final Long NOT_FOUND_BOOK_ID = 2L;
@@ -71,7 +74,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @Test
     void createBookSuccess() throws Exception {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("title", "My Diary");
+        requestParams.add(TITLE, "My Diary");
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY,
@@ -85,7 +88,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
     @Test
     void createBookFailure() throws Exception {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("title", "");
+        requestParams.add(TITLE, "");
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY,
@@ -150,7 +153,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
         Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("title", "My New Diary");
+        requestParams.add(TITLE, "My New Diary");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_BOOKID,
@@ -167,7 +170,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         // forbidden
         Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("title", "My New Diary");
+        requestParams.add(TITLE, "My New Diary");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_BOOKID,
@@ -189,7 +192,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         // bad request
         uriVars[0] = MOCK_BOOK_ID;
         requestParams.clear();
-        requestParams.add("title", "");
+        requestParams.add(TITLE, "");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_BOOKID,
@@ -244,7 +247,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
         Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("text", "My Record");
+        requestParams.add(TEXT, "My Record");
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
@@ -261,7 +264,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         // forbidden
         Object[] uriVars = { MOCK_BOOK_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("text", "My Record");
+        requestParams.add(TEXT, "My Record");
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
@@ -374,7 +377,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
         Object[] uriVars = { MOCK_RECORD_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("text", "My New Record");
+        requestParams.add(TEXT, "My New Record");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
@@ -391,7 +394,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
         // forbidden
         Object[] uriVars = { MOCK_RECORD_ID };
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-        requestParams.add("text", "My New Record");
+        requestParams.add(TEXT, "My New Record");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
