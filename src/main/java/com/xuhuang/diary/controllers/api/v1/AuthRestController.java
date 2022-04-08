@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
+import com.xuhuang.diary.exceptions.LoginFailureException;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,6 @@ public class AuthRestController {
     public static final String LOGGED_OUT_SUCCESSFULLY = "Logged out successfully.";
 
     private static final String MESSAGE = "message";
-    private static final String ERROR = "error";
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -52,15 +52,15 @@ public class AuthRestController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) throws LoginFailureException {
         Map<String, Object> body = new LinkedHashMap<>();
 
         try {
-            SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
+            SecurityContextHolder.getContext().setAuthentication(
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())));
         } catch (AuthenticationException e) {
-            body.put(ERROR, INVALID_USERNAME_AND_PASSWORD);
-            return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+            throw new LoginFailureException(INVALID_USERNAME_AND_PASSWORD);
         }
 
         body.put(MESSAGE, LOGGED_IN_SUCCESSFULLY);
