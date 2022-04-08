@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.domains.RegisterRequest;
-import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -52,16 +51,7 @@ public class AuthController {
             return Template.REGISTER.toString();
         }
 
-        try {
-            userService.register(request);
-        } catch (RegisterException e) {
-            List<String> errors = e.getMessages();
-
-            model.addAttribute(REQUEST, request);
-            model.addAttribute(ERRORS, errors);
-            return Template.REGISTER.toString();
-        }
-
+        userService.register(request);
         return Template.LOGIN.toString();
     }
 

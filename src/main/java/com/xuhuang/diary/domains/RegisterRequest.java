@@ -22,6 +22,7 @@ import lombok.Setter;
         message = RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRMATION)
 public class RegisterRequest {
 
+    public static final String USERNAME_ALREADY_TAKEN = "Username already taken.";
     public static final String VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY = "Username must contain only hyphens (-), underscores (_), letters or numbers.";
     public static final String VALIDATION_MESSAGE_USERNAME_AT_LEAST = "Username must contain at least one letter or number.";
     public static final String VALIDATION_MESSAGE_USERNAME_SIZE = "Username length must be between {min} and {max}.";
@@ -29,6 +30,7 @@ public class RegisterRequest {
     public static final int USERNAME_SIZE_MIN = 4;
     public static final int USERNAME_SIZE_MAX = 16;
 
+    public static final String EMAIL_ALREADY_TAKEN = "Email already taken.";
     public static final String VALIDATION_MESSAGE_EMAIL = "Email format not valid.";
     public static final String VALIDATION_MESSAGE_EMAIL_NOTBLANK = "Email must not be blank.";
 
@@ -44,14 +46,14 @@ public class RegisterRequest {
     public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK = "Password confirmation must not be blank.";
     public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRMATION = "Password confirmation does not match.";
 
-    @UniqueUsername
+    @UniqueUsername(message = USERNAME_ALREADY_TAKEN)
     @Pattern(regexp = "^[a-zA-Z0-9_-]*$", message = VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY)
     @Pattern(regexp = "^.*[a-zA-Z0-9].*$", message = VALIDATION_MESSAGE_USERNAME_AT_LEAST)
     @Size(min = USERNAME_SIZE_MIN, max = USERNAME_SIZE_MAX, message = VALIDATION_MESSAGE_USERNAME_SIZE)
     @NotBlank(message = VALIDATION_MESSAGE_USERNAME_NOTBLANK)
     private String username;
 
-    @UniqueEmail
+    @UniqueEmail(message = EMAIL_ALREADY_TAKEN)
     @Email(message = VALIDATION_MESSAGE_EMAIL)
     @NotBlank(message = VALIDATION_MESSAGE_EMAIL_NOTBLANK)
     private String email;

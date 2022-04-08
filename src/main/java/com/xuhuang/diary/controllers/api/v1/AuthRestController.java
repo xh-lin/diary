@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
-import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,6 @@ public class AuthRestController {
 
     private static final String MESSAGE = "message";
     private static final String ERROR = "error";
-    private static final String ERRORS = "errors";
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -48,14 +46,7 @@ public class AuthRestController {
     @PostMapping("register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-
-        try {
-            userService.register(request);
-        } catch (RegisterException e) {
-            body.put(ERRORS, e.getMessages());
-            return new ResponseEntity<>(body, HttpStatus.CONFLICT);
-        }
-
+        userService.register(request);
         body.put(MESSAGE, REGISTERED_SUCCESSFULLY);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }

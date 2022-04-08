@@ -12,7 +12,6 @@ import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.UserRepository;
-import com.xuhuang.diary.services.UserService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -261,10 +260,10 @@ class AuthRestControllerTests extends RestControllerTests {
                 mockMvcPerform(
                         HttpMethod.POST, API_V1_AUTH_REGISTER,
                         requestBody,
-                        HttpStatus.CONFLICT),
+                        HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                UserService.USERNAME_ALREADY_TAKEN,
-                UserService.EMAIL_ALREADY_TAKEN);
+                RegisterRequest.USERNAME_ALREADY_TAKEN,
+                RegisterRequest.EMAIL_ALREADY_TAKEN);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -275,9 +274,9 @@ class AuthRestControllerTests extends RestControllerTests {
                 mockMvcPerform(
                         HttpMethod.POST, API_V1_AUTH_REGISTER,
                         requestBody,
-                        HttpStatus.CONFLICT),
+                        HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                UserService.USERNAME_ALREADY_TAKEN);
+                RegisterRequest.USERNAME_ALREADY_TAKEN);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -289,9 +288,9 @@ class AuthRestControllerTests extends RestControllerTests {
                 mockMvcPerform(
                         HttpMethod.POST, API_V1_AUTH_REGISTER,
                         requestBody,
-                        HttpStatus.CONFLICT),
+                        HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                UserService.EMAIL_ALREADY_TAKEN);
+                RegisterRequest.EMAIL_ALREADY_TAKEN);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
