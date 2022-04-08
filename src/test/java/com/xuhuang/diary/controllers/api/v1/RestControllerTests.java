@@ -24,10 +24,8 @@ import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
-    protected static final String DATA_JPEXP = "$.data";
-    protected static final String ERROR_JPEXP = "$.error";
-    protected static final String ERRORS_JPEXP = "$.errors";
     protected static final String MESSAGE_JPEXP = "$.message";
+    protected static final String MESSAGES_JPEXP = "$.messages";
 
     protected static final String MOCK_PASSWORD = "Qwerty123.";
     protected static final String MOCK_PASSWORD_ENCRYPTED = new BCryptPasswordEncoder().encode(MOCK_PASSWORD);

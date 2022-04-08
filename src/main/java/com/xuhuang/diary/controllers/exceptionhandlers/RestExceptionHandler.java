@@ -32,16 +32,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         // LinkedHashMap maintains insertion order
         Map<String, Object> body = new LinkedHashMap<>();
 
-        // get all errors
-        List<String> errors = ex.getAllErrors()
+        // get all error messages
+        List<String> messages = ex.getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-        Collections.sort(errors);
+        Collections.sort(messages);
 
         body.put("timestamp", new Date());
         body.put("status", status.value());
-        body.put("errors", errors);
+        body.put("error", status.getReasonPhrase());
+        body.put("messages", messages);
         return new ResponseEntity<>(body, headers, status);
     }
 
@@ -62,8 +63,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        body.put("error", ex.getMessage());
+        body.put("timestamp", new Date());
         body.put("status", status.value());
+        body.put("error", status.getReasonPhrase());
+        body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, status);
     }
 

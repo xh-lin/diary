@@ -94,7 +94,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.POST, API_V1_DIARY,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -136,7 +136,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_BOOK_ID;
@@ -324,7 +324,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
 
         // bad request page size
         uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
@@ -333,7 +333,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
     @Test
@@ -360,7 +360,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(ERROR_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
