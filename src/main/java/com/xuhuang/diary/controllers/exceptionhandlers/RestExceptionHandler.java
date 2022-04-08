@@ -1,6 +1,5 @@
 package com.xuhuang.diary.controllers.exceptionhandlers;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +15,9 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,13 +33,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers, HttpStatus status, WebRequest request) {
         // LinkedHashMap maintains insertion order
         Map<String, Object> body = new LinkedHashMap<>();
+        MultiValueMap<String, String> messages = new LinkedMultiValueMap<>();
 
-        // get all error messages
-        List<String> messages = ex.getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-        Collections.sort(messages);
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            messages.add(error.getField(), error.getDefaultMessage());
+        }
+
+        List<String> global = ex.getBindingResult().getGlobalErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+        messages.put("global", global);
 
         body.put("timestamp", new Date());
         body.put("status", status.value());
