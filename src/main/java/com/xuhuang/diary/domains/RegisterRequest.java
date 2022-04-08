@@ -30,7 +30,7 @@ public class RegisterRequest {
     public static final int USERNAME_SIZE_MAX = 16;
 
     public static final String EMAIL_ALREADY_TAKEN = "Email already taken.";
-    public static final String EMAIL = "Email format not valid.";
+    public static final String EMAIL_FORMAT = "Email format not valid.";
     public static final String EMAIL_NOTBLANK = "Email must not be blank.";
 
     public static final String PASSWORD_LOWER = "Password must contain at least one lowercase letter.";
@@ -53,7 +53,7 @@ public class RegisterRequest {
     private String username;
 
     @UniqueEmail(message = EMAIL_ALREADY_TAKEN)
-    @Email(message = EMAIL)
+    @Email(message = EMAIL_FORMAT)
     @NotBlank(message = EMAIL_NOTBLANK)
     private String email;
 

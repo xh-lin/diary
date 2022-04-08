@@ -114,7 +114,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.EMAIL);
+                RegisterRequest.EMAIL_FORMAT);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 

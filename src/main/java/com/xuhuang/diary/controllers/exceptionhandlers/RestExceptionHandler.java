@@ -31,18 +31,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers, HttpStatus status, WebRequest request) {
         // LinkedHashMap maintains insertion order
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", new Date());
-        body.put("status", status.value());
 
         // get all errors
         List<String> errors = ex.getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-
         Collections.sort(errors);
-        body.put("errors", errors);
 
+        body.put("timestamp", new Date());
+        body.put("status", status.value());
+        body.put("errors", errors);
         return new ResponseEntity<>(body, headers, status);
     }
 
