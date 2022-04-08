@@ -53,7 +53,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY);
+                RegisterRequest.USERNAME_CONTAIN_ONLY);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -66,7 +66,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_USERNAME_AT_LEAST);
+                RegisterRequest.USERNAME_AT_LEAST);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -79,7 +79,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_USERNAME_SIZE
+                RegisterRequest.USERNAME_SIZE
                         .replace("{min}", String.valueOf(RegisterRequest.USERNAME_SIZE_MIN))
                         .replace("{max}", String.valueOf(RegisterRequest.USERNAME_SIZE_MAX)));
 
@@ -94,7 +94,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK);
+                RegisterRequest.USERNAME_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -114,7 +114,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_EMAIL);
+                RegisterRequest.EMAIL);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -127,7 +127,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_EMAIL_NOTBLANK);
+                RegisterRequest.EMAIL_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -148,7 +148,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_LOWER);
+                RegisterRequest.PASSWORD_LOWER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -163,7 +163,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_UPPER);
+                RegisterRequest.PASSWORD_UPPER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -178,7 +178,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NUMBER);
+                RegisterRequest.PASSWORD_NUMBER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -193,7 +193,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SPECIAL);
+                RegisterRequest.PASSWORD_SPECIAL);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -208,7 +208,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SIZE
+                RegisterRequest.PASSWORD_SIZE
                         .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
                         .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)));
 
@@ -225,8 +225,8 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK);
+                RegisterRequest.PASSWORD_NOTBLANK,
+                RegisterRequest.PASSWORD_CONFIRM_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -240,7 +240,7 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRMATION);
+                RegisterRequest.PASSWORD_CONFIRMATION);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -323,8 +323,8 @@ class AuthRestControllerTests extends RestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 ERRORS_JPEXP,
-                LoginRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK,
-                LoginRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK);
+                LoginRequest.USERNAME_NOTBLANK,
+                LoginRequest.PASSWORD_NOTBLANK);
     }
 
     @Test
