@@ -3,7 +3,6 @@ package com.xuhuang.diary.controllers.view.v1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import javax.security.auth.message.AuthException;
 
@@ -30,10 +29,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DiaryController {
 
-    private static final String REDIRECT_ERROR_400 = "redirect:/error/400";
-    private static final String REDIRECT_ERROR_404 = "redirect:/error/404";
-    private static final String REDIRECT_ERROR_403 = "redirect:/error/403";
-
     private static final String USER = "user";
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
@@ -53,7 +48,7 @@ public class DiaryController {
             Model model,
             @PathVariable(required = false) Long bookId,
             @PathVariable(required = false) Integer page,
-            @PathVariable(required = false) Integer size) {
+            @PathVariable(required = false) Integer size) throws AuthException {
         List<Book> books = diaryService.getBooks();
 
         // if have not selected a book and there are books
@@ -64,20 +59,13 @@ public class DiaryController {
         // if selected a book
         if (bookId != null) {
             Page<Record> recordPage;
-            try {
-                if (page == null) {
-                    recordPage = diaryService.getRecords(bookId);
-                } else if (size == null) {
-                    recordPage = diaryService.getRecords(bookId, page);
-                } else {
-                    recordPage = diaryService.getRecords(bookId, page, size);
-                }
-            } catch (AuthException e) {
-                return REDIRECT_ERROR_403;
-            } catch (NoSuchElementException e) {
-                return REDIRECT_ERROR_404;
-            } catch (IllegalArgumentException e) {
-                return REDIRECT_ERROR_400;
+
+            if (page == null) {
+                recordPage = diaryService.getRecords(bookId);
+            } else if (size == null) {
+                recordPage = diaryService.getRecords(bookId, page);
+            } else {
+                recordPage = diaryService.getRecords(bookId, page, size);
             }
 
             int totalPages = recordPage.getTotalPages();
