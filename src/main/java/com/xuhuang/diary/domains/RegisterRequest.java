@@ -6,6 +6,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.xuhuang.diary.validators.FieldMatch;
+import com.xuhuang.diary.validators.UniqueEmail;
+import com.xuhuang.diary.validators.UniqueUsername;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,12 +44,14 @@ public class RegisterRequest {
     public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK = "Password confirmation must not be blank.";
     public static final String VALIDATION_MESSAGE_PASSWORD_CONFIRMATION = "Password confirmation does not match.";
 
+    @UniqueUsername
     @Pattern(regexp = "^[a-zA-Z0-9_-]*$", message = VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY)
     @Pattern(regexp = "^.*[a-zA-Z0-9].*$", message = VALIDATION_MESSAGE_USERNAME_AT_LEAST)
     @Size(min = USERNAME_SIZE_MIN, max = USERNAME_SIZE_MAX, message = VALIDATION_MESSAGE_USERNAME_SIZE)
     @NotBlank(message = VALIDATION_MESSAGE_USERNAME_NOTBLANK)
     private String username;
 
+    @UniqueEmail
     @Email(message = VALIDATION_MESSAGE_EMAIL)
     @NotBlank(message = VALIDATION_MESSAGE_EMAIL_NOTBLANK)
     private String email;
