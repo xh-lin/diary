@@ -24,7 +24,7 @@ public class AuthController {
 
     private static final String REDIRECT_ROOT = "redirect:/";
     private static final String REQUEST_BODY = "requestBody";
-    private static final String ERRORS = "errors";
+    private static final String ERROR_MESSAGES = "errorMessages";
 
     private final UserService userService;
 
@@ -41,13 +41,13 @@ public class AuthController {
     @PostMapping("/register")
     public String submitRegistration(@Valid RegisterRequest requestBody, BindingResult br, Model model) {
         if (br.hasErrors()) {
-            List<String> errors = br.getAllErrors()
+            List<String> errorMessages = br.getAllErrors()
                     .stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
 
             model.addAttribute(REQUEST_BODY, requestBody);
-            model.addAttribute(ERRORS, errors);
+            model.addAttribute(ERROR_MESSAGES, errorMessages);
             return Template.REGISTER.toString();
         }
 

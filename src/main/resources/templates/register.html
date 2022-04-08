@@ -10,10 +10,8 @@
 
     <h3>Register a new account</h3>
     <form th:object="${requestBody}" th:action="@{/register}" method="POST">
-        <div th:if="${errors}" class="alert alert-danger">
-            <div th:each="error : ${errors}">
-                <span th:text="${error}"></span>
-            </div>
+        <div th:if="${errorMessages}" class="alert alert-danger">
+            <div th:each="error : ${errorMessages}" th:text="${error}"></div>
         </div>
 
         <div>
