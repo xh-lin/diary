@@ -44,6 +44,8 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
 
+    protected static final String MESSAGE_JPEXP = "$.message";
+
     private static final String TEXT = "text";
     private static final String TITLE = "title";
 
