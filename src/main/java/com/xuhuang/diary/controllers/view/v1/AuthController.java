@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private static final String REDIRECT_ROOT = "redirect:/";
-    private static final String REQUEST = "request";
+    private static final String REQUEST_BODY = "requestBody";
     private static final String ERRORS = "errors";
 
     private final UserService userService;
@@ -34,24 +34,24 @@ public class AuthController {
             // redirect to home page if logged in already
             return REDIRECT_ROOT;
         }
-        model.addAttribute(REQUEST, new RegisterRequest());
+        model.addAttribute(REQUEST_BODY, new RegisterRequest());
         return Template.REGISTER.toString();
     }
 
     @PostMapping("/register")
-    public String submitRegistration(@Valid RegisterRequest request, BindingResult br, Model model) {
+    public String submitRegistration(@Valid RegisterRequest requestBody, BindingResult br, Model model) {
         if (br.hasErrors()) {
             List<String> errors = br.getAllErrors()
                     .stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
 
-            model.addAttribute(REQUEST, request);
+            model.addAttribute(REQUEST_BODY, requestBody);
             model.addAttribute(ERRORS, errors);
             return Template.REGISTER.toString();
         }
 
-        userService.register(request);
+        userService.register(requestBody);
         return Template.LOGIN.toString();
     }
 
