@@ -41,7 +41,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         List<String> global = ex.getBindingResult().getGlobalErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
-        messages.put("global", global);
+        if (!global.isEmpty()) {
+            messages.put("global", global);
+        }
 
         body.put("timestamp", new Date());
         body.put("status", status.value());
