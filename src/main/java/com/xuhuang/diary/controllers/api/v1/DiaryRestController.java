@@ -24,7 +24,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/diary")
 @RequiredArgsConstructor
@@ -49,57 +51,93 @@ public class DiaryRestController {
 
     @PostMapping()
     public ResponseEntity<Object> createBook(@RequestParam String title) {
+        log.info("createBook(title: {})", title);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Book book = diaryService.createBook(title);
         body.put(DATA, book);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
+        log.info("{}", response);
+
+        return response;
     }
 
     @GetMapping()
     public ResponseEntity<Object> getBooks() {
+        log.info("getBooks()");
+
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(DATA, diaryService.getBooks());
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @GetMapping("/{bookId}")
     public ResponseEntity<Object> getBook(@PathVariable Long bookId) throws AuthException {
+        log.info("getBook(bookId: {})", bookId);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Book book = diaryService.getBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @PutMapping("/{bookId}")
     public ResponseEntity<Object> updateBook(@PathVariable Long bookId, @RequestParam String title)
             throws AuthException {
+        log.info("updateBook(bookId: {}, title: {})", bookId, title);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Book book = diaryService.updateBook(bookId, title);
         body.put(DATA, book);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Object> deleteBook(@PathVariable Long bookId) throws AuthException {
+        log.info("deleteBook(bookId: {})", bookId);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Book book = diaryService.deleteBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @PostMapping("/{bookId}/record")
     public ResponseEntity<Object> createRecord(@PathVariable Long bookId, @RequestParam String text)
             throws AuthException {
+        log.info("createRecord(bookId: {}, text: {})", bookId, text);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Record recd = diaryService.createRecord(bookId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
+        log.info("{}", response);
+
+        return response;
     }
 
     @GetMapping({
@@ -110,6 +148,8 @@ public class DiaryRestController {
             @PathVariable Long bookId,
             @PathVariable(required = false) Integer page,
             @PathVariable(required = false) Integer size) throws AuthException {
+        log.info("getRecords(bookId: {}, page: {}, size: {})", bookId, page, size);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Page<Record> recordPage;
 
@@ -139,35 +179,57 @@ public class DiaryRestController {
 
         body.put(DATA, data);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @GetMapping("/record/{recordId}")
     public ResponseEntity<Object> getRecord(@PathVariable Long recordId) throws AuthException {
+        log.info("getRecord(recordId: {})", recordId);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Record recd = diaryService.getRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @PutMapping("/record/{recordId}")
     public ResponseEntity<Object> updateRecord(@PathVariable Long recordId, @RequestParam String text)
             throws AuthException {
+        log.debug("updateRecord(recordId: {}, text: {})", recordId, text);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Record recd = diaryService.updateRecord(recordId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @DeleteMapping("/record/{recordId}")
     public ResponseEntity<Object> deleteRecord(@PathVariable Long recordId) throws AuthException {
+        log.info("deleteRecord(recordId: {})", recordId);
+
         Map<String, Object> body = new LinkedHashMap<>();
         Record recd = diaryService.deleteRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
 }

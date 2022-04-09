@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice("com.xuhuang.diary.controllers.api")
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -49,7 +52,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         body.put("messages", messages);
-        return new ResponseEntity<>(body, headers, status);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, headers, status);
+        log.info("{}", response);
+
+        return response;
     }
 
     @ExceptionHandler(Exception.class)
@@ -73,7 +80,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         body.put("message", ex.getMessage());
-        return new ResponseEntity<>(body, status);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, status);
+        log.info("{}", response);
+
+        return response;
     }
 
 }
