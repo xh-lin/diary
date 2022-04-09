@@ -3,15 +3,16 @@
 
 <head>
     <div th:replace="fragments/global::header"></div>
-    <title th:text="${title} ? ${title} : 'Error'"></title>
+    <title th:text="'Error ' + ${status} + ' - ' + ${error}"></title>
 </head>
 
 <body class="d-flex flex-column">
 
     <div class="d-flex justify-content-center my-auto">
         <div class="text-center">
-            <h1 th:text="${code}"></h1>
-            <p><strong th:utext="${message} ? ${message} : 'Something went wrong'"></strong></p>
+            <h1 th:text="${status}"></h1>
+            <p><strong th:utext="${error}"></strong></p>
+            <p th:if="${message}" th:utext="${message}"></p>
             <a th:href="@{/}">Back to Home Page</a>
         </div>
     </div>
