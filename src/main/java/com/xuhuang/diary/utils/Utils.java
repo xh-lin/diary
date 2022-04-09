@@ -8,11 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class Utils {
 
-    private Utils() {}
+    private Utils() {
+    }
 
     /*
-        Converts an Object to a JSON string
-    */
+     * Converts an Object to a JSON string
+     */
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -22,11 +23,11 @@ public final class Utils {
     }
 
     /*
-        Converts a date string in ISO format to Timestamp
-    */
+     * Converts a date string in ISO format to Timestamp
+     */
     public static Timestamp asTimestamp(String timeIsoStr) {
         return Timestamp.valueOf(
-            LocalDateTime.parse(timeIsoStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                LocalDateTime.parse(timeIsoStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
 }

@@ -1,39 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <div th:replace="fragments/global::header"></div>
-    <title>Registration</title>
+    <title>Registration | Diary Demo</title>
 </head>
-<body>
 
-    <h3>Register a new account</h3>
-    <form th:object="${request}" th:action="@{/register}" method="POST">
-        <div th:if="${errors}" class="alert alert-danger">
-            <div th:each="error : ${errors}">
-                <span th:text="${error}"></span>
-            </div>
-        </div>
+<body class="d-flex flex-column">
 
-        <div>
-            <input type="text" th:field="*{username}" placeholder="Username" required>
-        </div>
-        <div>
-            <input type="email" th:field="*{email}" placeholder="Email" required>
-        </div>
-        <div>
-            <input type="password" th:field="*{password}" placeholder="Password" required>
-        </div>
-        <div>
-            <input type="password" th:field="*{passwordConfirm}" placeholder="Confirm password" required>
-        </div>
-        <div>
-            <button type="submit" class="btn">Register</button>
-        </div>
-    </form>
+    <div class="d-flex justify-content-center my-auto">
+        <div class="card p-3">
+            <h3>Register a new account</h3>
 
-    <a th:href="@{/login}">Already have a account</a>
+            <form class="my-3" th:object="${requestBody}" th:action="@{/register}" method="POST">
+                <div class="mb-3">
+                    <input type="text" class="form-control"
+                        th:classappend="${errorMessages != null && errorMessages.containsKey('username') ? 'is-invalid' : ''}"
+                        th:field="*{username}" placeholder="Username" required>
+                    <ul th:if="${errorMessages?.containsKey('username')}" class="invalid-feedback">
+                        <li th:each="message : ${errorMessages.username}" th:text="${message}"></li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <input type="email" class="form-control"
+                        th:classappend="${errorMessages != null && errorMessages.containsKey('email') ? 'is-invalid' : ''}"
+                        th:field="*{email}" placeholder="Email" required>
+                    <ul th:if="${errorMessages?.containsKey('email')}" class="invalid-feedback">
+                        <li th:each="message : ${errorMessages.email}" th:text="${message}"></li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" class="form-control"
+                        th:classappend="${errorMessages != null && errorMessages.containsKey('password') ? 'is-invalid' : ''}"
+                        th:field="*{password}" placeholder="Password" required>
+                    <ul th:if="${errorMessages?.containsKey('password')}" class="invalid-feedback">
+                        <li th:each="message : ${errorMessages.password}" th:text="${message}"></li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <input type="password" class="form-control"
+                        th:classappend="${errorMessages != null && errorMessages.containsKey('passwordConfirm') ? 'is-invalid' : ''}"
+                        th:field="*{passwordConfirm}" placeholder="Confirm password" required>
+                    <ul th:if="${errorMessages?.containsKey('passwordConfirm')}" class="invalid-feedback">
+                        <li th:each="message : ${errorMessages.passwordConfirm}" th:text="${message}"></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+
+            <a th:href="@{/login}">Already have a account</a>
+        </div>
+    </div>
+
+    <footer th:include="fragments/global::footer"></footer>
 
     <div th:replace="fragments/global::external_scripts"></div>
 
 </body>
+
 </html>

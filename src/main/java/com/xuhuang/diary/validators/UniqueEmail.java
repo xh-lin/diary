@@ -9,20 +9,18 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Target({ ElementType.TYPE })
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FieldMatchValidator.class)
+@Constraint(validatedBy = UniqueEmailValidator.class)
 @Documented
-public @interface FieldMatch {
+public @interface UniqueEmail {
 
-    public static final String MESSAGE = "fields must match";
+    public static final String MESSAGE = "email must be unique";
 
     String message() default MESSAGE;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
-    String[] fields();
 
 }

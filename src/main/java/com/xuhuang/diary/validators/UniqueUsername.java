@@ -9,20 +9,18 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Target({ ElementType.TYPE })
+@Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FieldMatchValidator.class)
+@Constraint(validatedBy = UniqueUsernameValidator.class)
 @Documented
-public @interface FieldMatch {
+public @interface UniqueUsername {
 
-    public static final String MESSAGE = "fields must match";
+    public static final String MESSAGE = "username must be unique";
 
     String message() default MESSAGE;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
-    String[] fields();
 
 }

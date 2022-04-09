@@ -24,11 +24,6 @@ import org.springframework.util.MultiValueMap;
 
 public abstract class RestControllerTests {
 
-    protected static final String DATA_JPEXP = "$.data";
-    protected static final String ERROR_JPEXP = "$.error";
-    protected static final String ERRORS_JPEXP = "$.errors";
-    protected static final String MESSAGE_JPEXP = "$.message";
-
     protected static final String MOCK_PASSWORD = "Qwerty123.";
     protected static final String MOCK_PASSWORD_ENCRYPTED = new BCryptPasswordEncoder().encode(MOCK_PASSWORD);
     protected static final UserRole MOCK_USER_ROLE = UserRole.USER;
@@ -41,10 +36,10 @@ public abstract class RestControllerTests {
             throw new IllegalArgumentException("id must be greater than 0");
         }
         User user = new User(
-            String.format("mockUser%d", id),
-            String.format("mockUser%d@user.com", id),
-            MOCK_PASSWORD_ENCRYPTED,
-            MOCK_USER_ROLE);
+                String.format("mockUser%d", id),
+                String.format("mockUser%d@user.com", id),
+                MOCK_PASSWORD_ENCRYPTED,
+                MOCK_USER_ROLE);
         user.setId(id);
         return user;
     }
@@ -60,8 +55,8 @@ public abstract class RestControllerTests {
 
         if (requestBody != null) {
             requestBuilder
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(requestBody));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(requestBody));
         }
 
         if (user != null) {
@@ -69,68 +64,68 @@ public abstract class RestControllerTests {
         }
 
         return mockMvc.perform(requestBuilder)
-            .andDo(print())
-            .andExpect(status().is(httpStatus.value()));
+                .andDo(print())
+                .andExpect(status().is(httpStatus.value()));
     }
 
     /*
-        httpMethod, urlTemplate, uriVars, requestParams, user, httpStatus
-    */
+     * httpMethod, urlTemplate, uriVars, requestParams, user, httpStatus
+     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             Object[] uriVars, MultiValueMap<String, String> requestParams, User user,
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
-            httpMethod, urlTemplate,
-            uriVars, requestParams, null, user,
-            httpStatus);
+                httpMethod, urlTemplate,
+                uriVars, requestParams, null, user,
+                httpStatus);
     }
 
     /*
-        httpMethod, urlTemplate, uriVars, user, httpStatus
-    */
+     * httpMethod, urlTemplate, uriVars, user, httpStatus
+     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             Object[] uriVars, User user,
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
-            httpMethod, urlTemplate,
-            uriVars, null, null, user,
-            httpStatus);
+                httpMethod, urlTemplate,
+                uriVars, null, null, user,
+                httpStatus);
     }
 
     /*
-        httpMethod, urlTemplate, requestParams, user, httpStatus
-    */
+     * httpMethod, urlTemplate, requestParams, user, httpStatus
+     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             MultiValueMap<String, String> requestParams, User user,
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
-            httpMethod, urlTemplate,
-            new Object[] {}, requestParams, null, user,
-            httpStatus);
+                httpMethod, urlTemplate,
+                new Object[] {}, requestParams, null, user,
+                httpStatus);
     }
 
     /*
-        httpMethod, urlTemplate, user, httpStatus
-    */
+     * httpMethod, urlTemplate, user, httpStatus
+     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             User user,
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
-            httpMethod, urlTemplate,
-            new Object[] {}, null, null, user,
-            httpStatus);
+                httpMethod, urlTemplate,
+                new Object[] {}, null, null, user,
+                httpStatus);
     }
 
     /*
-        httpMethod, urlTemplate, requestBody, httpStatus
-    */
+     * httpMethod, urlTemplate, requestBody, httpStatus
+     */
     protected ResultActions mockMvcPerform(HttpMethod httpMethod, String urlTemplate,
             Object requestBody,
             HttpStatus httpStatus) throws Exception {
         return mockMvcPerform(
-            httpMethod, urlTemplate,
-            new Object[] {}, null, requestBody, null,
-            httpStatus);
+                httpMethod, urlTemplate,
+                new Object[] {}, null, requestBody, null,
+                httpStatus);
     }
 
     protected ResultActions expectArray(ResultActions resultActions,
@@ -149,14 +144,14 @@ public abstract class RestControllerTests {
     }
 
     /*
-        resultActions, jsonPathExpression, items
-    */
+     * resultActions, jsonPathExpression, items
+     */
     protected ResultActions expectArray(ResultActions resultActions,
-            String jsonPathExpression,  Object... items) throws Exception {
+            String jsonPathExpression, Object... items) throws Exception {
         return expectArray(
-            resultActions,
-            null, true,
-            jsonPathExpression, items);
+                resultActions,
+                null, true,
+                jsonPathExpression, items);
     }
 
 }

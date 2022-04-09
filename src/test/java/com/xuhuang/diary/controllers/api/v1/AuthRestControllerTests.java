@@ -12,7 +12,6 @@ import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.UserRepository;
-import com.xuhuang.diary.services.UserService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,6 +28,7 @@ class AuthRestControllerTests extends RestControllerTests {
     private static final String API_V1_AUTH_LOGIN = "/api/v1/auth/login";
     private static final String API_V1_AUTH_REGISTER = "/api/v1/auth/register";
 
+    protected static final String MESSAGE_JPEXP = "$.message";
     private static User mockUser;
 
     @MockBean
@@ -43,18 +43,18 @@ class AuthRestControllerTests extends RestControllerTests {
     void registerValidateUsername() throws Exception {
         // only -, _, letters or numbers
         RegisterRequest requestBody = new RegisterRequest(
-            "user:)",
-            mockUser.getEmail(),
-            MOCK_PASSWORD,
-            MOCK_PASSWORD);
+                "user:)",
+                mockUser.getEmail(),
+                MOCK_PASSWORD,
+                MOCK_PASSWORD);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_USERNAME_CONTAIN_ONLY);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_CONTAIN_ONLY);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -62,12 +62,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setUsername("-__-");
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_USERNAME_AT_LEAST);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_AT_LEAST);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -75,14 +75,14 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setUsername("1");
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_USERNAME_SIZE
-                .replace("{min}", String.valueOf(RegisterRequest.USERNAME_SIZE_MIN))
-                .replace("{max}", String.valueOf(RegisterRequest.USERNAME_SIZE_MAX)));
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_SIZE
+                        .replace("{min}", String.valueOf(RegisterRequest.USERNAME_SIZE_MIN))
+                        .replace("{max}", String.valueOf(RegisterRequest.USERNAME_SIZE_MAX)));
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -90,12 +90,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setUsername(null);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -104,18 +104,18 @@ class AuthRestControllerTests extends RestControllerTests {
     void registerValidateEmail() throws Exception {
         // email format
         RegisterRequest requestBody = new RegisterRequest(
-            mockUser.getUsername(),
-            "badEmail",
-            MOCK_PASSWORD,
-            MOCK_PASSWORD);
+                mockUser.getUsername(),
+                "badEmail",
+                MOCK_PASSWORD,
+                MOCK_PASSWORD);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_EMAIL);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_FORMAT);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -123,12 +123,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setEmail(null);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_EMAIL_NOTBLANK);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -138,18 +138,18 @@ class AuthRestControllerTests extends RestControllerTests {
         // at least one lowercase letter
         String password = "QWERTY123.";
         RegisterRequest requestBody = new RegisterRequest(
-            mockUser.getUsername(),
-            mockUser.getEmail(),
-            password,
-            password);
+                mockUser.getUsername(),
+                mockUser.getEmail(),
+                password,
+                password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_LOWER);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                RegisterRequest.PASSWORD_LOWER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -159,12 +159,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_UPPER);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                RegisterRequest.PASSWORD_UPPER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -174,12 +174,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NUMBER);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                RegisterRequest.PASSWORD_NUMBER);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -189,12 +189,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SPECIAL);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                RegisterRequest.PASSWORD_SPECIAL);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -204,14 +204,14 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_SIZE
-                .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
-                .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)));
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                RegisterRequest.PASSWORD_SIZE
+                        .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
+                        .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)));
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -221,13 +221,15 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRM_NOTBLANK);
+                expectArray(
+                        mockMvcPerform(
+                                HttpMethod.POST, API_V1_AUTH_REGISTER,
+                                requestBody,
+                                HttpStatus.BAD_REQUEST),
+                        "$.messages.password",
+                        RegisterRequest.PASSWORD_NOTBLANK),
+                "$.messages.passwordConfirm",
+                RegisterRequest.PASSWORD_CONFIRM_NOTBLANK);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -236,12 +238,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setPasswordConfirm("differentPassword");
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            RegisterRequest.VALIDATION_MESSAGE_PASSWORD_CONFIRMATION);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.global",
+                RegisterRequest.PASSWORD_CONFIRMATION);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -250,34 +252,20 @@ class AuthRestControllerTests extends RestControllerTests {
     void registerConflict() throws Exception {
         setupMockRepository();
 
-        // username and email taken
-        RegisterRequest requestBody = new RegisterRequest(
-            mockUser.getUsername(),
-            mockUser.getEmail(),
-            MOCK_PASSWORD,
-            MOCK_PASSWORD);
-
-        expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.CONFLICT),
-            ERRORS_JPEXP,
-            UserService.USERNAME_ALREADY_TAKEN,
-            UserService.EMAIL_ALREADY_TAKEN);
-
-        verify(mockUserRepository, times(0)).save(any(User.class));
-
         // username taken
-        requestBody.setEmail("another@user.com");
+        RegisterRequest requestBody = new RegisterRequest(
+                mockUser.getUsername(),
+                "another@user.com",
+                MOCK_PASSWORD,
+                MOCK_PASSWORD);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.CONFLICT),
-            ERRORS_JPEXP,
-            UserService.USERNAME_ALREADY_TAKEN);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_ALREADY_TAKEN);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -286,12 +274,12 @@ class AuthRestControllerTests extends RestControllerTests {
         requestBody.setUsername("anotherUser");
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_REGISTER,
-                requestBody,
-                HttpStatus.CONFLICT),
-            ERRORS_JPEXP,
-            UserService.EMAIL_ALREADY_TAKEN);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_ALREADY_TAKEN);
 
         verify(mockUserRepository, times(0)).save(any(User.class));
     }
@@ -299,16 +287,16 @@ class AuthRestControllerTests extends RestControllerTests {
     @Test
     void registerSuccess() throws Exception {
         RegisterRequest requestBody = new RegisterRequest(
-            mockUser.getUsername(),
-            mockUser.getEmail(),
-            MOCK_PASSWORD,
-            MOCK_PASSWORD);
+                mockUser.getUsername(),
+                mockUser.getEmail(),
+                MOCK_PASSWORD,
+                MOCK_PASSWORD);
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_AUTH_REGISTER,
-            requestBody,
-            HttpStatus.CREATED)
-            .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.REGISTERED_SUCCESSFULLY));
+                HttpMethod.POST, API_V1_AUTH_REGISTER,
+                requestBody,
+                HttpStatus.CREATED)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.REGISTERED_SUCCESSFULLY));
 
         verify(mockUserRepository, times(1)).save(any(User.class));
     }
@@ -316,16 +304,26 @@ class AuthRestControllerTests extends RestControllerTests {
     @Test
     void loginValidations() throws Exception {
         // email and password not blank
-        LoginRequest requestBody = new LoginRequest(null, null);
+        LoginRequest requestBody = new LoginRequest(null, MOCK_PASSWORD);
 
         expectArray(
-            mockMvcPerform(
-                HttpMethod.POST, API_V1_AUTH_LOGIN,
-                requestBody,
-                HttpStatus.BAD_REQUEST),
-            ERRORS_JPEXP,
-            LoginRequest.VALIDATION_MESSAGE_USERNAME_NOTBLANK,
-            LoginRequest.VALIDATION_MESSAGE_PASSWORD_NOTBLANK);
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_LOGIN,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                LoginRequest.USERNAME_NOTBLANK);
+
+        requestBody.setUsername(mockUser.getUsername());
+        requestBody.setPassword(null);
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_LOGIN,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.password",
+                LoginRequest.PASSWORD_NOTBLANK);
     }
 
     @Test
@@ -335,10 +333,10 @@ class AuthRestControllerTests extends RestControllerTests {
         LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), MOCK_PASSWORD);
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_AUTH_LOGIN,
-            requestBody,
-            HttpStatus.OK)
-            .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.LOGGED_IN_SUCCESSFULLY));
+                HttpMethod.POST, API_V1_AUTH_LOGIN,
+                requestBody,
+                HttpStatus.OK)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.LOGGED_IN_SUCCESSFULLY));
     }
 
     @Test
@@ -348,10 +346,10 @@ class AuthRestControllerTests extends RestControllerTests {
         LoginRequest requestBody = new LoginRequest(mockUser.getUsername(), "wrongPassword");
 
         mockMvcPerform(
-            HttpMethod.POST, API_V1_AUTH_LOGIN,
-            requestBody,
-            HttpStatus.UNAUTHORIZED)
-            .andExpect(jsonPath(ERROR_JPEXP).value(AuthRestController.INVALID_USERNAME_AND_PASSWORD));
+                HttpMethod.POST, API_V1_AUTH_LOGIN,
+                requestBody,
+                HttpStatus.UNAUTHORIZED)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(AuthRestController.INVALID_USERNAME_AND_PASSWORD));
     }
 
     private void setupMockRepository() {

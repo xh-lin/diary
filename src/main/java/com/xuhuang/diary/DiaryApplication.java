@@ -22,9 +22,9 @@ public class DiaryApplication {
 	}
 
 	@PostConstruct
-    void started() {
-        // set JVM timezone as UTC
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
+	void started() {
+		// set JVM timezone as UTC
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 
 }

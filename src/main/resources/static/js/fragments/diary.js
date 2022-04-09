@@ -61,7 +61,7 @@ formatTimestamps(records);
 
 const createBookForm = $(CREATE_BOOK_FORM_ID);
 
-setupAjaxFormSubmit(createBookForm, function(res) {
+setupAjaxFormSubmit(createBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
@@ -69,7 +69,7 @@ setupAjaxFormSubmit(createBookForm, function(res) {
         data: JSON.stringify(res.data),
         contentType: 'application/json',
         error: errorHandler,
-        success: function(bookFragment) {
+        success: function (bookFragment) {
             if (currentBookId === null) {
                 redirect(DIARY_URL, { toast: res.message });
             } else {
@@ -88,7 +88,7 @@ const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
 const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
 const updateBookFormTitleInput = updateBookForm.find(TITLE_INPUT_ID);
 
-updateBookDialogModal.on('show.bs.modal', function(event) {
+updateBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -101,7 +101,7 @@ updateBookDialogModal.on('show.bs.modal', function(event) {
     updateBookFormTitleInput.val(title);
 });
 
-setupAjaxFormSubmit(updateBookForm, function(res) {
+setupAjaxFormSubmit(updateBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
@@ -109,7 +109,7 @@ setupAjaxFormSubmit(updateBookForm, function(res) {
         data: JSON.stringify(res.data),
         contentType: 'application/json',
         error: errorHandler,
-        success: function(bookFragment) {
+        success: function (bookFragment) {
             // replace book fragment
             const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
             bookLinks.find(BOOK_FRAGMENT_ID).replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID));
@@ -125,7 +125,7 @@ const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID);
 const deleteBookForm = deleteBookDialogModal.find(DELETE_BOOK_FORM_ID);
 const deleteBookMessage = deleteBookDialogModal.find(DELETE_BOOK_MESSAGE_ID);
 
-deleteBookDialogModal.on('show.bs.modal', function(event) {
+deleteBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -138,7 +138,7 @@ deleteBookDialogModal.on('show.bs.modal', function(event) {
     deleteBookMessage.html(`<b>${title}</b> will be deleted.`);
 });
 
-setupAjaxFormSubmit(deleteBookForm, function(res) {
+setupAjaxFormSubmit(deleteBookForm, function (res) {
     const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
     const bookLink = bookLinks.find(BOOK_FRAGMENT_ID);
     // if deleting a selected book
@@ -157,7 +157,7 @@ setupAjaxFormSubmit(deleteBookForm, function(res) {
 
 const loadRecordsForm = $(LOAD_RECORDS_FORM_ID);
 
-setupAjaxFormSubmit(loadRecordsForm, function(res) {
+setupAjaxFormSubmit(loadRecordsForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
@@ -165,7 +165,7 @@ setupAjaxFormSubmit(loadRecordsForm, function(res) {
         data: JSON.stringify(res.data.content),
         contentType: 'application/json',
         error: errorHandler,
-        success: function(recordsFragment) {
+        success: function (recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
             formatTimestamps(recordsHtml);
             records.append(recordsHtml.children());
@@ -178,8 +178,8 @@ setupAjaxFormSubmit(loadRecordsForm, function(res) {
     });
 });
 
-loadRecordsForm.find('button:submit').on('focus', function(event) {
-    setTimeout(function() {
+loadRecordsForm.find('button:submit').on('focus', function (event) {
+    setTimeout(function () {
         event.currentTarget.blur();
     }, 200);
 });
@@ -190,7 +190,7 @@ loadRecordsForm.find('button:submit').on('focus', function(event) {
 
 const createRecordForm = $(CREATE_RECORD_FORM_ID);
 
-setupAjaxFormSubmit(createRecordForm, function(res) {
+setupAjaxFormSubmit(createRecordForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
@@ -198,7 +198,7 @@ setupAjaxFormSubmit(createRecordForm, function(res) {
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function(recordsFragment) {
+        success: function (recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
             formatTimestamps(recordsHtml);
             records.prepend(recordsHtml.children());
@@ -214,7 +214,7 @@ const updateRecordDialogModal = $(UPDATE_RECORD_DIALOG_MODAL_ID);
 const updateRecordForm = updateRecordDialogModal.find(UPDATE_RECORD_FORM_ID);
 const updateRecordFormTextarea = updateRecordForm.find('textarea');
 
-updateRecordDialogModal.on('show.bs.modal', function(event) {
+updateRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -227,7 +227,7 @@ updateRecordDialogModal.on('show.bs.modal', function(event) {
     updateRecordFormTextarea.val(text);
 });
 
-setupAjaxFormSubmit(updateRecordForm, function(res) {
+setupAjaxFormSubmit(updateRecordForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
@@ -235,7 +235,7 @@ setupAjaxFormSubmit(updateRecordForm, function(res) {
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function(recordsFragment) {
+        success: function (recordsFragment) {
             const recordsHtml = $($.parseHTML(recordsFragment));
             formatTimestamps(recordsHtml);
             // replace record fragment
@@ -253,7 +253,7 @@ const deleteRecordDialogModal = $(DELETE_RECORD_DIALOG_MODAL_ID);
 const deleteRecordForm = deleteRecordDialogModal.find(DELETE_RECORD_FORM_ID);
 const deleteRecordMessage = deleteRecordDialogModal.find(DELETE_RECORD_MESSAGE_ID);
 
-deleteRecordDialogModal.on('show.bs.modal', function(event) {
+deleteRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
 
@@ -271,7 +271,7 @@ deleteRecordDialogModal.on('show.bs.modal', function(event) {
     `);
 });
 
-setupAjaxFormSubmit(deleteRecordForm, function(res) {
+setupAjaxFormSubmit(deleteRecordForm, function (res) {
     const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
     const record = records.find(RECORD_FRAGMENT_ID);
     record.remove();

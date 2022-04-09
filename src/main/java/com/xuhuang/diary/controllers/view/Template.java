@@ -1,4 +1,4 @@
-package com.xuhuang.diary.controllers;
+package com.xuhuang.diary.controllers.view;
 
 public enum Template {
 

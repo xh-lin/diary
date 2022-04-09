@@ -32,9 +32,7 @@ public class Record extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
-    @JsonIdentityInfo( // Jackson only serialize id
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("book_id")
     @ToString.Exclude

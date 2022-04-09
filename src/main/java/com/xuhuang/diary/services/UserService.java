@@ -1,10 +1,6 @@
 package com.xuhuang.diary.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.xuhuang.diary.domains.RegisterRequest;
-import com.xuhuang.diary.exceptions.RegisterException;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.models.UserRole;
 import com.xuhuang.diary.repositories.UserRepository;
@@ -25,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserDetailsService {
 
     public static final String USER_NOT_FOUND_MSG = "User with username %s not found.";
-    public static final String USERNAME_ALREADY_TAKEN = "Username already taken.";
-    public static final String EMAIL_ALREADY_TAKEN = "Email already taken.";
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -34,35 +28,19 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(
-            () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
+                () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
     /*
-        Throws:
-            RegisterException - if either username or email is taken
-    */
-    public void register(RegisterRequest request) throws RegisterException {
-        List<String> exceptionMessages = new ArrayList<>();
-        boolean usernameExists = userRepository.findByUsername(request.getUsername()).isPresent();
-        boolean emailExists = userRepository.findByEmail(request.getEmail()).isPresent();
-
-        if (usernameExists) {
-            exceptionMessages.add(USERNAME_ALREADY_TAKEN);
-        }
-
-        if (emailExists) {
-            exceptionMessages.add(EMAIL_ALREADY_TAKEN);
-        }
-
-        if (!exceptionMessages.isEmpty()) {
-            throw new RegisterException(exceptionMessages);
-        }
-
+     * Throws:
+     * RegisterException - if either username or email is taken
+     */
+    public void register(RegisterRequest request) {
         User user = new User(
-            request.getUsername(),
-            request.getEmail(),
-            bCryptPasswordEncoder.encode(request.getPassword()),
-            UserRole.USER);
+                request.getUsername(),
+                request.getEmail(),
+                bCryptPasswordEncoder.encode(request.getPassword()),
+                UserRole.USER);
 
         userRepository.save(user);
     }

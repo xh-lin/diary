@@ -38,9 +38,9 @@ public class DiaryService {
     private final UserService userService;
 
     /*
-        Throws:
-            IllegalArgumentException - if title is blank
-    */
+     * Throws:
+     * IllegalArgumentException - if title is blank
+     */
     public Book createBook(String title) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(TITLE_MUST_NOT_BE_BLANK);
@@ -53,10 +53,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Book getBook(Long bookId) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
@@ -64,11 +64,11 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-            IllegalArgumentException - if title is blank
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     * IllegalArgumentException - if title is blank
+     */
     public Book updateBook(Long bookId, String title) throws AuthException {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(TITLE_MUST_NOT_BE_BLANK);
@@ -80,10 +80,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Book deleteBook(Long bookId) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
@@ -92,10 +92,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Record createRecord(Long bookId, String text) throws AuthException {
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
@@ -103,11 +103,11 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-            IllegalArgumentException - if either page < 0 or size <= 0
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     * IllegalArgumentException - if either page < 0 or size <= 0
+     */
     public Page<Record> getRecords(Long bookId, int page, int size) throws AuthException {
         if (page < 0) {
             throw new IllegalArgumentException(PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO);
@@ -130,10 +130,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Record getRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
@@ -141,10 +141,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Record updateRecord(Long recordId, String text) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
@@ -153,10 +153,10 @@ public class DiaryService {
     }
 
     /*
-        Throws:
-            AuthException - if book does not belong to the current user
-            NoSuchElementException - if book is not found
-    */
+     * Throws:
+     * AuthException - if book does not belong to the current user
+     * NoSuchElementException - if book is not found
+     */
     public Record deleteRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
