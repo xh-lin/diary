@@ -12,7 +12,10 @@ import com.xuhuang.diary.services.UserService;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -39,15 +42,22 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String submitRegistration(@Valid RegisterRequest requestBody, BindingResult br, Model model) {
+    public String submitRegistration(Model model, @Valid RegisterRequest requestBody, BindingResult br) {
         if (br.hasErrors()) {
-            List<String> errorMessages = br.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
+            MultiValueMap<String, String> errorMessages = new LinkedMultiValueMap<>();
 
-            model.addAttribute(REQUEST_BODY, requestBody);
+            for (FieldError error : br.getFieldErrors()) {
+                errorMessages.add(error.getField(), error.getDefaultMessage());
+            }
+
+            List<String> global = br.getGlobalErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            if (!global.isEmpty()) {
+                errorMessages.put("passwordConfirm", global);
+            }
+
             model.addAttribute(ERROR_MESSAGES, errorMessages);
+            model.addAttribute(REQUEST_BODY, requestBody);
             return Template.REGISTER.toString();
         }
 
