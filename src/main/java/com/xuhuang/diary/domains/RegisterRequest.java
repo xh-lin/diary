@@ -13,11 +13,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @FieldMatch(fields = { "password", "passwordConfirm" }, message = RegisterRequest.PASSWORD_CONFIRMATION)
 public class RegisterRequest {
 
@@ -55,6 +57,7 @@ public class RegisterRequest {
     @UniqueEmail(message = EMAIL_ALREADY_TAKEN)
     @Email(message = EMAIL_FORMAT)
     @NotBlank(message = EMAIL_NOTBLANK)
+    @ToString.Exclude
     private String email;
 
     @Pattern(regexp = "^.*[a-z].*$", message = PASSWORD_LOWER)
@@ -63,9 +66,11 @@ public class RegisterRequest {
     @Pattern(regexp = "^.*[^\\w\\s].*$", message = PASSWORD_SPECIAL)
     @Size(min = PASSWORD_SIZE_MIN, max = PASSWORD_SIZE_MAX, message = PASSWORD_SIZE)
     @NotBlank(message = PASSWORD_NOTBLANK)
+    @ToString.Exclude
     private String password;
 
     @NotBlank(message = PASSWORD_CONFIRM_NOTBLANK)
+    @ToString.Exclude
     private String passwordConfirm;
 
 }

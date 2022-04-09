@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth") // Spring Security permit all /api/v*/auth/**
 @RequiredArgsConstructor
@@ -45,14 +47,22 @@ public class AuthRestController {
 
     @PostMapping("register")
     public ResponseEntity<Object> register(@Valid @RequestBody RegisterRequest request) {
+        log.info("register(request: {})", request);
+
         Map<String, Object> body = new LinkedHashMap<>();
         userService.register(request);
         body.put(MESSAGE, REGISTERED_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
+        log.info("{}", response);
+
+        return response;
     }
 
     @PostMapping("login")
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest request) throws LoginFailureException {
+        log.info("login(request: {})", request.toString());
+
         Map<String, Object> body = new LinkedHashMap<>();
 
         try {
@@ -64,7 +74,11 @@ public class AuthRestController {
         }
 
         body.put(MESSAGE, LOGGED_IN_SUCCESSFULLY);
-        return new ResponseEntity<>(body, HttpStatus.OK);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
     }
 
     @PostMapping("logout")
@@ -78,6 +92,7 @@ public class AuthRestController {
 
         new SecurityContextLogoutHandler().logout(request, response, auth);
         body.put(MESSAGE, LOGGED_OUT_SUCCESSFULLY);
+
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
