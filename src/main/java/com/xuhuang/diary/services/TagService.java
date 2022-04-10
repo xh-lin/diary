@@ -20,6 +20,10 @@ public class TagService extends BaseService {
     private final TagRepository tagRepository;
     private final UserService userService;
 
+    /*
+     * Throws:
+     * IllegalArgumentException - if name is blank
+     */
     public Tag createTag(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(NAME_MUST_NOT_BE_BLANK);
@@ -31,12 +35,23 @@ public class TagService extends BaseService {
         return tagRepository.findByUser(userService.getCurrentUser());
     }
 
+    /*
+     * Throws:
+     * AuthException - if tag does not belong to the current user
+     * NoSuchElementException - if tag is not found
+     */
     public Tag getTag(Long tagId) throws AuthException {
         Tag tag = tagRepository.findById(tagId).orElseThrow();
         throwIfIsNotCurrentUser(tag.getUser());
         return tag;
     }
 
+    /*
+     * Throws:
+     * AuthException - if tag does not belong to the current user
+     * NoSuchElementException - if tag is not found
+     * IllegalArgumentException - if title is blank
+     */
     public Tag updateTag(Long tagId, String name) throws AuthException {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(NAME_MUST_NOT_BE_BLANK);
@@ -47,6 +62,11 @@ public class TagService extends BaseService {
         return tagRepository.save(tag);
     }
 
+    /*
+     * Throws:
+     * AuthException - if tag does not belong to the current user
+     * NoSuchElementException - if tag is not found
+     */
     public Tag deleteTag(Long tagId) throws AuthException {
         Tag tag = tagRepository.findById(tagId).orElseThrow();
         throwIfIsNotCurrentUser(tag.getUser());
