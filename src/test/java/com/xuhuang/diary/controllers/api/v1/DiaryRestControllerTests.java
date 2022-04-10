@@ -35,7 +35,7 @@ import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DiaryRestControllerTests extends RestControllerTests {
+public class DiaryRestControllerTests extends BaseRestControllerTests {
 
     private static final String API_V1_DIARY = "/api/v1/diary";
     private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/{bookId}";
