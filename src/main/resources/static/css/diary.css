@@ -44,3 +44,8 @@
     min-width: 300px;
     max-width: 600px;
 }
+
+/* Hide caret icon of bootstrap dropdown */
+#recordDropdownMenuLink::after {
+    display: none;
+}
