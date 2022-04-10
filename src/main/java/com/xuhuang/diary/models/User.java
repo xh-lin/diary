@@ -61,6 +61,12 @@ public class User extends BaseEntity implements UserDetails {
     @NonNull
     private Set<Book> books = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    @NonNull
+    private Set<Tag> tags = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
