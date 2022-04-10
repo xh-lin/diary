@@ -10,7 +10,6 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
-import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 
@@ -23,10 +22,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DiaryService {
+public class DiaryService extends BaseService {
 
     public static final String TITLE_MUST_NOT_BE_BLANK = "Title must not be blank.";
-    public static final String YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS = "You do not have permission to access.";
     public static final String PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO = "Page must be greater than or equal to zero.";
     public static final String SIZE_MUST_BE_GREATER_THAN_ZERO = "Size must be greater than zero.";
 
@@ -162,12 +160,6 @@ public class DiaryService {
         throwIfIsNotCurrentUser(recd.getBook().getUser());
         recordRepository.deleteById(recordId);
         return recd;
-    }
-
-    private void throwIfIsNotCurrentUser(User user) throws AuthException {
-        if (!userService.isCurrentUser(user)) {
-            throw new AuthException(YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS);
-        }
     }
 
     public Book parseBookJson(Map<String, Object> bookJson, boolean getRelated) {
