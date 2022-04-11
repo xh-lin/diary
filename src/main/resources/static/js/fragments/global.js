@@ -44,7 +44,7 @@ function showToast(message) {
     Use AJAX to submit a form
 */
 
-function setupAjaxFormSubmit(form, successHandler) {
+function setupAjaxFormSubmit(form, successHandler, closeModal = true) {
     form.submit(function (event) {
         // avoid to execute the actual submit of the form.
         event.preventDefault();
@@ -62,7 +62,8 @@ function setupAjaxFormSubmit(form, successHandler) {
 
                 // reset form and close dialog
                 form[0].reset();
-                form.closest('.modal').modal('hide');
+                if (closeModal)
+                    form.closest('.modal').modal('hide');
 
                 // update page
                 successHandler(res);
