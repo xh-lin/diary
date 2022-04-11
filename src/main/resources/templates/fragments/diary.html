@@ -134,20 +134,23 @@
                     Last edited
                     <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
                 </small>
-                <!-- Record dropdown menu -->
-                <div class="dropdown ms-auto">
-                    <a class="item dropdown-toggle text-dark" id="recordDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="recordDropdownMenuLink">
-                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#updateRecordDialogModal" th:data-bs-text="${record.text}"
-                                th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Update</a></li>
-                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#deleteRecordDialogModal" th:data-bs-text="${record.text}"
-                                th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Delete</a></li>
-                    </ul>
+                <div class="d-flex ms-auto">
+                    <!-- Record dropdown menu -->
+                    <div class="dropdown ms-2">
+                        <button type="button" class="dropdown-toggle btn btn-light rounded-circle p-0"
+                            id="recordDropdownMenuLink" style="width:30px; height:30px;" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="recordDropdownMenuLink">
+                            <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                                    data-bs-target="#updateRecordDialogModal" th:data-bs-text="${record.text}"
+                                    th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Update</a></li>
+                            <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
+                                    data-bs-target="#deleteRecordDialogModal" th:data-bs-text="${record.text}"
+                                    th:data-bs-url="@{|/api/v1/diary/record/${record.id}|}">Delete</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
