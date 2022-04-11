@@ -37,7 +37,6 @@ public class DiaryController {
     private static final String RECORDS = "records";
     private static final String TAGS = "tags";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
-    private static final String BOOK = "book";
 
     private final UserService userService;
     private final DiaryService diaryService;
@@ -89,14 +88,18 @@ public class DiaryController {
         return Template.DIARY.toString();
     }
 
-    @PostMapping("/fragments/book")
-    public String loadBookFragment(
-            Model model,
-            @RequestParam(required = false) Long currentBookId,
-            @RequestBody Map<String, Object> book) {
+    @PostMapping("/fragments/books")
+    public String loadBooksFragment(Model model, @RequestParam(required = false) Long currentBookId,
+            @RequestBody List<Map<String, Object>> booksJson) {
+        List<Book> books = new ArrayList<>();
+
+        for (Map<String, Object> bookJson : booksJson) {
+            books.add(diaryService.parseBookJson(bookJson));
+        }
+
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
-        model.addAttribute(BOOK, diaryService.parseBookJson(book));
-        return "fragments/diary::book";
+        model.addAttribute(BOOKS, books);
+        return "fragments/diary::books";
     }
 
     @PostMapping("/fragments/records")

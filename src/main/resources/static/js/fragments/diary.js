@@ -2,12 +2,12 @@
     Variables passed from Thymeleaf in fragments/diary::scripts:
 
     const DIARY_URL;
-    const BOOK_FRAGMENT_URL;
+    const BOOKS_FRAGMENT_URL;
     const RECORDS_FRAGMENT_URL;
     let currentBookId;
 */
 console.assert(DIARY_URL !== undefined);
-console.assert(BOOK_FRAGMENT_URL !== undefined);
+console.assert(BOOKS_FRAGMENT_URL !== undefined);
 console.assert(RECORDS_FRAGMENT_URL !== undefined);
 console.assert(currentBookId !== undefined);
 
@@ -65,16 +65,16 @@ setupAjaxFormSubmit(createBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
-        url: BOOK_FRAGMENT_URL,
-        data: JSON.stringify(res.data),
+        url: BOOKS_FRAGMENT_URL,
+        data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function (bookFragment) {
+        success: function (booksFragment) {
             if (currentBookId === null) {
                 redirect(DIARY_URL, { toast: res.message });
             } else {
                 // append new book fragment
-                bookLinks.append(bookFragment);
+                bookLinks.append($(booksFragment).children());
             }
         }
     });
@@ -105,14 +105,14 @@ setupAjaxFormSubmit(updateBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
-        url: BOOK_FRAGMENT_URL,
-        data: JSON.stringify(res.data),
+        url: BOOKS_FRAGMENT_URL,
+        data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function (bookFragment) {
+        success: function (booksFragment) {
             // replace book fragment
             const BOOK_FRAGMENT_ID = BOOK_ID_PREFIX + res.data.id;
-            bookLinks.find(BOOK_FRAGMENT_ID).replaceWith($(bookFragment).find(BOOK_FRAGMENT_ID));
+            bookLinks.find(BOOK_FRAGMENT_ID).replaceWith($(booksFragment).find(BOOK_FRAGMENT_ID));
         }
     });
 });
@@ -147,7 +147,7 @@ setupAjaxFormSubmit(deleteBookForm, function (res) {
         redirect(DIARY_URL, { toast: res.message });
     } else {
         // delete book fragment
-        bookLink.parent().remove();
+        bookLink.remove();
     }
 });
 

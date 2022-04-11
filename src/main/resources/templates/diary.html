@@ -12,9 +12,7 @@
     <!-- The sidebar -->
     <nav class="sidebar d-flex flex-column">
         <!-- Book links -->
-        <div id="bookLinks">
-            <div th:each="book : ${books}" th:include="fragments/diary::book"></div>
-        </div>
+        <div id="bookLinks" th:include="fragments/diary::books"></div>
         <!-- Create book link -->
         <div th:include="fragments/diary::create_book_link"></div>
         <!-- User related links -->

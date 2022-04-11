@@ -7,8 +7,8 @@
 
 <body>
 
-    <div th:fragment="book">
-        <div class="d-flex flex-row" th:id="book_ + ${book.id}">
+    <div th:fragment="books">
+        <div th:each="book : ${books}" class="d-flex flex-row" th:id="book_ + ${book.id}">
             <!-- Book link -->
             <a class="item flex-fill" th:classappend="${currentBookId == book.id} ? active : ''" th:text="${book.title}"
                 th:href="@{|/diary/${book.id}|}"></a>
@@ -244,7 +244,7 @@
     <div th:fragment="scripts">
         <script th:inline="javascript">
             const DIARY_URL = /*[[@{/diary}]]*/ undefined;
-            const BOOK_FRAGMENT_URL = /*[[@{/diary/fragments/book(currentBookId=${currentBookId})}]]*/ undefined;
+            const BOOKS_FRAGMENT_URL = /*[[@{/diary/fragments/books(currentBookId=${currentBookId})}]]*/ undefined;
             const RECORDS_FRAGMENT_URL = /*[[@{/diary/fragments/records}]]*/ undefined;
             let currentBookId = /*[[${currentBookId}]]*/ undefined;
         </script>
