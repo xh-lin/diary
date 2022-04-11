@@ -166,7 +166,7 @@ setupAjaxFormSubmit(loadRecordsForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $($.parseHTML(recordsFragment));
+            const recordsHtml = $(recordsFragment);
             formatTimestamps(recordsHtml);
             records.append(recordsHtml.children());
 
@@ -199,7 +199,7 @@ setupAjaxFormSubmit(createRecordForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $($.parseHTML(recordsFragment));
+            const recordsHtml = $(recordsFragment);
             formatTimestamps(recordsHtml);
             records.prepend(recordsHtml.children());
         }
@@ -236,7 +236,7 @@ setupAjaxFormSubmit(updateRecordForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $($.parseHTML(recordsFragment));
+            const recordsHtml = $(recordsFragment);
             formatTimestamps(recordsHtml);
             // replace record fragment
             const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
