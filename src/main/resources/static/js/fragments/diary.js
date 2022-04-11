@@ -166,9 +166,9 @@ setupAjaxFormSubmit(loadRecordsForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $(recordsFragment);
-            formatTimestamps(recordsHtml);
-            records.append(recordsHtml.children());
+            const newRecords = $(recordsFragment);
+            formatTimestamps(newRecords);
+            records.append(newRecords.children());
 
             loadRecordsForm.attr('action', res.data.nextPageUrl);
             if (loadRecordsForm.attr('action') === undefined) {
@@ -199,9 +199,9 @@ setupAjaxFormSubmit(createRecordForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $(recordsFragment);
-            formatTimestamps(recordsHtml);
-            records.prepend(recordsHtml.children());
+            const newRecords = $(recordsFragment);
+            formatTimestamps(newRecords);
+            records.prepend(newRecords.children());
         }
     });
 });
@@ -236,11 +236,11 @@ setupAjaxFormSubmit(updateRecordForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (recordsFragment) {
-            const recordsHtml = $(recordsFragment);
-            formatTimestamps(recordsHtml);
+            const newRecords = $(recordsFragment);
+            formatTimestamps(newRecords);
             // replace record fragment
             const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.id;
-            records.find(RECORD_FRAGMENT_ID).replaceWith(recordsHtml.find(RECORD_FRAGMENT_ID));
+            records.find(RECORD_FRAGMENT_ID).replaceWith(newRecords.find(RECORD_FRAGMENT_ID));
         }
     });
 });
