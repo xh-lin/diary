@@ -31,10 +31,6 @@ public class UserService implements UserDetailsService {
                 () -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, username)));
     }
 
-    /*
-     * Throws:
-     * RegisterException - if either username or email is taken
-     */
     public void register(RegisterRequest request) {
         User user = new User(
                 request.getUsername(),
