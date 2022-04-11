@@ -15,3 +15,8 @@ body {
 .btn-light:hover {
     background-color: lightgrey;
 }
+
+/* Display toast in front of modal (make sure z-index is higher than modal's) */
+.toast {
+    z-index: 1056;
+}
