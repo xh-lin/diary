@@ -82,8 +82,8 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
         textStatus: textStatus,
         errorThrown: errorThrown
     });
-    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.error !== undefined)
-        ? jqXHR.responseJSON.error : jqXHR.statusText;
+    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.message !== undefined)
+        ? jqXHR.responseJSON.message : jqXHR.error;
     alert(`Error - ${jqXHR.status}: ${errorMessage}`);
 }
 
