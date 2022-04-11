@@ -263,12 +263,7 @@ deleteRecordDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     deleteRecordForm.attr('action', url);
-    deleteRecordMessage.html(`
-        <span class="d-inline-block text-truncate align-bottom" style="max-width: 50%;">
-            <b>${text}</b>
-        </span>
-        will be deleted.
-    `);
+    deleteRecordMessage.text(text);
 });
 
 setupAjaxFormSubmit(deleteRecordForm, function (res) {
