@@ -9,6 +9,7 @@ import javax.security.auth.message.AuthException;
 import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.DiaryService;
 import com.xuhuang.diary.services.TagService;
 import com.xuhuang.diary.services.UserService;
@@ -109,6 +110,18 @@ public class DiaryController {
         model.addAttribute(RECORDS, records);
         model.addAttribute(TAGS, tagService.getTags());
         return "fragments/diary::records";
+    }
+
+    @PostMapping("/fragments/tags")
+    public String loadTagsFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
+        List<Tag> tags = new ArrayList<>();
+
+        for (Map<String, Object> tagJson : tagsJson) {
+            tags.add(tagService.parseTagJson(tagJson));
+        }
+
+        model.addAttribute(TAGS, tags);
+        return "fragments/tag::tags";
     }
 
 }

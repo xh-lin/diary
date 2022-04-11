@@ -1,6 +1,10 @@
 package com.xuhuang.diary.services;
 
+import static com.xuhuang.diary.utils.Utils.asTimestamp;
+
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 
@@ -72,6 +76,33 @@ public class TagService extends BaseService {
         throwIfIsNotCurrentUser(tag.getUser());
         tagRepository.deleteById(tagId);
         return tag;
+    }
+
+    public Tag parseTagJson(Map<String, Object> tagJson, boolean getRelated) {
+        Long id = Long.valueOf(((Integer) tagJson.get("id")).longValue());
+
+        if (getRelated) {
+            try {
+                return getTag(id);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
+        Timestamp createdAt = asTimestamp((String) tagJson.get("createdAt"));
+        Timestamp updateddAt = asTimestamp((String) tagJson.get("updatedAt"));
+        String name = (String) tagJson.get("name");
+        Tag tag = new Tag();
+
+        tag.setId(id);
+        tag.setCreatedAt(createdAt);
+        tag.setUpdatedAt(updateddAt);
+        tag.setName(name);
+        return tag;
+    }
+
+    public Tag parseTagJson(Map<String, Object> tagJson) {
+        return parseTagJson(tagJson, false);
     }
 
 }

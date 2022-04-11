@@ -46,11 +46,14 @@
         </div>
     </div>
 
-    <vid th:fragment="tags">
+    <div th:fragment="tags">
         <button th:each="tag : ${tags}" class="btn btn-info rounded-pill py-0 ms-1 mb-1" th:text="${tag.name}"></button>
-    </vid>
+    </div>
 
     <div th:fragment="scripts">
+        <script th:inline="javascript">
+            const DIARY_TAGS_FRAGMENT_URL = /*[[@{/diary/fragments/tags}]]*/ undefined;
+        </script>
         <script th:src="@{/js/fragments/tag.js}"></script>
     </div>
 
