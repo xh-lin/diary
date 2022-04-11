@@ -1,14 +1,14 @@
 /*
-    Variables pass from Thymeleaf in fragments/diary::scripts:
+    Variables passed from Thymeleaf in fragments/diary::scripts:
 
     const DIARY_URL;
-    const DIARY_BOOK_FRAGMENT_URL;
-    const DIARY_RECORDS_FRAGMENT_URL;
+    const BOOK_FRAGMENT_URL;
+    const RECORDS_FRAGMENT_URL;
     let currentBookId;
 */
 console.assert(DIARY_URL !== undefined);
-console.assert(DIARY_BOOK_FRAGMENT_URL !== undefined);
-console.assert(DIARY_RECORDS_FRAGMENT_URL !== undefined);
+console.assert(BOOK_FRAGMENT_URL !== undefined);
+console.assert(RECORDS_FRAGMENT_URL !== undefined);
 console.assert(currentBookId !== undefined);
 
 const BOOK_ID_PREFIX = '#book_';
@@ -65,7 +65,7 @@ setupAjaxFormSubmit(createBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_BOOK_FRAGMENT_URL,
+        url: BOOK_FRAGMENT_URL,
         data: JSON.stringify(res.data),
         contentType: 'application/json',
         error: errorHandler,
@@ -105,7 +105,7 @@ setupAjaxFormSubmit(updateBookForm, function (res) {
     // load book fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_BOOK_FRAGMENT_URL,
+        url: BOOK_FRAGMENT_URL,
         data: JSON.stringify(res.data),
         contentType: 'application/json',
         error: errorHandler,
@@ -161,7 +161,7 @@ setupAjaxFormSubmit(loadRecordsForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_RECORDS_FRAGMENT_URL,
+        url: RECORDS_FRAGMENT_URL,
         data: JSON.stringify(res.data.content),
         contentType: 'application/json',
         error: errorHandler,
@@ -194,7 +194,7 @@ setupAjaxFormSubmit(createRecordForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_RECORDS_FRAGMENT_URL,
+        url: RECORDS_FRAGMENT_URL,
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
@@ -231,7 +231,7 @@ setupAjaxFormSubmit(updateRecordForm, function (res) {
     // load records fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_RECORDS_FRAGMENT_URL,
+        url: RECORDS_FRAGMENT_URL,
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,

@@ -1,9 +1,9 @@
 /*
-    Variables pass from Thymeleaf in fragments/tag::scripts
+    Variables passed from Thymeleaf in fragments/tag::scripts:
 
-    const DIARY_TAGS_FRAGMENT_URL;
+    const TAGS_FRAGMENT_URL;
 */
-console.assert(DIARY_TAGS_FRAGMENT_URL !== undefined);
+console.assert(TAGS_FRAGMENT_URL !== undefined);
 
 const TAG_BUTTONS_ID = '#tagButtons';
 const CREATE_TAG_FORM_TOGGLE_BUTTON_ID = '#createTagFormToggleButton';
@@ -54,7 +54,7 @@ setupAjaxFormSubmit(createTagForm, function (res) {
     // load tags fragment
     $.ajax({
         type: 'POST',
-        url: DIARY_TAGS_FRAGMENT_URL,
+        url: TAGS_FRAGMENT_URL,
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
