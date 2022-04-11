@@ -135,6 +135,11 @@
                     <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
                 </small>
                 <div class="d-flex ms-auto">
+                    <!-- Tag dropdown menu -->
+                    <button type="button" class="btn btn-light rounded-circle p-0" style="width:30px; height:30px;"
+                        data-bs-toggle="modal" data-bs-target="#tagDialogModal">
+                        <i class="bi bi-tags"></i>
+                    </button>
                     <!-- Record dropdown menu -->
                     <div class="dropdown ms-2">
                         <button type="button" class="dropdown-toggle btn btn-light rounded-circle p-0"

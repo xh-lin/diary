@@ -10,6 +10,7 @@ import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.TagService;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.data.domain.Page;
@@ -33,11 +34,13 @@ public class DiaryController {
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
+    private static final String TAGS = "tags";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
     private static final String BOOK = "book";
 
     private final UserService userService;
     private final DiaryService diaryService;
+    private final TagService tagService;
 
     @GetMapping({
             "",
@@ -76,6 +79,7 @@ public class DiaryController {
 
             model.addAttribute(RECORDS, recordPage.getContent());
             model.addAttribute(NEXT_PAGE_URL, (nextPage < totalPages) ? nextPageUrl : null);
+            model.addAttribute(TAGS, tagService.getTags());
         }
 
         model.addAttribute(USER, userService.getCurrentUser());
@@ -103,6 +107,7 @@ public class DiaryController {
         }
 
         model.addAttribute(RECORDS, records);
+        model.addAttribute(TAGS, tagService.getTags());
         return "fragments/diary::records";
     }
 

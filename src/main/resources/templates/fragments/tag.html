@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+    <div th:fragment="tag_dialog">
+        <!-- Modal -->
+        <div class="modal fade" id="tagDialogModal" tabindex="-1" aria-labelledby="tagDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tagDialogModalLabel">Select tags</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <span id="tagButtons" th:include="fragments/tag::tags"></span>
+                        <span>
+                            <!-- Button for toggling create tag form -->
+                            <button class="btn btn-light rounded-pill py-0 mb-1" id="createTagFormToggleButton">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            <!-- Create tag form -->
+                            <form class="d-inline-flex d-none" id="createTagForm"
+                                style="max-width:200px; height:25px;"
+                                th:action="@{/api/v1/tag}" method="POST">
+                                <input type="text" class="form-control" name="name"
+                                    style="border-radius: 50px 0px 0px 50px;">
+                                <button type="submit" class="btn btn-outline-success py-0"
+                                    style="border-radius: 0px 50px 50px 0px;">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </form>
+                        </span>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <vid th:fragment="tags">
+        <button th:each="tag : ${tags}" class="btn btn-info rounded-pill py-0 ms-1 mb-1" th:text="${tag.name}"></button>
+    </vid>
+
+    <div th:fragment="scripts">
+        <script th:src="@{/js/fragments/tag.js}"></script>
+    </div>
+
+</body>
+
+</html>
