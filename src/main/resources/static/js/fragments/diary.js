@@ -41,15 +41,6 @@ const bookLinks = $(BOOK_LINKS_ID);
 const records = $(RECORDS_ID);
 
 /*
-    Toast in the beginning
-*/
-
-const toastMessage = getUrlParam('toast');
-if (toastMessage !== undefined) {
-    showToast(toastMessage);
-}
-
-/*
     Convert records timestamps to local timezone
 */
 

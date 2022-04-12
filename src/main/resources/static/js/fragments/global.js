@@ -129,3 +129,12 @@ if (backToTopButton[0] !== undefined) {
         document.documentElement.scrollTop = 0;
     });
 }
+
+/*
+    Toast in the beginning
+*/
+
+const toastMessage = getUrlParam('toast');
+if (toastMessage !== undefined) {
+    showToast(toastMessage);
+}
