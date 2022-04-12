@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/diary")
 @RequiredArgsConstructor
@@ -52,6 +54,8 @@ public class DiaryController {
             @PathVariable(required = false) Long bookId,
             @PathVariable(required = false) Integer page,
             @PathVariable(required = false) Integer size) throws AuthException {
+        log.info("viewDiary(bookId: {}, page: {}, size: {})", bookId, page, size);
+
         List<Book> books = diaryService.getBooks();
 
         // if have not selected a book and there are books
@@ -85,6 +89,9 @@ public class DiaryController {
         model.addAttribute(USER, userService.getCurrentUser());
         model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
+
+        log.info("{}", model.asMap());
+
         return Template.DIARY.toString();
     }
 
