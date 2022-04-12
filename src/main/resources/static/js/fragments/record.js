@@ -92,11 +92,11 @@ setupAjaxFormSubmit(createRecordForm, function (res) {
 
 updateRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
-    const button = event.relatedTarget;
+    const button = $(event.relatedTarget);
 
     // Extract info from data-bs-* attributes
-    const text = button.getAttribute('data-bs-text');
-    const url = button.getAttribute('data-bs-url');
+    const text = button.attr('data-bs-text');
+    const url = button.attr('data-bs-url');
 
     // Update the modal's content.
     updateRecordForm.attr('action', url);
@@ -127,11 +127,11 @@ setupAjaxFormSubmit(updateRecordForm, function (res) {
 
 deleteRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
-    const button = event.relatedTarget;
+    const button = $(event.relatedTarget);
 
     // Extract info from data-bs-* attributes
-    const text = button.getAttribute('data-bs-text');
-    const url = button.getAttribute('data-bs-url');
+    const text = button.attr('data-bs-text');
+    const url = button.attr('data-bs-url');
 
     // Update the modal's content.
     deleteRecordForm.attr('action', url);

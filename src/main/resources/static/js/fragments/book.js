@@ -60,11 +60,11 @@ setupAjaxFormSubmit(createBookForm, function (res) {
 
 updateBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
-    const button = event.relatedTarget;
+    const button = $(event.relatedTarget);
 
     // Extract info from data-bs-* attributes
-    const title = button.getAttribute('data-bs-title');
-    const url = button.getAttribute('data-bs-url');
+    const title = button.attr('data-bs-title');
+    const url = button.attr('data-bs-url');
 
     // Update the modal's content.
     updateBookForm.attr('action', url);
@@ -93,11 +93,11 @@ setupAjaxFormSubmit(updateBookForm, function (res) {
 
 deleteBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
-    const button = event.relatedTarget;
+    const button = $(event.relatedTarget);
 
     // Extract info from data-bs-* attributes
-    const title = button.getAttribute('data-bs-title');
-    const url = button.getAttribute('data-bs-url');
+    const title = button.attr('data-bs-title');
+    const url = button.attr('data-bs-url');
 
     // Update the modal's content.
     deleteBookForm.attr('action', url);
