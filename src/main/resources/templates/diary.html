@@ -28,11 +28,11 @@
             <div th:if="${books.isEmpty()}">Please create a diary book.</div>
             <div th:unless="${books.isEmpty()}">
                 <!-- Create record editor -->
-                <div th:include="fragments/diary::create_record_editor"></div>
+                <div th:include="fragments/record::create_record_editor"></div>
                 <!-- Records -->
-                <div id="records" th:include="fragments/diary::records"></div>
+                <div id="records" th:include="fragments/record::records"></div>
                 <!-- Load records button -->
-                <div class="d-flex justify-content-center my-3" th:include="fragments/diary::load_records_button"></div>
+                <div class="d-flex justify-content-center my-3" th:include="fragments/record::load_records_button"></div>
             </div>
         </div>
 
@@ -46,8 +46,8 @@
         <div th:replace="fragments/diary::create_book_dialog"></div>
         <div th:replace="fragments/diary::update_book_dialog"></div>
         <div th:replace="fragments/diary::delete_book_dialog"></div>
-        <div th:replace="fragments/diary::update_record_dialog"></div>
-        <div th:replace="fragments/diary::delete_record_dialog"></div>
+        <div th:replace="fragments/record::update_record_dialog"></div>
+        <div th:replace="fragments/record::delete_record_dialog"></div>
         <div th:replace="fragments/tag::tag_dialog"></div>
     </div>
 
@@ -56,6 +56,7 @@
         <div th:replace="fragments/global::external_scripts"></div>
         <div th:replace="fragments/global::scripts"></div>
         <div th:replace="fragments/diary::scripts"></div>
+        <div th:replace="fragments/record::scripts"></div>
         <div th:replace="fragments/tag::scripts"></div>
     </div>
 

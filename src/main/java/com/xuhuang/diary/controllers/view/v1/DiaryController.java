@@ -112,7 +112,7 @@ public class DiaryController {
 
         model.addAttribute(RECORDS, records);
         model.addAttribute(TAGS, tagService.getTags());
-        return "fragments/diary::records";
+        return "fragments/record::records";
     }
 
     @PostMapping("/fragments/tags")
