@@ -11,17 +11,23 @@ console.assert(currentBookId !== undefined);
 
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
+
 const CREATE_BOOK_FORM_ID = '#createBookForm';
+
 const UPDATE_BOOK_DIALOG_MODAL_ID = '#updateBookDialogModal';
 const UPDATE_BOOK_FORM_ID = '#updateBookForm';
+
 const DELETE_BOOK_DIALOG_MODAL_ID = '#deleteBookDialogModal';
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
 const DELETE_BOOK_TITLE_ID = '#deleteBookTitle';
 
 const bookLinks = $(BOOK_LINKS_ID);
+
 const createBookForm = $(CREATE_BOOK_FORM_ID);
+
 const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
 const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
+
 const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID);
 const deleteBookForm = deleteBookDialogModal.find(DELETE_BOOK_FORM_ID);
 

@@ -7,19 +7,27 @@ console.assert(RECORDS_FRAGMENT_URL !== undefined);
 
 const RECORD_ID_PREFIX = '#record_';
 const RECORDS_ID = '#records';
+
 const LOAD_RECORDS_FORM_ID = '#loadRecordsForm'
+
 const CREATE_RECORD_FORM_ID = '#createRecordForm';
+
 const UPDATE_RECORD_DIALOG_MODAL_ID = '#updateRecordDialogModal';
 const UPDATE_RECORD_FORM_ID = '#updateRecordForm';
+
 const DELETE_RECORD_DIALOG_MODAL_ID = '#deleteRecordDialogModal';
 const DELETE_RECORD_FORM_ID = '#deleteRecordForm';
 const DELETE_RECORD_TEXT_ID = '#deleteRecordText';
 
 const records = $(RECORDS_ID);
+
 const loadRecordsForm = $(LOAD_RECORDS_FORM_ID);
+
 const createRecordForm = $(CREATE_RECORD_FORM_ID);
+
 const updateRecordDialogModal = $(UPDATE_RECORD_DIALOG_MODAL_ID);
 const updateRecordForm = updateRecordDialogModal.find(UPDATE_RECORD_FORM_ID);
+
 const deleteRecordDialogModal = $(DELETE_RECORD_DIALOG_MODAL_ID);
 const deleteRecordForm = deleteRecordDialogModal.find(DELETE_RECORD_FORM_ID);
 
