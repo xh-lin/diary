@@ -99,7 +99,7 @@ public class DiaryController {
 
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOKS, books);
-        return "fragments/diary::books";
+        return "fragments/book::books";
     }
 
     @PostMapping("/fragments/records")

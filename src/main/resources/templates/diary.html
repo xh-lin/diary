@@ -12,9 +12,9 @@
     <!-- The sidebar -->
     <nav class="sidebar d-flex flex-column">
         <!-- Book links -->
-        <div id="bookLinks" th:include="fragments/diary::books"></div>
+        <div id="bookLinks" th:include="fragments/book::books"></div>
         <!-- Create book link -->
-        <div th:include="fragments/diary::create_book_link"></div>
+        <div th:include="fragments/book::create_book_link"></div>
         <!-- User related links -->
         <div class="flex-fill"></div>
         <span class="text-item" th:text="${user.username}"></span>
@@ -43,9 +43,9 @@
     <div>
         <div th:replace="fragments/global::toast"></div>
         <div th:replace="fragments/global::backToTopButton"></div>
-        <div th:replace="fragments/diary::create_book_dialog"></div>
-        <div th:replace="fragments/diary::update_book_dialog"></div>
-        <div th:replace="fragments/diary::delete_book_dialog"></div>
+        <div th:replace="fragments/book::create_book_dialog"></div>
+        <div th:replace="fragments/book::update_book_dialog"></div>
+        <div th:replace="fragments/book::delete_book_dialog"></div>
         <div th:replace="fragments/record::update_record_dialog"></div>
         <div th:replace="fragments/record::delete_record_dialog"></div>
         <div th:replace="fragments/tag::tag_dialog"></div>
@@ -55,7 +55,7 @@
     <div>
         <div th:replace="fragments/global::external_scripts"></div>
         <div th:replace="fragments/global::scripts"></div>
-        <div th:replace="fragments/diary::scripts"></div>
+        <div th:replace="fragments/book::scripts"></div>
         <div th:replace="fragments/record::scripts"></div>
         <div th:replace="fragments/tag::scripts"></div>
     </div>

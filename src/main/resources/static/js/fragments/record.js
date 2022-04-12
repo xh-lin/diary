@@ -1,5 +1,5 @@
 /*
-    Variables passed from Thymeleaf in fragments/diary::scripts:
+    Variables passed from Thymeleaf in fragments/record::scripts:
 
     const RECORDS_FRAGMENT_URL;
 */
