@@ -27,8 +27,7 @@
                                 <i class="bi bi-plus-lg"></i>
                             </button>
                             <!-- Create tag form -->
-                            <form class="d-inline-flex d-none" id="createTagForm"
-                                style="max-width:200px; height:25px;"
+                            <form class="d-inline-flex d-none" id="createTagForm" style="max-width:200px; height:25px;"
                                 th:action="@{/api/v1/tag}" method="POST">
                                 <input type="text" class="form-control" name="name"
                                     style="border-radius: 50px 0px 0px 50px;" required>
@@ -47,7 +46,8 @@
     </div>
 
     <div th:fragment="tags">
-        <button th:each="tag : ${tags}" class="btn btn-info rounded-pill py-0 ms-1 mb-1" th:text="${tag.name}"></button>
+        <button th:each="tag : ${tags}" class="btn btn-info rounded-pill text-truncate py-0 ms-1 mb-1"
+            th:text="${tag.name}" th:title="${tag.name}" style="max-width: 100%;"></button>
     </div>
 
     <div th:fragment="scripts">
