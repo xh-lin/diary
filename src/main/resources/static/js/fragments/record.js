@@ -8,17 +8,20 @@ console.assert(RECORDS_FRAGMENT_URL !== undefined);
 const RECORD_ID_PREFIX = '#record_';
 const RECORDS_ID = '#records';
 const LOAD_RECORDS_FORM_ID = '#loadRecordsForm'
-
 const CREATE_RECORD_FORM_ID = '#createRecordForm';
-
 const UPDATE_RECORD_DIALOG_MODAL_ID = '#updateRecordDialogModal';
 const UPDATE_RECORD_FORM_ID = '#updateRecordForm';
-
 const DELETE_RECORD_DIALOG_MODAL_ID = '#deleteRecordDialogModal';
 const DELETE_RECORD_FORM_ID = '#deleteRecordForm';
-const DELETE_RECORD_MESSAGE_ID = '#deleteRecordMessage';
+const DELETE_RECORD_TEXT_ID = '#deleteRecordText';
 
 const records = $(RECORDS_ID);
+const loadRecordsForm = $(LOAD_RECORDS_FORM_ID);
+const createRecordForm = $(CREATE_RECORD_FORM_ID);
+const updateRecordDialogModal = $(UPDATE_RECORD_DIALOG_MODAL_ID);
+const updateRecordForm = updateRecordDialogModal.find(UPDATE_RECORD_FORM_ID);
+const deleteRecordDialogModal = $(DELETE_RECORD_DIALOG_MODAL_ID);
+const deleteRecordForm = deleteRecordDialogModal.find(DELETE_RECORD_FORM_ID);
 
 /*
     Convert records timestamps to local timezone
@@ -29,8 +32,6 @@ formatTimestamps(records);
 /*
     Load more records
 */
-
-const loadRecordsForm = $(LOAD_RECORDS_FORM_ID);
 
 setupAjaxFormSubmit(loadRecordsForm, function (res) {
     // load records fragment
@@ -61,8 +62,6 @@ loadRecordsForm.find('button:submit').on('mouseup mouseout', function () {
     Create record
 */
 
-const createRecordForm = $(CREATE_RECORD_FORM_ID);
-
 setupAjaxFormSubmit(createRecordForm, function (res) {
     // load records fragment
     $.ajax({
@@ -83,10 +82,6 @@ setupAjaxFormSubmit(createRecordForm, function (res) {
     Update record
 */
 
-const updateRecordDialogModal = $(UPDATE_RECORD_DIALOG_MODAL_ID);
-const updateRecordForm = updateRecordDialogModal.find(UPDATE_RECORD_FORM_ID);
-const updateRecordFormTextarea = updateRecordForm.find('textarea');
-
 updateRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
@@ -97,7 +92,7 @@ updateRecordDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     updateRecordForm.attr('action', url);
-    updateRecordFormTextarea.val(text);
+    updateRecordForm.find('textarea').val(text);
 });
 
 setupAjaxFormSubmit(updateRecordForm, function (res) {
@@ -122,10 +117,6 @@ setupAjaxFormSubmit(updateRecordForm, function (res) {
     Delete record
 */
 
-const deleteRecordDialogModal = $(DELETE_RECORD_DIALOG_MODAL_ID);
-const deleteRecordForm = deleteRecordDialogModal.find(DELETE_RECORD_FORM_ID);
-const deleteRecordMessage = deleteRecordDialogModal.find(DELETE_RECORD_MESSAGE_ID);
-
 deleteRecordDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
@@ -136,7 +127,7 @@ deleteRecordDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     deleteRecordForm.attr('action', url);
-    deleteRecordMessage.text(text);
+    deleteRecordDialogModal.find(DELETE_RECORD_TEXT_ID).text(text);
 });
 
 setupAjaxFormSubmit(deleteRecordForm, function (res) {

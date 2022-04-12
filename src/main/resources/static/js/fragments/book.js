@@ -11,24 +11,23 @@ console.assert(currentBookId !== undefined);
 
 const BOOK_ID_PREFIX = '#book_';
 const BOOK_LINKS_ID = '#bookLinks';
-const TITLE_INPUT_ID = '#titleInput';
-
 const CREATE_BOOK_FORM_ID = '#createBookForm';
-
 const UPDATE_BOOK_DIALOG_MODAL_ID = '#updateBookDialogModal';
 const UPDATE_BOOK_FORM_ID = '#updateBookForm';
-
 const DELETE_BOOK_DIALOG_MODAL_ID = '#deleteBookDialogModal';
 const DELETE_BOOK_FORM_ID = '#deleteBookForm';
-const DELETE_BOOK_MESSAGE_ID = '#deleteBookMessage';
+const DELETE_BOOK_TITLE_ID = '#deleteBookTitle';
 
 const bookLinks = $(BOOK_LINKS_ID);
+const createBookForm = $(CREATE_BOOK_FORM_ID);
+const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
+const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
+const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID);
+const deleteBookForm = deleteBookDialogModal.find(DELETE_BOOK_FORM_ID);
 
 /*
     Create Book
 */
-
-const createBookForm = $(CREATE_BOOK_FORM_ID);
 
 setupAjaxFormSubmit(createBookForm, function (res) {
     // load book fragment
@@ -53,10 +52,6 @@ setupAjaxFormSubmit(createBookForm, function (res) {
     Update Book
 */
 
-const updateBookDialogModal = $(UPDATE_BOOK_DIALOG_MODAL_ID);
-const updateBookForm = updateBookDialogModal.find(UPDATE_BOOK_FORM_ID);
-const updateBookFormTitleInput = updateBookForm.find(TITLE_INPUT_ID);
-
 updateBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
@@ -67,7 +62,7 @@ updateBookDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     updateBookForm.attr('action', url);
-    updateBookFormTitleInput.val(title);
+    updateBookForm.find('input[name=title]').val(title);
 });
 
 setupAjaxFormSubmit(updateBookForm, function (res) {
@@ -90,10 +85,6 @@ setupAjaxFormSubmit(updateBookForm, function (res) {
     Delete Book
 */
 
-const deleteBookDialogModal = $(DELETE_BOOK_DIALOG_MODAL_ID);
-const deleteBookForm = deleteBookDialogModal.find(DELETE_BOOK_FORM_ID);
-const deleteBookMessage = deleteBookDialogModal.find(DELETE_BOOK_MESSAGE_ID);
-
 deleteBookDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = event.relatedTarget;
@@ -104,7 +95,7 @@ deleteBookDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     deleteBookForm.attr('action', url);
-    deleteBookMessage.text(title);
+    deleteBookDialogModal.find(DELETE_BOOK_TITLE_ID).text(title);
 });
 
 setupAjaxFormSubmit(deleteBookForm, function (res) {
