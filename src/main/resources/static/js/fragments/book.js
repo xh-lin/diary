@@ -104,7 +104,7 @@ deleteBookDialogModal.on('show.bs.modal', function (event) {
 
     // Update the modal's content.
     deleteBookForm.attr('action', url);
-    deleteBookMessage.html(`<b>${title}</b> will be deleted.`);
+    deleteBookMessage.text(title);
 });
 
 setupAjaxFormSubmit(deleteBookForm, function (res) {
