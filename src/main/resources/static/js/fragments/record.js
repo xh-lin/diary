@@ -53,10 +53,8 @@ setupAjaxFormSubmit(loadRecordsForm, function (res) {
     });
 });
 
-loadRecordsForm.find('button:submit').on('focus', function (event) {
-    setTimeout(function () {
-        event.currentTarget.blur();
-    }, 200);
+loadRecordsForm.find('button:submit').on('mouseup mouseout', function () {
+    $(this).blur();
 });
 
 /*
