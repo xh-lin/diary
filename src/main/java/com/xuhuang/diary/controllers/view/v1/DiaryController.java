@@ -12,7 +12,6 @@ import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.DiaryService;
 import com.xuhuang.diary.services.TagService;
-import com.xuhuang.diary.services.UserService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -33,14 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DiaryController {
 
-    private static final String USER = "user";
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
     private static final String TAGS = "tags";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
 
-    private final UserService userService;
     private final DiaryService diaryService;
     private final TagService tagService;
 
@@ -86,7 +83,6 @@ public class DiaryController {
             model.addAttribute(TAGS, tagService.getTags());
         }
 
-        model.addAttribute(USER, userService.getCurrentUser());
         model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
 

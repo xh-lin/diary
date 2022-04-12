@@ -16,8 +16,8 @@
         <!-- Create book link -->
         <div th:include="fragments/book::create_book_link"></div>
         <!-- User related links -->
-        <div class="flex-fill"></div>
-        <span class="text-item" th:text="${user.username}"></span>
+        <div class="mt-auto"><hr></div>
+        <span class="text-item pt-0" sec:authentication="principal.username"></span>
         <a class="item" th:href="@{/logout}">Logout</a>
     </nav>
 
