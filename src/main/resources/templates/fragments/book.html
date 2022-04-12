@@ -8,10 +8,10 @@
 <body>
 
     <div th:fragment="books">
-        <div th:each="book : ${books}" class="d-flex flex-row" th:id="book_ + ${book.id}">
+        <div th:each="book : ${books}" class="d-flex flex-row" th:id="book_ + ${book.id}" style="max-width: 100%;">
             <!-- Book link -->
-            <a class="item flex-fill" th:classappend="${currentBookId == book.id} ? active : ''" th:text="${book.title}"
-                th:href="@{|/diary/${book.id}|}"></a>
+            <a class="item flex-fill text-truncate" th:classappend="${currentBookId == book.id} ? active : ''"
+                th:text="${book.title}" th:title="${book.title}" th:href="@{|/diary/${book.id}|}"></a>
             <!-- Book dropdown menu -->
             <div class="dropdown">
                 <a class="item dropdown-toggle" id="bookDropdownMenuLink" role="button" data-bs-toggle="dropdown"
