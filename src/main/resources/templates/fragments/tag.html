@@ -30,7 +30,7 @@
                     </div>
                     <!-- Footer -->
                     <div class="modal-footer">
-                        <button class="btn btn-primary btn-sm" id="tagCancelActionButton" style="display:none;">
+                        <button class="btn btn-secondary btn-sm" id="tagCancelActionButton" style="display:none;">
                             Cancel
                         </button>
                         <div id="tagActionButtons">
@@ -46,7 +46,8 @@
 
     <div th:fragment="tags">
         <button th:each="tag : ${tags}" class="btn btn-info rounded-pill text-truncate py-0 ms-1 mb-1"
-            th:id="tag_ + ${tag.id}" th:text="${tag.name}" th:title="${tag.name}" style="max-width: 100%;"></button>
+            th:id="tag_ + ${tag.id}" th:text="${tag.name}" th:title="${tag.name}" style="max-width: 100%;"
+            th:data-bs-name="${tag.name}" th:data-bs-url="@{|/api/v1/tag/${tag.id}|}"></button>
     </div>
 
     <div th:fragment="create_tag_button_group">
@@ -62,6 +63,36 @@
                 <i class="bi bi-check"></i>
             </button>
         </form>
+    </div>
+
+    <div th:fragment="delete_tag_dialog">
+        <!-- Modal -->
+        <div class="modal fade" id="deleteTagDialogModal" tabindex="-1" aria-labelledby="deleteTagDialogModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteTagDialogModalLabel">Are you sure?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <form id="deleteTagForm" method="DELETE">
+                            <span class="d-inline-block text-truncate align-bottom" style="max-width: 50%;">
+                                <strong id="deleteTagName"></strong>
+                            </span>
+                            will be deleted.
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger" form="deleteTagForm">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div th:fragment="scripts">
