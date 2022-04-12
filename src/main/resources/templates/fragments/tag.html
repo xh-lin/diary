@@ -26,22 +26,7 @@
                         <!-- Tag buttons -->
                         <span id="tagButtons" th:include="fragments/tag::tags"></span>
                         <!-- Create tag button group -->
-                        <span id="createTagButtonGroup">
-                            <!-- Button for toggling create tag form -->
-                            <button class="btn btn-light rounded-pill py-0 mb-1" id="createTagFormToggleButton">
-                                <i class="bi bi-plus-lg"></i>
-                            </button>
-                            <!-- Create tag form -->
-                            <form class="d-inline-flex d-none" id="createTagForm" style="max-width:200px; height:25px;"
-                                th:action="@{/api/v1/tag}" method="POST">
-                                <input type="text" class="form-control" name="name"
-                                    style="border-radius: 50px 0px 0px 50px;" required>
-                                <button type="submit" class="btn btn-outline-success py-0"
-                                    style="border-radius: 0px 50px 50px 0px;">
-                                    <i class="bi bi-check"></i>
-                                </button>
-                            </form>
-                        </span>
+                        <span id="createTagButtonGroup" th:include="fragments/tag::create_tag_button_group"></span>
                     </div>
                     <!-- Footer -->
                     <div class="modal-footer">
@@ -62,6 +47,21 @@
     <div th:fragment="tags">
         <button th:each="tag : ${tags}" class="btn btn-info rounded-pill text-truncate py-0 ms-1 mb-1"
             th:id="tag_ + ${tag.id}" th:text="${tag.name}" th:title="${tag.name}" style="max-width: 100%;"></button>
+    </div>
+
+    <div th:fragment="create_tag_button_group">
+        <!-- Button for toggling create tag form -->
+        <button class="btn btn-light rounded-pill py-0 mb-1" id="createTagFormToggleButton">
+            <i class="bi bi-plus-lg"></i>
+        </button>
+        <!-- Create tag form -->
+        <form class="d-inline-flex d-none" id="createTagForm" style="max-width:200px; height:25px;"
+            th:action="@{/api/v1/tag}" method="POST">
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" required>
+            <button type="submit" class="btn btn-outline-success py-0" style="border-radius: 0px 50px 50px 0px;">
+                <i class="bi bi-check"></i>
+            </button>
+        </form>
     </div>
 
     <div th:fragment="scripts">
