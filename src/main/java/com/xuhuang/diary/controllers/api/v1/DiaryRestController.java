@@ -7,7 +7,7 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
 
 import org.springframework.data.domain.Page;
@@ -48,7 +48,7 @@ public class DiaryRestController {
     private static final String PAGE_SIZE = "pageSize";
     private static final String CONTENT = "content";
 
-    private final DiaryService diaryService;
+    private final BookService bookService;
     private final RecordService recordService;
 
     @PostMapping()
@@ -56,7 +56,7 @@ public class DiaryRestController {
         log.info("createBook(title: {})", title);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.createBook(title);
+        Book book = bookService.createBook(title);
         body.put(DATA, book);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
 
@@ -71,7 +71,7 @@ public class DiaryRestController {
         log.info("getBooks()");
 
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put(DATA, diaryService.getBooks());
+        body.put(DATA, bookService.getBooks());
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class DiaryRestController {
         log.info("getBook(bookId: {})", bookId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.getBook(bookId);
+        Book book = bookService.getBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
@@ -101,7 +101,7 @@ public class DiaryRestController {
         log.info("updateBook(bookId: {}, title: {})", bookId, title);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.updateBook(bookId, title);
+        Book book = bookService.updateBook(bookId, title);
         body.put(DATA, book);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
 
@@ -116,7 +116,7 @@ public class DiaryRestController {
         log.info("deleteBook(bookId: {})", bookId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.deleteBook(bookId);
+        Book book = bookService.deleteBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
 

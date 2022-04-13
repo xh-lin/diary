@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DiaryService extends BaseService {
+public class BookService extends BaseService {
 
     public static final String TITLE_MUST_NOT_BE_BLANK = "Title must not be blank.";
 

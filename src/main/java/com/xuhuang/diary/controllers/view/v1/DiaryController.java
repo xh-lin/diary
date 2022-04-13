@@ -10,7 +10,7 @@ import com.xuhuang.diary.controllers.view.Template;
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.Tag;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
 import com.xuhuang.diary.services.TagService;
 
@@ -39,7 +39,7 @@ public class DiaryController {
     private static final String TAGS = "tags";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
 
-    private final DiaryService diaryService;
+    private final BookService bookService;
     private final RecordService recordService;
     private final TagService tagService;
 
@@ -55,7 +55,7 @@ public class DiaryController {
             @PathVariable(required = false) Integer size) throws AuthException {
         log.info("viewDiary(bookId: {}, page: {}, size: {})", bookId, page, size);
 
-        List<Book> books = diaryService.getBooks();
+        List<Book> books = bookService.getBooks();
 
         // if have not selected a book and there are books
         if (bookId == null && !books.isEmpty()) {
@@ -99,7 +99,7 @@ public class DiaryController {
         List<Book> books = new ArrayList<>();
 
         for (Map<String, Object> bookJson : booksJson) {
-            books.add(diaryService.parseBookJson(bookJson));
+            books.add(bookService.parseBookJson(bookJson));
         }
 
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);

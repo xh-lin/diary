@@ -6,7 +6,8 @@ import com.xuhuang.diary.controllers.view.v1.AppController;
 import com.xuhuang.diary.controllers.view.v1.AuthController;
 import com.xuhuang.diary.controllers.view.v1.DiaryController;
 import com.xuhuang.diary.controllers.view.v1.ErrorController;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.BookService;
+import com.xuhuang.diary.services.RecordService;
 import com.xuhuang.diary.services.UserService;
 
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,9 @@ class DiaryApplicationTests {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private DiaryService diaryService;
+	private BookService bookService;
+	@Autowired
+	private RecordService recordService;
 
 	@Test
 	void contextLoads() {
@@ -47,7 +50,8 @@ class DiaryApplicationTests {
 		Assertions.assertThat(diaryRestController).isNotNull();
 
 		Assertions.assertThat(userService).isNotNull();
-		Assertions.assertThat(diaryService).isNotNull();
+		Assertions.assertThat(bookService).isNotNull();
+		Assertions.assertThat(recordService).isNotNull();
 	}
 
 }

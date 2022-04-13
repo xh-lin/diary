@@ -17,7 +17,7 @@ import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 import com.xuhuang.diary.repositories.UserRepository;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -97,7 +97,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.POST, API_V1_DIARY,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.TITLE_MUST_NOT_BE_BLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -139,7 +139,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_BOOK_ID;
@@ -363,7 +363,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
@@ -456,7 +456,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     }
 
     private void setupMockRepository() {
-        Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
+        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
 
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
