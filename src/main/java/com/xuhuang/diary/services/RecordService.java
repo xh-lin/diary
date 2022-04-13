@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RecordService extends BaseService {
 
+    public static final String TEXT_MUST_NOT_BE_EMPTY = "Text must not be empty.";
     public static final String PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO = "Page must be greater than or equal to zero.";
     public static final String SIZE_MUST_BE_GREATER_THAN_ZERO = "Size must be greater than zero.";
 
@@ -36,8 +37,12 @@ public class RecordService extends BaseService {
      * Throws:
      * AuthException - if book does not belong to the current user
      * NoSuchElementException - if book is not found
+     * IllegalArgumentException - if text is empty
      */
     public Record createRecord(Long bookId, String text) throws AuthException {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(TEXT_MUST_NOT_BE_EMPTY);
+        }
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
         return recordRepository.save(new Record(text, book));
@@ -72,8 +77,8 @@ public class RecordService extends BaseService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
      */
     public Record getRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
@@ -83,10 +88,14 @@ public class RecordService extends BaseService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
+     * IllegalArgumentException - if text is empty
      */
     public Record updateRecord(Long recordId, String text) throws AuthException {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(TEXT_MUST_NOT_BE_EMPTY);
+        }
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
         recd.setText(text);
@@ -95,8 +104,8 @@ public class RecordService extends BaseService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
      */
     public Record deleteRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();

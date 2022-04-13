@@ -54,7 +54,7 @@ public class TagService extends BaseService {
      * Throws:
      * AuthException - if tag does not belong to the current user
      * NoSuchElementException - if tag is not found
-     * IllegalArgumentException - if title is blank
+     * IllegalArgumentException - if name is blank
      */
     public Tag updateTag(Long tagId, String name) throws AuthException {
         if (name == null || name.isBlank()) {
