@@ -11,6 +11,7 @@ import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.RecordService;
 import com.xuhuang.diary.services.TagService;
 
 import org.springframework.data.domain.Page;
@@ -39,6 +40,7 @@ public class DiaryController {
     private static final String NEXT_PAGE_URL = "nextPageUrl";
 
     private final DiaryService diaryService;
+    private final RecordService recordService;
     private final TagService tagService;
 
     @GetMapping({
@@ -65,11 +67,11 @@ public class DiaryController {
             Page<Record> recordPage;
 
             if (page == null) {
-                recordPage = diaryService.getRecords(bookId);
+                recordPage = recordService.getRecords(bookId);
             } else if (size == null) {
-                recordPage = diaryService.getRecords(bookId, page);
+                recordPage = recordService.getRecords(bookId, page);
             } else {
-                recordPage = diaryService.getRecords(bookId, page, size);
+                recordPage = recordService.getRecords(bookId, page, size);
             }
 
             int totalPages = recordPage.getTotalPages();
@@ -110,7 +112,7 @@ public class DiaryController {
         List<Record> records = new ArrayList<>();
 
         for (Map<String, Object> recordJson : recordsJson) {
-            records.add(diaryService.parseRecordJson(recordJson));
+            records.add(recordService.parseRecordJson(recordJson));
         }
 
         model.addAttribute(RECORDS, records);

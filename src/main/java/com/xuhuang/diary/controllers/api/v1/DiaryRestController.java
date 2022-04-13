@@ -8,6 +8,7 @@ import javax.security.auth.message.AuthException;
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.RecordService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ public class DiaryRestController {
     private static final String CONTENT = "content";
 
     private final DiaryService diaryService;
+    private final RecordService recordService;
 
     @PostMapping()
     public ResponseEntity<Object> createBook(@RequestParam String title) {
@@ -130,7 +132,7 @@ public class DiaryRestController {
         log.info("createRecord(bookId: {}, text: {})", bookId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.createRecord(bookId, text);
+        Record recd = recordService.createRecord(bookId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
 
@@ -154,11 +156,11 @@ public class DiaryRestController {
         Page<Record> recordPage;
 
         if (page == null) {
-            recordPage = diaryService.getRecords(bookId);
+            recordPage = recordService.getRecords(bookId);
         } else if (size == null) {
-            recordPage = diaryService.getRecords(bookId, page);
+            recordPage = recordService.getRecords(bookId, page);
         } else {
-            recordPage = diaryService.getRecords(bookId, page, size);
+            recordPage = recordService.getRecords(bookId, page, size);
         }
 
         Map<String, Object> data = new LinkedHashMap<>();
@@ -191,7 +193,7 @@ public class DiaryRestController {
         log.info("getRecord(recordId: {})", recordId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.getRecord(recordId);
+        Record recd = recordService.getRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
@@ -207,7 +209,7 @@ public class DiaryRestController {
         log.debug("updateRecord(recordId: {}, text: {})", recordId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.updateRecord(recordId, text);
+        Record recd = recordService.updateRecord(recordId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
 
@@ -222,7 +224,7 @@ public class DiaryRestController {
         log.info("deleteRecord(recordId: {})", recordId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.deleteRecord(recordId);
+        Record recd = recordService.deleteRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
 

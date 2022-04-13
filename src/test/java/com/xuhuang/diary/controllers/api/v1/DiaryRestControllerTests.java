@@ -18,6 +18,7 @@ import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 import com.xuhuang.diary.repositories.UserRepository;
 import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.services.RecordService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -326,7 +327,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
 
         // bad request page size
         uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
@@ -335,7 +336,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
     @Test
