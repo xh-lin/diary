@@ -59,7 +59,7 @@
                 <form class="d-flex flex-column" id="createRecordForm"
                     th:action="@{|/api/v1/diary/${currentBookId}/record|}" method="POST">
                     <div class="mb-1">
-                        <textarea class="w-100" name="text" placeholder="Say something..."></textarea>
+                        <textarea class="w-100" name="text" placeholder="Say something..." required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm ms-auto">Submit</button>
                 </form>
@@ -83,7 +83,7 @@
                         <form id="updateRecordForm" method="PUT">
                             <div class="mb-3">
                                 <textarea class="w-100" style="height: 200px;" name="text"
-                                    placeholder="Say something..."></textarea>
+                                    placeholder="Say something..." required></textarea>
                             </div>
                         </form>
                     </div>
