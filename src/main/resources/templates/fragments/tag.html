@@ -17,6 +17,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="tagDialogModalLabel">
                             <span id="selectTagLabel">Select tag</span>
+                            <span id="updateTagLabel">Update tag</span>
                             <span id="deleteTagLabel" style="display:none;">Delete tag</span>
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -27,6 +28,8 @@
                         <span id="tagButtons" th:include="fragments/tag::tags"></span>
                         <!-- Create tag button group -->
                         <span id="createTagButtonGroup" th:include="fragments/tag::create_tag_button_group"></span>
+                        <!-- Edit tag form -->
+                        <span th:include="fragments/tag::update_tag_form"></span>
                     </div>
                     <!-- Footer -->
                     <div class="modal-footer">
@@ -34,6 +37,9 @@
                             Cancel
                         </button>
                         <div id="tagActionButtons">
+                            <button type="button" class="btn btn-primary btn-sm" id="updateTagButton">
+                                <i class="bi bi-pencil"></i>
+                            </button>
                             <button type="button" class="btn btn-danger btn-sm" id="deleteTagButton">
                                 <i class="bi bi-trash3"></i>
                             </button>
@@ -60,6 +66,15 @@
             th:action="@{/api/v1/tag}" method="POST">
             <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" required>
             <button type="submit" class="btn btn-outline-success py-0" style="border-radius: 0px 50px 50px 0px;">
+                <i class="bi bi-check"></i>
+            </button>
+        </form>
+    </div>
+
+    <div th:fragment="update_tag_form">
+        <form class="d-inline-flex d-none" id="updateTagForm" style="max-width:200px; height:25px;" method="PUT">
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" required>
+            <button type="submit" class="btn btn-outline-primary py-0" style="border-radius: 0px 50px 50px 0px;">
                 <i class="bi bi-check"></i>
             </button>
         </form>
