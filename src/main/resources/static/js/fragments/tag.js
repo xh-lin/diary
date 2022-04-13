@@ -77,7 +77,7 @@ function hideCreateTagForm() {
 function showUpdateTagForm(tagButton) {
     tagButtons.find('button.d-none').removeClass('d-none');
     updateTagForm.removeClass('d-none');
-    tagButton.after(updateTagForm);
+    tagButton.parent().after(updateTagForm);
     tagButton.addClass('d-none');
 }
 

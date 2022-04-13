@@ -34,7 +34,7 @@
                     <!-- Footer -->
                     <div class="modal-footer">
                         <button class="btn btn-secondary btn-sm" id="tagCancelActionButton" style="display:none;">
-                            Cancel
+                            <i class="bi bi-arrow-90deg-right"></i>
                         </button>
                         <div id="tagActionButtons">
                             <button type="button" class="btn btn-primary btn-sm" id="updateTagButton">
@@ -51,9 +51,11 @@
     </div>
 
     <div th:fragment="tags">
-        <button th:each="tag : ${tags}" class="btn btn-info rounded-pill text-truncate py-0 ms-1 mb-1"
-            th:id="tag_ + ${tag.id}" th:text="${tag.name}" th:title="${tag.name}" style="max-width: 100%;"
-            th:data-bs-name="${tag.name}" th:data-bs-url="@{|/api/v1/tag/${tag.id}|}"></button>
+        <span th:each="tag : ${tags}" th:id="tag_ + ${tag.id}">
+            <button class="btn btn-info rounded-pill text-truncate py-0 mb-1" th:text="${tag.name}"
+                th:title="${tag.name}" style="max-width: 100%;" th:data-bs-name="${tag.name}"
+                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}"></button>
+        </span>
     </div>
 
     <div th:fragment="create_tag_button_group">
