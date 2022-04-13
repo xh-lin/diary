@@ -9,6 +9,7 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 
@@ -32,6 +33,7 @@ public class RecordService extends BaseService {
 
     private final BookRepository bookRepository;
     private final RecordRepository recordRepository;
+    private final TagService tagService;
 
     /*
      * Throws:
@@ -112,6 +114,30 @@ public class RecordService extends BaseService {
         throwIfIsNotCurrentUser(recd.getBook().getUser());
         recordRepository.deleteById(recordId);
         return recd;
+    }
+
+    /*
+     * Throws:
+     * AuthException - if record or tag does not belong to the current user
+     * NoSuchElementException - if record or tag is not found
+     */
+    public Record addTag(Long recordId, Long tagId) throws AuthException {
+        Record recd = getRecord(recordId);
+        Tag tag = tagService.getTag(tagId);
+        recd.getTags().add(tag);
+        return recordRepository.save(recd);
+    }
+
+    /*
+     * Throws:
+     * AuthException - if record or tag does not belong to the current user
+     * NoSuchElementException - if record or tag is not found
+     */
+    public Record removeTag(Long recordId, Long tagId) throws AuthException {
+        Record recd = getRecord(recordId);
+        Tag tag = tagService.getTag(tagId);
+        recd.getTags().remove(tag);
+        return recordRepository.save(recd);
     }
 
     public Record parseRecordJson(Map<String, Object> recordJson, boolean getRelated) {

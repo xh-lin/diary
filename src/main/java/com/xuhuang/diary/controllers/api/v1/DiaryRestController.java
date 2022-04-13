@@ -234,4 +234,34 @@ public class DiaryRestController {
         return response;
     }
 
+    @PutMapping("/record/{recordId}/tag/{tagId}")
+    public ResponseEntity<Object> addTag(@PathVariable Long recordId, @PathVariable Long tagId) throws AuthException {
+        log.info("addTag(recordId: {}, tagId: {})", recordId, tagId);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record recd = recordService.addTag(recordId, tagId);
+        body.put(DATA, recd);
+        body.put(MESSAGE, UPDATED_SUCCESSFULLY);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
+    }
+
+    @DeleteMapping("/record/{recordId}/tag/{tagId}")
+    public ResponseEntity<Object> removeTag(@PathVariable Long recordId, @PathVariable Long tagId) throws AuthException {
+        log.info("removeTag(recordId: {}, tagId: {})", recordId, tagId);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        Record recd = recordService.removeTag(recordId, tagId);
+        body.put(DATA, recd);
+        body.put(MESSAGE, DELETED_SUCCESSFULLY);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+
+        return response;
+    }
+
 }
