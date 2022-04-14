@@ -49,3 +49,7 @@
 #recordDropdownMenuLink::after {
     display: none;
 }
+
+.inactive-tag {
+    opacity: 0.5;
+}

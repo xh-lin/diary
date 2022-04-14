@@ -5,8 +5,12 @@
 */
 console.assert(TAG_BUTTONS_FRAGMENT_URL !== undefined);
 
+const TAG_BADGE_ID_PREFIX = '#tagBadge_';
 const TAG_BUTTON_ID_PREFIX = '#tagButton_';
+const INACTIVE_TAG_CLASS = 'inactive-tag';
+
 const TAG_DIALOG_MODAL_ID = '#tagDialogModal';
+const TAG_BADGES_ID = '#tagBadges';
 const TAG_BUTTONS_ID = '#tagButtons';
 
 const CREATE_TAG_BUTTON_GROUP_ID = '#createTagButtonGroup';
@@ -162,13 +166,11 @@ function tagOnClickHandler(event) {
             // TODO
             break;
         case TagAction.UPDATE:
-            // Update the modal's content.
             updateTagForm.attr('action', url);
             updateTagForm.find('input[name=name]').val(name);
             showUpdateTagForm(tagButton);
             break;
         case TagAction.DELETE:
-            // Update the modal's content.
             deleteTagForm.attr('action', url);
             deleteTagForm.find(DELETE_TAG_NAME_ID).text(name);
             deleteTagDialogModal.show()
@@ -181,7 +183,32 @@ function tagOnClickHandler(event) {
 tagButtons.find('button').click(tagOnClickHandler);
 
 /*
-    Create tag form submit
+    Select tag
+*/
+
+tagDialogModal.on('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    const button = $(event.relatedTarget);
+
+    // get active tag ids
+    const tagBadges = button.closest('.card-footer').find(TAG_BADGES_ID);
+    const activeTagButtonIdSet = new Set();
+    tagBadges.children().each(function () {
+        const tagId = $(this).attr('id').replace(TAG_BADGE_ID_PREFIX.substring(1), '');
+        activeTagButtonIdSet.add(TAG_BUTTON_ID_PREFIX.substring(1) + tagId);
+    })
+
+    // set tag buttons to be active or inactive
+    tagButtons.children().each(function () {
+        if (activeTagButtonIdSet.has($(this).attr('id')))
+            $(this).removeClass(INACTIVE_TAG_CLASS);
+        else
+            $(this).addClass(INACTIVE_TAG_CLASS);
+    });
+});
+
+/*
+    Create tag
 */
 
 setupAjaxFormSubmit(createTagForm, function (res) {
@@ -204,7 +231,7 @@ setupAjaxFormSubmit(createTagForm, function (res) {
 }, false);
 
 /*
-    Update tag form submit
+    Update tag
 */
 
 setupAjaxFormSubmit(updateTagForm, function (res) {
@@ -228,7 +255,7 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
 }, false);
 
 /*
-    Delete tag form submit
+    Delete tag
 */
 
 setupAjaxFormSubmit(deleteTagForm, function (res) {

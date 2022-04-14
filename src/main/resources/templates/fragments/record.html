@@ -10,20 +10,26 @@
     <div th:fragment="records">
         <div th:each="record : ${records}" class="card mt-4" th:id="record_ + ${record.id}">
             <div class="card-header">
+                <!-- Created at -->
                 <div class="timestamp" th:text="${#dates.formatISO(record.createdAt)}"></div>
             </div>
             <div class="card-body">
+                <!-- Record text -->
                 <div class="card-text" style="white-space: pre-wrap;" th:utext="${record.text}"></div>
             </div>
             <div class="card-footer d-flex">
                 <div>
+                    <!-- Updated at -->
                     <small class="text-muted" th:if="${record.createdAt != record.updatedAt}">
                         Last edited
                         <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
                     </small>
                     <div>
-                        <span class="badge rounded-pill bg-info text-dark me-1" th:each="tag : ${record.tags}"
-                            th:text="${tag.name}"></span>
+                        <!-- Tag badges -->
+                        <span id="tagBadges">
+                            <span class="badge rounded-pill bg-info text-dark me-1" th:each="tag : ${record.tags}"
+                                th:id="tagBadge_ + ${tag.id}" th:text="${tag.name}"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="d-flex ms-auto">
