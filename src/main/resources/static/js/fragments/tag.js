@@ -288,6 +288,7 @@ setupAjaxFormSubmit(createTagForm, function (res) {
 
 setupAjaxFormSubmit(updateTagForm, function (res) {
     hideUpdateTagForm();
+    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
     // load tag buttons fragment
     $.ajax({
         type: 'POST',
@@ -300,8 +301,7 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
             // setup on click handler
             newTagButtons.find('button').click(tagOnClickHandler);
             // replace new tag fragment
-            const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
-            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).replaceWith(newTagButtons.find(TAG_BUTTON_FRAGMENT_ID));
+            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).html(newTagButtons.find(TAG_BUTTON_FRAGMENT_ID).children());
         }
     });
 
