@@ -288,7 +288,6 @@ setupAjaxFormSubmit(createTagForm, function (res) {
 
 setupAjaxFormSubmit(updateTagForm, function (res) {
     hideUpdateTagForm();
-    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
     // load tag buttons fragment
     $.ajax({
         type: 'POST',
@@ -301,11 +300,25 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
             // setup on click handler
             newTagButtons.find('button').click(tagOnClickHandler);
             // replace new tag fragment
+            const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
             tagButtons.find(TAG_BUTTON_FRAGMENT_ID).html(newTagButtons.find(TAG_BUTTON_FRAGMENT_ID).children());
         }
     });
 
-    // TODO: if active, update record fragment's tag badge
+    // load tag badges fragment
+    $.ajax({
+        type: 'POST',
+        url: TAG_BADGES_FRAGMENT_URL,
+        data: JSON.stringify([res.data]),
+        contentType: 'application/json',
+        error: errorHandler,
+        success: function (tagBadgesFragment) {
+            const TAG_BADGES_FRAGMENT_ID = TAG_BADGE_ID_PREFIX + res.data.id;
+            $('.card-footer').each(function () {
+                $(this).find(TAG_BADGES_FRAGMENT_ID).replaceWith($(tagBadgesFragment).find(TAG_BADGES_FRAGMENT_ID));
+            });
+        }
+    });
 }, false);
 
 /*
@@ -317,5 +330,5 @@ setupAjaxFormSubmit(deleteTagForm, function (res) {
     const tagButton = tagButtons.find(TAG_BUTTON_FRAGMENT_ID);
     tagButton.remove();
 
-    // TODO: if active, update record fragment's tag badge
+    // TODO: update record fragments' tag badge
 });
