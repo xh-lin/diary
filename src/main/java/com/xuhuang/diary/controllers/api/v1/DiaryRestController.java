@@ -7,8 +7,10 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
+import com.xuhuang.diary.services.TagService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,8 @@ public class DiaryRestController {
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
+    private static final String RECORD = "record";
+    private static final String TAG = "tag";
 
     private static final String PREV_PAGE_URL = "prevPageUrl";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
@@ -50,6 +54,7 @@ public class DiaryRestController {
 
     private final BookService bookService;
     private final RecordService recordService;
+    private final TagService tagService;
 
     @PostMapping()
     public ResponseEntity<Object> createBook(@RequestParam String title) {
@@ -239,8 +244,13 @@ public class DiaryRestController {
         log.info("addTag(recordId: {}, tagId: {})", recordId, tagId);
 
         Map<String, Object> body = new LinkedHashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
         Record recd = recordService.addTag(recordId, tagId);
-        body.put(DATA, recd);
+        Tag tag = tagService.getTag(tagId);
+
+        data.put(RECORD, recd);
+        data.put(TAG, tag);
+        body.put(DATA, data);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
@@ -254,8 +264,13 @@ public class DiaryRestController {
         log.info("removeTag(recordId: {}, tagId: {})", recordId, tagId);
 
         Map<String, Object> body = new LinkedHashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
         Record recd = recordService.removeTag(recordId, tagId);
-        body.put(DATA, recd);
+        Tag tag = tagService.getTag(tagId);
+
+        data.put(RECORD, recd);
+        data.put(TAG, tag);
+        body.put(DATA, data);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
