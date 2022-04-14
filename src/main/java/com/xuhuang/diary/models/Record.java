@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -52,6 +53,7 @@ public class Record extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(joinColumns = { @JoinColumn(name = "record_id") },
             inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    @OrderBy("id")
     @NonNull
     private Set<Tag> tags = new HashSet<>();
 
