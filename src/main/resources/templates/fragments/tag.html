@@ -62,7 +62,8 @@
 
     <div th:fragment="tag_badges">
         <span th:each="tag : ${tags}" th:id="tagBadge_ + ${tag.id}">
-            <span class="badge rounded-pill bg-info text-dark" th:text="${tag.name}"></span>
+            <span class="badge rounded-pill bg-info text-dark text-truncate" th:text="${tag.name}"
+                th:title="${tag.name}" style="max-width: 100%;"></span>
         </span>
     </div>
 
