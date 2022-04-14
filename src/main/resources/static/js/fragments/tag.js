@@ -220,17 +220,27 @@ tagDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(selectTagForm, function (res) {
-    // update tag button to active or inactive
     const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.tag.id;
-    const method = selectTagForm.attr('method');
-    if (method === 'DELETE')
-        tagButtons.find(TAG_BUTTON_FRAGMENT_ID).addClass(INACTIVE_TAG_CLASS);
-    else if (method === 'PUT')
-        tagButtons.find(TAG_BUTTON_FRAGMENT_ID).removeClass(INACTIVE_TAG_CLASS);
-    else
-        console.error(`Unexpected method: ${method}`);
+    const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.record.id; // RECORD_ID_PREFIX declared in record.js
+    const tagBadges = $(RECORD_FRAGMENT_ID).find(TAG_BADGES_ID)
 
-    // TODO: update record fragment's tag badge
+    switch (selectTagForm.attr('method')) {
+        case 'DELETE':
+            // update tag button to inactive
+            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).addClass(INACTIVE_TAG_CLASS);
+            // record fragment remove tag badge
+            const TAG_BADGES_FRAGMENT_ID = TAG_BADGE_ID_PREFIX + res.data.tag.id;
+            const tagBadge = tagBadges.find(TAG_BADGES_FRAGMENT_ID);
+            tagBadge.remove();
+            break;
+        case 'PUT':
+            // update tag button to active
+            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).removeClass(INACTIVE_TAG_CLASS);
+            // TODO: record fragment add tag badge
+            break;
+        default:
+            console.error(`Unexpected method: ${method}`);
+    }
 }, false);
 
 /*
