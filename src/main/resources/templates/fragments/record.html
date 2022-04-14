@@ -15,11 +15,17 @@
             <div class="card-body">
                 <div class="card-text" style="white-space: pre-wrap;" th:utext="${record.text}"></div>
             </div>
-            <div class="card-footer text-muted d-flex">
-                <small th:if="${record.createdAt != record.updatedAt}">
-                    Last edited
-                    <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
-                </small>
+            <div class="card-footer d-flex">
+                <div>
+                    <small class="text-muted" th:if="${record.createdAt != record.updatedAt}">
+                        Last edited
+                        <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
+                    </small>
+                    <div>
+                        <span class="badge rounded-pill bg-info text-dark me-1" th:each="tag : ${record.tags}"
+                            th:text="${tag.name}"></span>
+                    </div>
+                </div>
                 <div class="d-flex ms-auto">
                     <!-- Tag dropdown menu -->
                     <button type="button" class="btn btn-light rounded-circle p-0" style="width:30px; height:30px;"
