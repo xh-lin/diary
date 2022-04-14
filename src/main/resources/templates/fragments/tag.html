@@ -25,7 +25,7 @@
                     <!-- Body -->
                     <div class="modal-body">
                         <!-- Tag buttons -->
-                        <span id="tagButtons" th:include="fragments/tag::tags"></span>
+                        <span id="tagButtons" th:include="fragments/tag::tag_buttons"></span>
                         <!-- Create tag button group -->
                         <span id="createTagButtonGroup" th:include="fragments/tag::create_tag_button_group"></span>
                         <!-- Edit tag form -->
@@ -50,8 +50,8 @@
         </div>
     </div>
 
-    <div th:fragment="tags">
-        <span th:each="tag : ${tags}" th:id="tag_ + ${tag.id}">
+    <div th:fragment="tag_buttons">
+        <span th:each="tag : ${tags}" th:id="tagButton_ + ${tag.id}">
             <button class="btn btn-info rounded-pill text-truncate py-0 mb-1" th:text="${tag.name}"
                 th:title="${tag.name}" style="max-width: 100%;" th:data-bs-name="${tag.name}"
                 th:data-bs-url="@{|/api/v1/tag/${tag.id}|}"></button>
@@ -114,7 +114,7 @@
 
     <div th:fragment="scripts">
         <script th:inline="javascript">
-            const TAGS_FRAGMENT_URL = /*[[@{/diary/fragments/tags}]]*/ undefined;
+            const TAG_BUTTONS_FRAGMENT_URL = /*[[@{/diary/fragments/tag_buttons}]]*/ undefined;
         </script>
         <script th:src="@{/js/fragments/tag.js}"></script>
     </div>

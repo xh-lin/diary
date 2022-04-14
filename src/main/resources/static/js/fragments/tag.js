@@ -1,11 +1,11 @@
 /*
     Variables passed from Thymeleaf in fragments/tag::scripts:
 
-    const TAGS_FRAGMENT_URL;
+    const TAG_BUTTONS_FRAGMENT_URL;
 */
-console.assert(TAGS_FRAGMENT_URL !== undefined);
+console.assert(TAG_BUTTONS_FRAGMENT_URL !== undefined);
 
-const TAG_ID_PREFIX = '#tag_';
+const TAG_BUTTON_ID_PREFIX = '#tagButton_';
 const TAG_DIALOG_MODAL_ID = '#tagDialogModal';
 const TAG_BUTTONS_ID = '#tagButtons';
 
@@ -186,19 +186,19 @@ tagButtons.find('button').click(tagOnClickHandler);
 
 setupAjaxFormSubmit(createTagForm, function (res) {
     hideCreateTagForm();
-    // load tags fragment
+    // load tag buttons fragment
     $.ajax({
         type: 'POST',
-        url: TAGS_FRAGMENT_URL,
+        url: TAG_BUTTONS_FRAGMENT_URL,
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function (tagsFragment) {
-            const newTags = $(tagsFragment);
+        success: function (tagButtonsFragment) {
+            const newTagButtons = $(tagButtonsFragment);
             // setup on click handler
-            newTags.find('button').click(tagOnClickHandler);
+            newTagButtons.find('button').click(tagOnClickHandler);
             // append new tags fragment
-            tagButtons.append(newTags.children());
+            tagButtons.append(newTagButtons.children());
         }
     });
 }, false);
@@ -209,20 +209,20 @@ setupAjaxFormSubmit(createTagForm, function (res) {
 
 setupAjaxFormSubmit(updateTagForm, function (res) {
     hideUpdateTagForm();
-    // load tags fragment
+    // load tag buttons fragment
     $.ajax({
         type: 'POST',
-        url: TAGS_FRAGMENT_URL,
+        url: TAG_BUTTONS_FRAGMENT_URL,
         data: JSON.stringify([res.data]),
         contentType: 'application/json',
         error: errorHandler,
-        success: function (tagsFragment) {
-            const newTags = $(tagsFragment);
+        success: function (tagButtonsFragment) {
+            const newTagButtons = $(tagButtonsFragment);
             // setup on click handler
-            newTags.find('button').click(tagOnClickHandler);
+            newTagButtons.find('button').click(tagOnClickHandler);
             // replace new tag fragment
-            const TAG_FRAGMENT_ID = TAG_ID_PREFIX + res.data.id;
-            tagButtons.find(TAG_FRAGMENT_ID).replaceWith(newTags.find(TAG_FRAGMENT_ID));
+            const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
+            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).replaceWith(newTagButtons.find(TAG_BUTTON_FRAGMENT_ID));
         }
     });
 }, false);
@@ -232,7 +232,7 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
 */
 
 setupAjaxFormSubmit(deleteTagForm, function (res) {
-    const TAG_FRAGMENT_ID = TAG_ID_PREFIX + res.data.id;
-    const tagButton = tagButtons.find(TAG_FRAGMENT_ID);
+    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
+    const tagButton = tagButtons.find(TAG_BUTTON_FRAGMENT_ID);
     tagButton.remove();
 });

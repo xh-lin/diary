@@ -120,8 +120,8 @@ public class DiaryController {
         return "fragments/record::records";
     }
 
-    @PostMapping("/fragments/tags")
-    public String loadTagsFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
+    @PostMapping("/fragments/tag_buttons")
+    public String loadTagButtonsFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
         List<Tag> tags = new ArrayList<>();
 
         for (Map<String, Object> tagJson : tagsJson) {
@@ -129,7 +129,7 @@ public class DiaryController {
         }
 
         model.addAttribute(TAGS, tags);
-        return "fragments/tag::tags";
+        return "fragments/tag::tag_buttons";
     }
 
 }
