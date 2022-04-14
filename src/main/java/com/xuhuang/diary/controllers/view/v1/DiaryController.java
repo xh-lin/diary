@@ -132,4 +132,16 @@ public class DiaryController {
         return "fragments/tag::tag_buttons";
     }
 
+    @PostMapping("/fragments/tag_badges")
+    public String loadTagBadgesFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
+        List<Tag> tags = new ArrayList<>();
+
+        for (Map<String, Object> tagJson : tagsJson) {
+            tags.add(tagService.parseTagJson(tagJson));
+        }
+
+        model.addAttribute(TAGS, tags);
+        return "fragments/tag::tag_badges";
+    }
+
 }

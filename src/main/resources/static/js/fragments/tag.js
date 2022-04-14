@@ -2,8 +2,10 @@
     Variables passed from Thymeleaf in fragments/tag::scripts:
 
     const TAG_BUTTONS_FRAGMENT_URL;
+    const TAG_BADGES_FRAGMENT_URL;
 */
 console.assert(TAG_BUTTONS_FRAGMENT_URL !== undefined);
+console.assert(TAG_BADGES_FRAGMENT_URL !== undefined)
 
 const TAG_BADGE_ID_PREFIX = '#tagBadge_';
 const TAG_BUTTON_ID_PREFIX = '#tagButton_';
@@ -236,7 +238,19 @@ setupAjaxFormSubmit(selectTagForm, function (res) {
         case 'PUT':
             // update tag button to active
             tagButtons.find(TAG_BUTTON_FRAGMENT_ID).removeClass(INACTIVE_TAG_CLASS);
-            // TODO: record fragment add tag badge
+            // load tag badges fragment
+            $.ajax({
+                type: 'POST',
+                url: TAG_BADGES_FRAGMENT_URL,
+                data: JSON.stringify([res.data.tag]),
+                contentType: 'application/json',
+                error: errorHandler,
+                success: function (tagBadgesFragment) {
+                    // record fragment add tag badge
+                    const newTagBadges = $(tagBadgesFragment);
+                    tagBadges.append(newTagBadges.children());
+                }
+            });
             break;
         default:
             console.error(`Unexpected method: ${method}`);
