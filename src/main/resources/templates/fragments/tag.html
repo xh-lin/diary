@@ -60,6 +60,11 @@
         </span>
     </div>
 
+    <div th:fragment="tag_badges">
+        <span class="badge rounded-pill bg-info text-dark me-1" th:each="tag : ${tags}"
+            th:id="tagBadge_ + ${tag.id}" th:text="${tag.name}"></span>
+    </div>
+
     <div th:fragment="create_tag_button_group">
         <!-- Button for toggling create tag form -->
         <button class="btn btn-light rounded-pill py-0 mb-1" id="createTagFormDisplayButton">

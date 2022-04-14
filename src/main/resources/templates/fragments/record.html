@@ -26,10 +26,7 @@
                     </small>
                     <div>
                         <!-- Tag badges -->
-                        <span id="tagBadges">
-                            <span class="badge rounded-pill bg-info text-dark me-1" th:each="tag : ${record.tags}"
-                                th:id="tagBadge_ + ${tag.id}" th:text="${tag.name}"></span>
-                        </span>
+                        <span id="tagBadges" th:with="tags=${record.tags}" th:include="fragments/tag::tag_badges"></span>
                     </div>
                 </div>
                 <div class="d-flex ms-auto">
