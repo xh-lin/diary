@@ -166,7 +166,8 @@ function tagOnClickHandler(event) {
     switch (currentAction) {
         case TagAction.SELECT:
             const id = tagButton.attr('data-bs-id');
-            selectTagForm.attr('action', `${selectTagForm.attr('action')}/${id}`);
+            const actionPrefix = selectTagForm.attr('data-bs-action-prefix');
+            selectTagForm.attr('action', `${actionPrefix}/${id}`);
             selectTagForm.attr('method', tagButton.parent().hasClass(INACTIVE_TAG_CLASS) ? 'PUT' : 'DELETE');
             selectTagForm.submit();
             break;
@@ -199,7 +200,7 @@ tagDialogModal.on('show.bs.modal', function (event) {
     const url = button.attr('data-bs-url');
 
     // Update the modal's content.
-    selectTagForm.attr('action', url);
+    selectTagForm.attr('data-bs-action-prefix', url);
 
     // get active tag ids
     const tagBadges = button.closest('.card-footer').find(TAG_BADGES_ID);
@@ -219,7 +220,16 @@ tagDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(selectTagForm, function (res) {
-    // TODO: update tag button inactive-tag class
+    // update tag button to active or inactive
+    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.tag.id;
+    const method = selectTagForm.attr('method');
+    if (method === 'DELETE')
+        tagButtons.find(TAG_BUTTON_FRAGMENT_ID).addClass(INACTIVE_TAG_CLASS);
+    else if (method === 'PUT')
+        tagButtons.find(TAG_BUTTON_FRAGMENT_ID).removeClass(INACTIVE_TAG_CLASS);
+    else
+        console.error(`Unexpected method: ${method}`);
+
     // TODO: update record fragment's tag badge
 }, false);
 
