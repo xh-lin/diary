@@ -112,6 +112,11 @@ public class RecordService extends BaseService {
     public Record deleteRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
+        // clean tag relationships
+        if (!recd.getTags().isEmpty()) {
+            recd.getTags().clear();
+            recordRepository.save(recd);
+        }
         recordRepository.deleteById(recordId);
         return recd;
     }
