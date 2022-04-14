@@ -23,7 +23,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         Object o1 = parser.parseExpression(fieldNames[0]).getValue(value);
 
         for (int i = 1; i < fieldNames.length; i++) {
-            Object o2 = parser.parseExpression(fieldNames[1]).getValue(value);
+            Object o2 = parser.parseExpression(fieldNames[i]).getValue(value);
 
             if (o1 == null) {
                 if (o2 != null)
