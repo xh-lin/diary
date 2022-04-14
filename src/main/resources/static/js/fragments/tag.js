@@ -11,6 +11,7 @@ const INACTIVE_TAG_CLASS = 'inactive-tag';
 
 const TAG_DIALOG_MODAL_ID = '#tagDialogModal';
 const TAG_BADGES_ID = '#tagBadges';
+const SELECT_TAG_FORM_ID = '#selectTagForm'
 const TAG_BUTTONS_ID = '#tagButtons';
 
 const CREATE_TAG_BUTTON_GROUP_ID = '#createTagButtonGroup';
@@ -34,6 +35,7 @@ const UPDATE_TAG_BUTTON_ID = '#updateTagButton';
 const DELETE_TAG_BUTTON_ID = '#deleteTagButton';
 
 const tagDialogModal = $(TAG_DIALOG_MODAL_ID);
+const selectTagForm = $(SELECT_TAG_FORM_ID);
 const tagButtons = tagDialogModal.find(TAG_BUTTONS_ID);
 
 const createTagButtonGroup = $(CREATE_TAG_BUTTON_GROUP_ID);
@@ -163,7 +165,10 @@ function tagOnClickHandler(event) {
     const url = tagButton.attr('data-bs-url');
     switch (currentAction) {
         case TagAction.SELECT:
-            // TODO
+            const id = tagButton.attr('data-bs-id');
+            selectTagForm.attr('action', `${selectTagForm.attr('action')}/${id}`);
+            selectTagForm.attr('method', tagButton.parent().hasClass(INACTIVE_TAG_CLASS) ? 'PUT' : 'DELETE');
+            selectTagForm.submit();
             break;
         case TagAction.UPDATE:
             updateTagForm.attr('action', url);
@@ -190,6 +195,12 @@ tagDialogModal.on('show.bs.modal', function (event) {
     // Button that triggered the modal
     const button = $(event.relatedTarget);
 
+    // Extract info from data-bs-* attributes
+    const url = button.attr('data-bs-url');
+
+    // Update the modal's content.
+    selectTagForm.attr('action', url);
+
     // get active tag ids
     const tagBadges = button.closest('.card-footer').find(TAG_BADGES_ID);
     const activeTagButtonIdSet = new Set();
@@ -207,6 +218,11 @@ tagDialogModal.on('show.bs.modal', function (event) {
     });
 });
 
+setupAjaxFormSubmit(selectTagForm, function (res) {
+    // TODO: update tag button inactive-tag class
+    // TODO: update record fragment's tag badge
+}, false);
+
 /*
     Create tag
 */
@@ -222,6 +238,8 @@ setupAjaxFormSubmit(createTagForm, function (res) {
         error: errorHandler,
         success: function (tagButtonsFragment) {
             const newTagButtons = $(tagButtonsFragment);
+            // set to inactive
+            newTagButtons.children().addClass(INACTIVE_TAG_CLASS);
             // setup on click handler
             newTagButtons.find('button').click(tagOnClickHandler);
             // append new tags fragment
@@ -252,6 +270,8 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
             tagButtons.find(TAG_BUTTON_FRAGMENT_ID).replaceWith(newTagButtons.find(TAG_BUTTON_FRAGMENT_ID));
         }
     });
+
+    // TODO: if active, update record fragment's tag badge
 }, false);
 
 /*
@@ -262,4 +282,6 @@ setupAjaxFormSubmit(deleteTagForm, function (res) {
     const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.id;
     const tagButton = tagButtons.find(TAG_BUTTON_FRAGMENT_ID);
     tagButton.remove();
+
+    // TODO: if active, update record fragment's tag badge
 });

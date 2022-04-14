@@ -35,7 +35,8 @@
                 <div class="d-flex ms-auto">
                     <!-- Tag dropdown menu -->
                     <button type="button" class="btn btn-light rounded-circle p-0" style="width:30px; height:30px;"
-                        data-bs-toggle="modal" data-bs-target="#tagDialogModal">
+                        data-bs-toggle="modal" data-bs-target="#tagDialogModal"
+                        th:data-bs-url="@{|/api/v1/diary/record/${record.id}/tag|}">
                         <i class="bi bi-tags"></i>
                     </button>
                     <!-- Record dropdown menu -->

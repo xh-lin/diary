@@ -24,6 +24,8 @@
                     </div>
                     <!-- Body -->
                     <div class="modal-body">
+                        <!-- Select tag form -->
+                        <form class="d-none" id="selectTagForm"></form>
                         <!-- Tag buttons -->
                         <span id="tagButtons" th:include="fragments/tag::tag_buttons"></span>
                         <!-- Create tag button group -->
@@ -54,7 +56,7 @@
         <span th:each="tag : ${tags}" th:id="tagButton_ + ${tag.id}">
             <button class="btn btn-info rounded-pill text-truncate py-0 mb-1" th:text="${tag.name}"
                 th:title="${tag.name}" style="max-width: 100%;" th:data-bs-name="${tag.name}"
-                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}"></button>
+                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}" th:data-bs-id="${tag.id}"></button>
         </span>
     </div>
 
