@@ -95,14 +95,11 @@ function formatTimestamps(parent, selector = '.timestamp') {
     parent.find(selector).each(function () {
         const date = new Date($(this).text());
         const momentDate = moment(date);
+        const text = (moment().diff(momentDate, 'days') < 3) ? momentDate.fromNow() : momentDate.format('llll');
+        const prefix = $(this).attr('data-bs-prefix');
 
+        $(this).text((prefix === undefined) ? text : prefix + text);
         $(this).attr('title', momentDate.format('LLLL'))
-
-        if (moment().diff(momentDate, 'days') < 3) {
-            $(this).text(momentDate.fromNow());
-        } else {
-            $(this).text(momentDate.format('llll'));
-        }
     });
 }
 

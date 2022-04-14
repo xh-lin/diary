@@ -20,10 +20,8 @@
             <div class="card-footer d-flex">
                 <div style="overflow: hidden;">
                     <!-- Updated at -->
-                    <small class="text-muted" th:if="${record.createdAt != record.updatedAt}">
-                        Last edited
-                        <span class="timestamp" th:text="${#dates.formatISO(record.updatedAt)}"></span>
-                    </small>
+                    <small class="timestamp text-muted" th:if="${record.createdAt != record.updatedAt}"
+                        th:text="${#dates.formatISO(record.updatedAt)}" data-bs-prefix="Last edited "></small>
                     <!-- Tag badges -->
                     <div id="tagBadges" th:with="tags=${record.tags}" th:include="fragments/tag::tag_badges"></div>
                 </div>
