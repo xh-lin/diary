@@ -248,12 +248,17 @@ class AuthRestControllerTests extends BaseRestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-                mockMvcPerform(
-                        HttpMethod.POST, API_V1_AUTH_REGISTER,
-                        requestBody,
-                        HttpStatus.BAD_REQUEST),
-                "$.messages.password",
-                RegisterRequest.PASSWORD_SIZE
+                expectArray(
+                        mockMvcPerform(
+                                HttpMethod.POST, API_V1_AUTH_REGISTER,
+                                requestBody,
+                                HttpStatus.BAD_REQUEST),
+                        "$.messages.password",
+                        RegisterRequest.PASSWORD_SIZE
+                                .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
+                                .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX))),
+                "$.messages.passwordConfirm",
+                RegisterRequest.PASSWORD_CONFIRM_SIZE
                         .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
                         .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)));
 
