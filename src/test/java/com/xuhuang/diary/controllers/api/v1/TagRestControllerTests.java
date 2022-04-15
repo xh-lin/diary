@@ -1,9 +1,14 @@
 package com.xuhuang.diary.controllers.api.v1;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.models.User;
@@ -29,6 +34,9 @@ public class TagRestControllerTests extends BaseRestControllerTests {
     private static final String MESSAGE_JPEXP = "$.message";
 
     private static final String NAME = "name";
+
+    private static final Long MOCK_TAG_ID = 1L;
+    private static final String MOCK_TAG_NAME = "Mock Tag";
 
     private static User mockUser;
 
@@ -66,6 +74,31 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 .andExpect(jsonPath(MESSAGE_JPEXP).value(TagService.NAME_MUST_NOT_BE_BLANK));
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
+    }
+
+    @Test
+    void getTagsSuccess() throws Exception {
+        setupMockRepository();
+
+        mockMvcPerform(
+                HttpMethod.GET, API_V1_TAG,
+                mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagRestController.FETCHED_SUCCESSFULLY))
+                .andExpect(jsonPath("$.data[0].name").value(MOCK_TAG_NAME));
+    }
+
+    private void setupMockRepository() {
+        // tag of mockUser
+        Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
+        mockTag.setId(MOCK_TAG_ID);
+        mockUser.getTags().add(mockTag);
+
+        // setup mock repository for tag
+        Optional<Tag> optionalMockTag = Optional.ofNullable(mockTag);
+        List<Tag> mockTags = Arrays.asList(mockTag);
+        doReturn(optionalMockTag).when(mockTagRepository).findById(MOCK_TAG_ID);
+        doReturn(mockTags).when(mockTagRepository).findByUser(mockUser);
     }
 
 }
