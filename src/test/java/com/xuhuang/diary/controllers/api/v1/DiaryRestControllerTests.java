@@ -16,7 +16,6 @@ import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
-import com.xuhuang.diary.repositories.UserRepository;
 import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
 
@@ -61,8 +60,6 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     private static User mockUser;
     private static User anotherMockUser;
 
-    @MockBean
-    private UserRepository mockUserRepository;
     @MockBean
     private BookRepository mockBookRepository;
     @MockBean

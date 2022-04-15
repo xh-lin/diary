@@ -2,12 +2,14 @@ package com.xuhuang.diary;
 
 import com.xuhuang.diary.controllers.api.v1.AuthRestController;
 import com.xuhuang.diary.controllers.api.v1.DiaryRestController;
+import com.xuhuang.diary.controllers.api.v1.TagRestController;
 import com.xuhuang.diary.controllers.view.v1.AppController;
 import com.xuhuang.diary.controllers.view.v1.AuthController;
 import com.xuhuang.diary.controllers.view.v1.DiaryController;
 import com.xuhuang.diary.controllers.view.v1.ErrorController;
 import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
+import com.xuhuang.diary.services.TagService;
 import com.xuhuang.diary.services.UserService;
 
 import org.assertj.core.api.Assertions;
@@ -31,6 +33,8 @@ class DiaryApplicationTests {
 	private AuthRestController authRestController;
 	@Autowired
 	private DiaryRestController diaryRestController;
+    @Autowired
+    private TagRestController tagRestController;
 
 	@Autowired
 	private UserService userService;
@@ -38,6 +42,8 @@ class DiaryApplicationTests {
 	private BookService bookService;
 	@Autowired
 	private RecordService recordService;
+    @Autowired
+    private TagService tagService;
 
 	@Test
 	void contextLoads() {
@@ -48,10 +54,12 @@ class DiaryApplicationTests {
 
 		Assertions.assertThat(authRestController).isNotNull();
 		Assertions.assertThat(diaryRestController).isNotNull();
+		Assertions.assertThat(tagRestController).isNotNull();
 
 		Assertions.assertThat(userService).isNotNull();
 		Assertions.assertThat(bookService).isNotNull();
 		Assertions.assertThat(recordService).isNotNull();
+		Assertions.assertThat(tagService).isNotNull();
 	}
 
 }
