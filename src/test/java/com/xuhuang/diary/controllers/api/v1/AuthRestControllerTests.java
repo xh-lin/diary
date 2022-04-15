@@ -149,6 +149,20 @@ class AuthRestControllerTests extends BaseRestControllerTests {
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
+        // size
+        String s = "0123456789";
+        requestBody.setEmail(s.repeat(6) + "@test.com");
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_SIZE.replace("{max}", String.valueOf(RegisterRequest.EMAIL_SIZE_MAX)));
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
         // not blank
         requestBody.setEmail(null);
 
