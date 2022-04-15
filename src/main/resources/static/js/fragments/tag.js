@@ -313,6 +313,7 @@ setupAjaxFormSubmit(updateTagForm, function (res) {
         contentType: 'application/json',
         error: errorHandler,
         success: function (tagBadgesFragment) {
+            // update record fragments' tag badge
             const TAG_BADGES_FRAGMENT_ID = TAG_BADGE_ID_PREFIX + res.data.id;
             $('.card-footer').each(function () {
                 $(this).find(TAG_BADGES_FRAGMENT_ID).replaceWith($(tagBadgesFragment).find(TAG_BADGES_FRAGMENT_ID));
@@ -330,5 +331,9 @@ setupAjaxFormSubmit(deleteTagForm, function (res) {
     const tagButton = tagButtons.find(TAG_BUTTON_FRAGMENT_ID);
     tagButton.remove();
 
-    // TODO: update record fragments' tag badge
+    // remove record fragments' tag badge
+    const TAG_BADGES_FRAGMENT_ID = TAG_BADGE_ID_PREFIX + res.data.id;
+    $('.card-footer').each(function () {
+        $(this).find(TAG_BADGES_FRAGMENT_ID).remove();
+    });
 });
