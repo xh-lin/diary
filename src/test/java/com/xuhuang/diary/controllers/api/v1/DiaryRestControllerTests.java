@@ -46,7 +46,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
     private static final String API_V1_DIARY_RECORD_RECORDID_TAG_TAGID = "/api/v1/diary/record/{recordId}/tag/{tagId}";
 
-    protected static final String MESSAGE_JPEXP = "$.message";
+    private static final String MESSAGE_JPEXP = "$.message";
 
     private static final String TEXT = "text";
     private static final String TITLE = "title";
