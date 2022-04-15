@@ -67,7 +67,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -81,7 +80,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -96,7 +94,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -112,7 +109,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -127,7 +123,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -143,7 +138,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -173,7 +167,7 @@ public class DiaryRestController {
         page = recordPage.getPageable().getPageNumber();
         size = recordPage.getPageable().getPageSize();
         UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
+                .path("/api/v1/diary").pathSegment("{bookId}", RECORD, "{page}", "{size}");
         int prevPage = Math.min(page - 1, totalPages - 1);
         int nextPage = Math.max(page + 1, 0);
 
@@ -189,7 +183,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -204,14 +197,13 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
     @PutMapping("/record/{recordId}")
     public ResponseEntity<Object> updateRecord(@PathVariable Long recordId, @RequestParam String text)
             throws AuthException {
-        log.debug("updateRecord(recordId: {}, text: {})", recordId, text);
+        log.info("updateRecord(recordId: {}, text: {})", recordId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
         Record recd = recordService.updateRecord(recordId, text);
@@ -220,7 +212,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -235,7 +226,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -255,7 +245,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -275,7 +264,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 

@@ -55,7 +55,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, headers, status);
         log.info("{}", response);
-
         return response;
     }
 
@@ -83,7 +82,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, status);
         log.info("{}", response);
-
         return response;
     }
 

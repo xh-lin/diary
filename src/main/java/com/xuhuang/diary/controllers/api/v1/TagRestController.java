@@ -49,7 +49,6 @@ public class TagRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -63,7 +62,6 @@ public class TagRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -78,7 +76,6 @@ public class TagRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -94,7 +91,6 @@ public class TagRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -109,7 +105,6 @@ public class TagRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 

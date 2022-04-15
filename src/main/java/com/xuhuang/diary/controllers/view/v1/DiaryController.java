@@ -89,58 +89,69 @@ public class DiaryController {
         model.addAttribute(BOOKS, books);
 
         log.info("{}", model.asMap());
-
         return Template.DIARY.toString();
     }
 
     @PostMapping("/fragments/books")
     public String loadBooksFragment(Model model, @RequestParam(required = false) Long currentBookId,
             @RequestBody List<Map<String, Object>> booksJson) {
-        List<Book> books = new ArrayList<>();
+        log.info("loadBooksFragment(currentBookId: {}, booksJson: {})", currentBookId, booksJson);
 
+        List<Book> books = new ArrayList<>();
         for (Map<String, Object> bookJson : booksJson) {
             books.add(bookService.parseBookJson(bookJson));
         }
 
         model.addAttribute(CURRENT_BOOK_ID, currentBookId);
         model.addAttribute(BOOKS, books);
+
+        log.info("{}", model.asMap());
         return "fragments/book::books";
     }
 
     @PostMapping("/fragments/records")
     public String loadRecordsFragment(Model model, @RequestBody List<Map<String, Object>> recordsJson) {
-        List<Record> records = new ArrayList<>();
+        log.info("loadRecordsFragment(recordsJson: {})", recordsJson);
 
+        List<Record> records = new ArrayList<>();
         for (Map<String, Object> recordJson : recordsJson) {
             records.add(recordService.parseRecordJson(recordJson));
         }
 
         model.addAttribute(RECORDS, records);
         model.addAttribute(TAGS, tagService.getTags());
+
+        log.info("{}", model.asMap());
         return "fragments/record::records";
     }
 
     @PostMapping("/fragments/tag_buttons")
     public String loadTagButtonsFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
-        List<Tag> tags = new ArrayList<>();
+        log.info("loadTagButtonsFragment(tagsJson: {})", tagsJson);
 
+        List<Tag> tags = new ArrayList<>();
         for (Map<String, Object> tagJson : tagsJson) {
             tags.add(tagService.parseTagJson(tagJson));
         }
 
         model.addAttribute(TAGS, tags);
+
+        log.info("{}", model.asMap());
         return "fragments/tag::tag_buttons";
     }
 
     @PostMapping("/fragments/tag_badges")
     public String loadTagBadgesFragment(Model model, @RequestBody List<Map<String, Object>> tagsJson) {
-        List<Tag> tags = new ArrayList<>();
+        log.info("loadTagBadgesFragment(tagsJson: {})", tagsJson);
 
+        List<Tag> tags = new ArrayList<>();
         for (Map<String, Object> tagJson : tagsJson) {
             tags.add(tagService.parseTagJson(tagJson));
         }
 
         model.addAttribute(TAGS, tags);
+
+        log.info("{}", model.asMap());
         return "fragments/tag::tag_badges";
     }
 
