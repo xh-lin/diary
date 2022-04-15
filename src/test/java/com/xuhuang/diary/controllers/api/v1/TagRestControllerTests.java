@@ -106,6 +106,28 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 .andExpect(jsonPath("$.data.name").value(MOCK_TAG_NAME));
     }
 
+    @Test
+    void getTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.GET, API_V1_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+
+        // not found
+        uriVars[0] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.GET, API_V1_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.NOT_FOUND);
+    }
+
     private void setupMockRepository() {
         // tag of mockUser
         Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
