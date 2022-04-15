@@ -41,12 +41,27 @@ class AuthRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void registerValidateUsername() throws Exception {
-        // only -, _, letters or numbers
+        setupMockRepository();
+
+        // unique
         RegisterRequest requestBody = new RegisterRequest(
-                "user:)",
+                mockUser.getUsername(),
                 mockUser.getEmail(),
                 MOCK_PASSWORD,
                 MOCK_PASSWORD);
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_ALREADY_TAKEN);
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // only -, _, letters or numbers
+        requestBody.setUsername("user:)");
 
         expectArray(
                 mockMvcPerform(
