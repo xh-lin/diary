@@ -50,7 +50,7 @@ public class Record extends BaseEntity {
     @NonNull
     private Book book;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(joinColumns = { @JoinColumn(name = "record_id") },
             inverseJoinColumns = { @JoinColumn(name = "tag_id") })
     @OrderBy("id")

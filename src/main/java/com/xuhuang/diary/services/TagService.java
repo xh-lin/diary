@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 
+import com.xuhuang.diary.models.Record;
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.repositories.TagRepository;
 
@@ -74,6 +75,13 @@ public class TagService extends BaseService {
     public Tag deleteTag(Long tagId) throws AuthException {
         Tag tag = tagRepository.findById(tagId).orElseThrow();
         throwIfIsNotCurrentUser(tag.getUser());
+        // clean record relationships
+        if (!tag.getRecords().isEmpty()) {
+            for (Record recd : tag.getRecords()) {
+                recd.getTags().remove(tag);
+            }
+            tagRepository.save(tag);
+        }
         tagRepository.deleteById(tagId);
         return tag;
     }
