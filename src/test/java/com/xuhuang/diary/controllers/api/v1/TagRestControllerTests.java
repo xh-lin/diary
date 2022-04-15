@@ -68,6 +68,7 @@ public class TagRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void createTagFailure() throws Exception {
+        // bad request
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add(NAME, "");
 
@@ -126,6 +127,22 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_TAG_TAGID,
                 uriVars, anotherMockUser,
                 HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void updateTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_TAG_ID };
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add(NAME, "My New Tag");
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_TAG_TAGID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.OK);
+
+        verify(mockTagRepository, times(1)).save(any(Tag.class));
     }
 
     private void setupMockRepository() {

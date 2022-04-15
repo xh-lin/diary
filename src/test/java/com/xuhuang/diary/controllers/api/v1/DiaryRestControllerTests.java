@@ -95,6 +95,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void createBookFailure() throws Exception {
+        // bad request
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add(TITLE, "");
 
