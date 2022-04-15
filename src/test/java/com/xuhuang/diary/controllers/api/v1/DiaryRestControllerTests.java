@@ -511,6 +511,56 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
 
+    @Test
+    void removeTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
+    }
+
+    @Test
+    void removeTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found record
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found tag
+        uriVars[0] = MOCK_RECORD_ID;
+        uriVars[1] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+    }
+
     private void setupMockRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
