@@ -37,7 +37,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 63)
     @NonNull
     private String username;
 
@@ -45,14 +45,14 @@ public class User extends BaseEntity implements UserDetails {
     @NonNull
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 63)
     @JsonIgnore
     @ToString.Exclude
     @NonNull
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 15)
     @NonNull
     private UserRole userRole;
 
