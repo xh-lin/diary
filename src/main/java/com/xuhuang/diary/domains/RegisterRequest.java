@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xuhuang.diary.validators.FieldMatch;
 import com.xuhuang.diary.validators.UniqueEmail;
 import com.xuhuang.diary.validators.UniqueUsername;
@@ -62,7 +61,6 @@ public class RegisterRequest {
     @Email(message = EMAIL_FORMAT)
     @Size(max = EMAIL_SIZE_MAX, message = EMAIL_SIZE)
     @NotBlank(message = EMAIL_NOTBLANK)
-    @JsonIgnore
     @ToString.Exclude
     private String email;
 
@@ -72,13 +70,11 @@ public class RegisterRequest {
     @Pattern(regexp = "^.*[^\\w\\s].*$", message = PASSWORD_SPECIAL)
     @Size(min = PASSWORD_SIZE_MIN, max = PASSWORD_SIZE_MAX, message = PASSWORD_SIZE)
     @NotBlank(message = PASSWORD_NOTBLANK)
-    @JsonIgnore
     @ToString.Exclude
     private String password;
 
     @Size(min = PASSWORD_SIZE_MIN, max = PASSWORD_SIZE_MAX, message = PASSWORD_CONFIRM_SIZE)
     @NotBlank(message = PASSWORD_CONFIRM_NOTBLANK)
-    @JsonIgnore
     @ToString.Exclude
     private String passwordConfirm;
 

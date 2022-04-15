@@ -3,8 +3,6 @@ package com.xuhuang.diary.domains;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +32,6 @@ public class LoginRequest {
 
     @Size(min = PASSWORD_SIZE_MIN, max = PASSWORD_SIZE_MAX, message = PASSWORD_SIZE)
     @NotBlank(message = PASSWORD_NOTBLANK)
-    @JsonIgnore
     @ToString.Exclude
     private String password;
 
