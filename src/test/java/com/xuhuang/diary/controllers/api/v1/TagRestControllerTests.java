@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.TagRepository;
+import com.xuhuang.diary.services.TagService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,20 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 .andExpect(jsonPath(MESSAGE_JPEXP).value(TagRestController.CREATED_SUCCESSFULLY));
 
         verify(mockTagRepository, times(1)).save(any(Tag.class));
+    }
+
+    @Test
+    void createTagFailure() throws Exception {
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add(NAME, "");
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_TAG,
+                requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagService.NAME_MUST_NOT_BE_BLANK));
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
     }
 
 }
