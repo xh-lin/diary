@@ -20,12 +20,14 @@
                 You have been logged out.
             </div>
 
-            <form  class="my-3" th:action="@{/login}" method="POST">
+            <form class="my-3" th:action="@{/login}" method="POST">
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"
+                        maxlength="63" required>
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                        maxlength="127" required>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">Log in</button>
