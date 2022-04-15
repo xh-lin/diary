@@ -249,7 +249,8 @@ public class DiaryRestController {
     }
 
     @DeleteMapping("/record/{recordId}/tag/{tagId}")
-    public ResponseEntity<Object> removeTag(@PathVariable Long recordId, @PathVariable Long tagId) throws AuthException {
+    public ResponseEntity<Object> removeTag(@PathVariable Long recordId, @PathVariable Long tagId)
+            throws AuthException {
         log.info("removeTag(recordId: {}, tagId: {})", recordId, tagId);
 
         Map<String, Object> body = new LinkedHashMap<>();

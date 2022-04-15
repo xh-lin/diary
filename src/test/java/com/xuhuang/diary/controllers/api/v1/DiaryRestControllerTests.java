@@ -12,9 +12,11 @@ import java.util.Optional;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
+import com.xuhuang.diary.repositories.TagRepository;
 import com.xuhuang.diary.services.BookService;
 import com.xuhuang.diary.services.RecordService;
 
@@ -42,6 +44,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/{bookId}/record/{page}";
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
+    private static final String API_V1_DIARY_RECORD_RECORDID_TAG_TAGID = "/api/v1/diary/record/{recordId}/tag/{tagId}";
 
     protected static final String MESSAGE_JPEXP = "$.message";
 
@@ -56,6 +59,10 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     private static final String MOCK_RECORD_TEXT = "Mock Record";
     private static final Long NOT_FOUND_RECORD_ID = 2L;
 
+    private static final Long MOCK_TAG_ID = 1L;
+    private static final String MOCK_TAG_NAME = "Mock Tag";
+    private static final Long NOT_FOUND_TAG_ID = 2L;
+
     private static User mockUser;
     private static User anotherMockUser;
 
@@ -63,6 +70,8 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     private BookRepository mockBookRepository;
     @MockBean
     private RecordRepository mockRecordRepository;
+    @MockBean
+    private TagRepository mockTagRepository;
 
     @BeforeAll
     static void setup() {
@@ -441,6 +450,7 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
 
+        // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
 
         mockMvcPerform(
@@ -449,6 +459,56 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
+    }
+
+    @Test
+    void addTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
+    }
+
+    @Test
+    void addTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found record
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found tag
+        uriVars[0] = MOCK_RECORD_ID;
+        uriVars[1] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
 
     private void setupMockRepository() {
@@ -461,6 +521,11 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
         Record mockRecord = new Record(MOCK_RECORD_TEXT, mockBook);
         mockRecord.setId(MOCK_RECORD_ID);
         mockBook.getRecords().add(mockRecord);
+
+        // tag of mockUser
+        Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
+        mockTag.setId(MOCK_TAG_ID);
+        mockUser.getTags().add(mockTag);
 
         // setup mock repository for book
         Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
@@ -475,6 +540,12 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
         Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
+
+        // setup mock repository for tag
+        Optional<Tag> optionalMockTag = Optional.ofNullable(mockTag);
+        List<Tag> mockTags = Arrays.asList(mockTag);
+        doReturn(optionalMockTag).when(mockTagRepository).findById(MOCK_TAG_ID);
+        doReturn(mockTags).when(mockTagRepository).findByUser(mockUser);
     }
 
 }
