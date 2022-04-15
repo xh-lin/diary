@@ -213,7 +213,7 @@ tagDialogModal.on('show.bs.modal', function (event) {
     })
 
     // set tag buttons to be active or inactive
-    tagButtons.children().each(function () {
+    tagButtons.find(`[id^=${TAG_BUTTON_ID_PREFIX.substring(1)}]`).each(function () {
         if (activeTagButtonIdSet.has($(this).attr('id')))
             $(this).removeClass(INACTIVE_TAG_CLASS);
         else
