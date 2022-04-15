@@ -41,7 +41,7 @@ public class User extends BaseEntity implements UserDetails {
     @NonNull
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 63)
     @NonNull
     private String email;
 

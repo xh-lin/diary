@@ -40,7 +40,7 @@ create table user (
     id bigint not null auto_increment,
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
-    email varchar(255) not null,
+    email varchar(63) not null,
     password varchar(63) not null,
     user_role varchar(15) not null,
     username varchar(63) not null,

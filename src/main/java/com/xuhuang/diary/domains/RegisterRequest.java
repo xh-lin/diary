@@ -35,7 +35,7 @@ public class RegisterRequest {
     public static final String EMAIL_FORMAT = "Email format not valid.";
     public static final String EMAIL_SIZE = "Email length must be less than or equal to {max}.";
     public static final String EMAIL_NOTBLANK = "Email must not be blank.";
-    public static final int EMAIL_SIZE_MAX = 255;
+    public static final int EMAIL_SIZE_MAX = 63;
 
     public static final String PASSWORD_LOWER = "Password must contain at least one lowercase letter.";
     public static final String PASSWORD_UPPER = "Password must contain at least one uppercase letter.";

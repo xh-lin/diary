@@ -25,7 +25,7 @@
                 <div class="mb-3">
                     <input type="email" class="form-control"
                         th:classappend="${errorMessages != null && errorMessages.containsKey('email') ? 'is-invalid' : ''}"
-                        th:field="*{email}" placeholder="Email" maxlength="255" required>
+                        th:field="*{email}" placeholder="Email" maxlength="63" required>
                     <ul th:if="${errorMessages?.containsKey('email')}" class="invalid-feedback">
                         <li th:each="message : ${errorMessages.email}" th:text="${message}"></li>
                     </ul>
