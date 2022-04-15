@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMap;
 
-public abstract class BaseRestControllerTests {
+abstract class BaseRestControllerTests {
 
     protected static final String MOCK_PASSWORD = "Qwerty123.";
     protected static final String MOCK_PASSWORD_ENCRYPTED = new BCryptPasswordEncoder().encode(MOCK_PASSWORD);

@@ -27,7 +27,7 @@ import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TagRestControllerTests extends BaseRestControllerTests {
+class TagRestControllerTests extends BaseRestControllerTests {
 
     private static final String API_V1_TAG = "/api/v1/tag";
     private static final String API_V1_TAG_TAGID = "/api/v1/tag/{tagId}";
@@ -196,6 +196,31 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 HttpStatus.OK);
 
         verify(mockTagRepository, times(1)).deleteById(any(Long.class));
+    }
+
+    @Test
+    void deleteTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockTagRepository, times(0)).deleteById(any(Long.class));
+
+        // not found
+        uriVars[0] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockTagRepository, times(0)).deleteById(any(Long.class));
     }
 
     private void setupMockRepository() {
