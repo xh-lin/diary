@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -453,25 +452,27 @@ public class DiaryRestControllerTests extends BaseRestControllerTests {
     }
 
     private void setupMockRepository() {
-        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
-
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
         mockBook.setId(MOCK_BOOK_ID);
-        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
-        List<Book> mockBooks = new ArrayList<>();
-        mockBooks.add(mockBook);
-
-        doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
-        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+        mockUser.getBooks().add(mockBook);
 
         // record of mockUser
         Record mockRecord = new Record(MOCK_RECORD_TEXT, mockBook);
         mockRecord.setId(MOCK_RECORD_ID);
+        mockBook.getRecords().add(mockRecord);
+
+        // setup mock repository for book
+        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
+        List<Book> mockBooks = Arrays.asList(mockBook);
+        doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
+        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+
+        // setup mock repository for record
         Optional<Record> optionalMockRecord = Optional.ofNullable(mockRecord);
         List<Record> mockRecords = Arrays.asList(mockRecord);
+        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
         Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
-
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
     }
