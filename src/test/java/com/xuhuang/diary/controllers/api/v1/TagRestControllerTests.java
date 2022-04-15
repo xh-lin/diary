@@ -145,6 +145,45 @@ public class TagRestControllerTests extends BaseRestControllerTests {
         verify(mockTagRepository, times(1)).save(any(Tag.class));
     }
 
+    @Test
+    void updateTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_TAG_ID };
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add(NAME, "My New Tag");
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_TAG_TAGID,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
+
+        // not found
+        uriVars[0] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_TAG_TAGID,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
+
+        // bad request
+        uriVars[0] = MOCK_TAG_ID;
+        requestParams.clear();
+        requestParams.add(NAME, "");
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_TAG_TAGID,
+                uriVars, requestParams, anotherMockUser,
+                HttpStatus.BAD_REQUEST);
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
+    }
+
     private void setupMockRepository() {
         // tag of mockUser
         Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
