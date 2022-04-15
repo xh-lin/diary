@@ -184,6 +184,20 @@ public class TagRestControllerTests extends BaseRestControllerTests {
         verify(mockTagRepository, times(0)).save(any(Tag.class));
     }
 
+    @Test
+    void deleteTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK);
+
+        verify(mockTagRepository, times(1)).deleteById(any(Long.class));
+    }
+
     private void setupMockRepository() {
         // tag of mockUser
         Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
