@@ -30,6 +30,7 @@ import org.springframework.util.MultiValueMap;
 public class TagRestControllerTests extends BaseRestControllerTests {
 
     private static final String API_V1_TAG = "/api/v1/tag";
+    private static final String API_V1_TAG_TAGID = "/api/v1/tag/{tagId}";
 
     private static final String MESSAGE_JPEXP = "$.message";
 
@@ -37,8 +38,10 @@ public class TagRestControllerTests extends BaseRestControllerTests {
 
     private static final Long MOCK_TAG_ID = 1L;
     private static final String MOCK_TAG_NAME = "Mock Tag";
+    private static final Long NOT_FOUND_TAG_ID = 2L;
 
     private static User mockUser;
+    private static User anotherMockUser;
 
     @MockBean
     private TagRepository mockTagRepository;
@@ -46,6 +49,7 @@ public class TagRestControllerTests extends BaseRestControllerTests {
     @BeforeAll
     static void setup() {
         mockUser = mockUser(1L);
+        anotherMockUser = mockUser(2L);
     }
 
     @Test
@@ -86,6 +90,20 @@ public class TagRestControllerTests extends BaseRestControllerTests {
                 HttpStatus.OK)
                 .andExpect(jsonPath(MESSAGE_JPEXP).value(TagRestController.FETCHED_SUCCESSFULLY))
                 .andExpect(jsonPath("$.data[0].name").value(MOCK_TAG_NAME));
+    }
+
+    @Test
+    void getTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.GET, API_V1_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK)
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagRestController.FETCHED_SUCCESSFULLY))
+                .andExpect(jsonPath("$.data.name").value(MOCK_TAG_NAME));
     }
 
     private void setupMockRepository() {
