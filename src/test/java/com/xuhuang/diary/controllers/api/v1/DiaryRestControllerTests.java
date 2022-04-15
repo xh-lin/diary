@@ -6,18 +6,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
-import com.xuhuang.diary.repositories.UserRepository;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.repositories.TagRepository;
+import com.xuhuang.diary.services.BookService;
+import com.xuhuang.diary.services.RecordService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DiaryRestControllerTests extends RestControllerTests {
+class DiaryRestControllerTests extends BaseRestControllerTests {
 
     private static final String API_V1_DIARY = "/api/v1/diary";
     private static final String API_V1_DIARY_BOOKID = "/api/v1/diary/{bookId}";
@@ -43,8 +44,9 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE = "/api/v1/diary/{bookId}/record/{page}";
     private static final String API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE = "/api/v1/diary/{bookId}/record/{page}/{size}";
     private static final String API_V1_DIARY_RECORD_RECORDID = "/api/v1/diary/record/{recordId}";
+    private static final String API_V1_DIARY_RECORD_RECORDID_TAG_TAGID = "/api/v1/diary/record/{recordId}/tag/{tagId}";
 
-    protected static final String MESSAGE_JPEXP = "$.message";
+    private static final String MESSAGE_JPEXP = "$.message";
 
     private static final String TEXT = "text";
     private static final String TITLE = "title";
@@ -57,15 +59,19 @@ public class DiaryRestControllerTests extends RestControllerTests {
     private static final String MOCK_RECORD_TEXT = "Mock Record";
     private static final Long NOT_FOUND_RECORD_ID = 2L;
 
+    private static final Long MOCK_TAG_ID = 1L;
+    private static final String MOCK_TAG_NAME = "Mock Tag";
+    private static final Long NOT_FOUND_TAG_ID = 2L;
+
     private static User mockUser;
     private static User anotherMockUser;
 
     @MockBean
-    private UserRepository mockUserRepository;
-    @MockBean
     private BookRepository mockBookRepository;
     @MockBean
     private RecordRepository mockRecordRepository;
+    @MockBean
+    private TagRepository mockTagRepository;
 
     @BeforeAll
     static void setup() {
@@ -89,6 +95,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
     @Test
     void createBookFailure() throws Exception {
+        // bad request
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add(TITLE, "");
 
@@ -96,7 +103,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.POST, API_V1_DIARY,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.TITLE_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.TITLE_MUST_NOT_BE_BLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -138,7 +145,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_BOOK_ID;
@@ -326,7 +333,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
 
         // bad request page size
         uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
@@ -335,7 +342,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.SIZE_MUST_BE_GREATER_THAN_ZERO));
     }
 
     @Test
@@ -362,7 +369,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_RECORD_RECORDID,
                 uriVars, anotherMockUser,
                 HttpStatus.FORBIDDEN)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(DiaryService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
+                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS));
 
         // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
@@ -444,6 +451,7 @@ public class DiaryRestControllerTests extends RestControllerTests {
 
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
 
+        // not found
         uriVars[0] = NOT_FOUND_RECORD_ID;
 
         mockMvcPerform(
@@ -454,28 +462,141 @@ public class DiaryRestControllerTests extends RestControllerTests {
         verify(mockRecordRepository, times(0)).deleteById(any(Long.class));
     }
 
-    private void setupMockRepository() {
-        Pageable pageable = PageRequest.of(DiaryService.DEFAULT_PAGE, DiaryService.DEFAULT_PAGE_SIZE);
+    @Test
+    void addTagSuccess() throws Exception {
+        setupMockRepository();
 
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
+    }
+
+    @Test
+    void addTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found record
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found tag
+        uriVars[0] = MOCK_RECORD_ID;
+        uriVars[1] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+    }
+
+    @Test
+    void removeTagSuccess() throws Exception {
+        setupMockRepository();
+
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.OK);
+
+        verify(mockRecordRepository, times(1)).save(any(Record.class));
+    }
+
+    @Test
+    void removeTagFailure() throws Exception {
+        setupMockRepository();
+
+        // forbidden
+        Object[] uriVars = { MOCK_RECORD_ID, MOCK_TAG_ID };
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, anotherMockUser,
+                HttpStatus.FORBIDDEN);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found record
+        uriVars[0] = NOT_FOUND_RECORD_ID;
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // not found tag
+        uriVars[0] = MOCK_RECORD_ID;
+        uriVars[1] = NOT_FOUND_TAG_ID;
+
+        mockMvcPerform(
+                HttpMethod.DELETE, API_V1_DIARY_RECORD_RECORDID_TAG_TAGID,
+                uriVars, mockUser,
+                HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+    }
+
+    private void setupMockRepository() {
         // book of mockUser
         Book mockBook = new Book(MOCK_BOOK_TITLE, mockUser);
         mockBook.setId(MOCK_BOOK_ID);
-        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
-        List<Book> mockBooks = new ArrayList<>();
-        mockBooks.add(mockBook);
-
-        doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
-        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+        mockUser.getBooks().add(mockBook);
 
         // record of mockUser
         Record mockRecord = new Record(MOCK_RECORD_TEXT, mockBook);
         mockRecord.setId(MOCK_RECORD_ID);
+        mockBook.getRecords().add(mockRecord);
+
+        // tag of mockUser
+        Tag mockTag = new Tag(MOCK_TAG_NAME, mockUser);
+        mockTag.setId(MOCK_TAG_ID);
+        mockUser.getTags().add(mockTag);
+
+        // setup mock repository for book
+        Optional<Book> optionalMockBook = Optional.ofNullable(mockBook);
+        List<Book> mockBooks = Arrays.asList(mockBook);
+        doReturn(optionalMockBook).when(mockBookRepository).findById(MOCK_BOOK_ID);
+        doReturn(mockBooks).when(mockBookRepository).findByUser(mockUser);
+
+        // setup mock repository for record
         Optional<Record> optionalMockRecord = Optional.ofNullable(mockRecord);
         List<Record> mockRecords = Arrays.asList(mockRecord);
+        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
         Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
-
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
+
+        // setup mock repository for tag
+        Optional<Tag> optionalMockTag = Optional.ofNullable(mockTag);
+        List<Tag> mockTags = Arrays.asList(mockTag);
+        doReturn(optionalMockTag).when(mockTagRepository).findById(MOCK_TAG_ID);
+        doReturn(mockTags).when(mockTagRepository).findByUser(mockUser);
     }
 
 }

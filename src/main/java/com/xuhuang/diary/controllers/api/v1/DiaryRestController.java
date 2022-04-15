@@ -7,7 +7,10 @@ import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
-import com.xuhuang.diary.services.DiaryService;
+import com.xuhuang.diary.models.Tag;
+import com.xuhuang.diary.services.BookService;
+import com.xuhuang.diary.services.RecordService;
+import com.xuhuang.diary.services.TagService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -39,6 +42,8 @@ public class DiaryRestController {
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
+    private static final String RECORD = "record";
+    private static final String TAG = "tag";
 
     private static final String PREV_PAGE_URL = "prevPageUrl";
     private static final String NEXT_PAGE_URL = "nextPageUrl";
@@ -47,20 +52,21 @@ public class DiaryRestController {
     private static final String PAGE_SIZE = "pageSize";
     private static final String CONTENT = "content";
 
-    private final DiaryService diaryService;
+    private final BookService bookService;
+    private final RecordService recordService;
+    private final TagService tagService;
 
     @PostMapping()
     public ResponseEntity<Object> createBook(@RequestParam String title) {
         log.info("createBook(title: {})", title);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.createBook(title);
+        Book book = bookService.createBook(title);
         body.put(DATA, book);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -69,12 +75,11 @@ public class DiaryRestController {
         log.info("getBooks()");
 
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put(DATA, diaryService.getBooks());
+        body.put(DATA, bookService.getBooks());
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -83,13 +88,12 @@ public class DiaryRestController {
         log.info("getBook(bookId: {})", bookId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.getBook(bookId);
+        Book book = bookService.getBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -99,13 +103,12 @@ public class DiaryRestController {
         log.info("updateBook(bookId: {}, title: {})", bookId, title);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.updateBook(bookId, title);
+        Book book = bookService.updateBook(bookId, title);
         body.put(DATA, book);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -114,13 +117,12 @@ public class DiaryRestController {
         log.info("deleteBook(bookId: {})", bookId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Book book = diaryService.deleteBook(bookId);
+        Book book = bookService.deleteBook(bookId);
         body.put(DATA, book);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -130,13 +132,12 @@ public class DiaryRestController {
         log.info("createRecord(bookId: {}, text: {})", bookId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.createRecord(bookId, text);
+        Record recd = recordService.createRecord(bookId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, CREATED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -154,11 +155,11 @@ public class DiaryRestController {
         Page<Record> recordPage;
 
         if (page == null) {
-            recordPage = diaryService.getRecords(bookId);
+            recordPage = recordService.getRecords(bookId);
         } else if (size == null) {
-            recordPage = diaryService.getRecords(bookId, page);
+            recordPage = recordService.getRecords(bookId, page);
         } else {
-            recordPage = diaryService.getRecords(bookId, page, size);
+            recordPage = recordService.getRecords(bookId, page, size);
         }
 
         Map<String, Object> data = new LinkedHashMap<>();
@@ -166,7 +167,7 @@ public class DiaryRestController {
         page = recordPage.getPageable().getPageNumber();
         size = recordPage.getPageable().getPageSize();
         UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/diary").pathSegment("{bookId}", "record", "{page}", "{size}");
+                .path("/api/v1/diary").pathSegment("{bookId}", RECORD, "{page}", "{size}");
         int prevPage = Math.min(page - 1, totalPages - 1);
         int nextPage = Math.max(page + 1, 0);
 
@@ -182,7 +183,6 @@ public class DiaryRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -191,29 +191,27 @@ public class DiaryRestController {
         log.info("getRecord(recordId: {})", recordId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.getRecord(recordId);
+        Record recd = recordService.getRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, FETCHED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
     @PutMapping("/record/{recordId}")
     public ResponseEntity<Object> updateRecord(@PathVariable Long recordId, @RequestParam String text)
             throws AuthException {
-        log.debug("updateRecord(recordId: {}, text: {})", recordId, text);
+        log.info("updateRecord(recordId: {}, text: {})", recordId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.updateRecord(recordId, text);
+        Record recd = recordService.updateRecord(recordId, text);
         body.put(DATA, recd);
         body.put(MESSAGE, UPDATED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
@@ -222,13 +220,51 @@ public class DiaryRestController {
         log.info("deleteRecord(recordId: {})", recordId);
 
         Map<String, Object> body = new LinkedHashMap<>();
-        Record recd = diaryService.deleteRecord(recordId);
+        Record recd = recordService.deleteRecord(recordId);
         body.put(DATA, recd);
         body.put(MESSAGE, DELETED_SUCCESSFULLY);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
+        return response;
+    }
 
+    @PutMapping("/record/{recordId}/tag/{tagId}")
+    public ResponseEntity<Object> addTag(@PathVariable Long recordId, @PathVariable Long tagId) throws AuthException {
+        log.info("addTag(recordId: {}, tagId: {})", recordId, tagId);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
+        Record recd = recordService.addTag(recordId, tagId);
+        Tag tag = tagService.getTag(tagId);
+
+        data.put(RECORD, recd);
+        data.put(TAG, tag);
+        body.put(DATA, data);
+        body.put(MESSAGE, UPDATED_SUCCESSFULLY);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+        return response;
+    }
+
+    @DeleteMapping("/record/{recordId}/tag/{tagId}")
+    public ResponseEntity<Object> removeTag(@PathVariable Long recordId, @PathVariable Long tagId)
+            throws AuthException {
+        log.info("removeTag(recordId: {}, tagId: {})", recordId, tagId);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
+        Record recd = recordService.removeTag(recordId, tagId);
+        Tag tag = tagService.getTag(tagId);
+
+        data.put(RECORD, recd);
+        data.put(TAG, tag);
+        body.put(DATA, data);
+        body.put(MESSAGE, DELETED_SUCCESSFULLY);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
         return response;
     }
 

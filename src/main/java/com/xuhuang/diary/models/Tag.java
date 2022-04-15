@@ -3,14 +3,12 @@ package com.xuhuang.diary.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -33,11 +31,11 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-public class Book extends BaseEntity {
+public class Tag extends BaseEntity {
 
     @Column(nullable = false)
     @NonNull
-    private String title;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
@@ -48,8 +46,7 @@ public class Book extends BaseEntity {
     @NonNull
     private User user;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @OrderBy("id")
+    @ManyToMany(mappedBy = "tags")
     @JsonIgnore
     @ToString.Exclude
     @NonNull

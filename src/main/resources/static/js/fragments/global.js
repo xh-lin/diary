@@ -44,7 +44,7 @@ function showToast(message) {
     Use AJAX to submit a form
 */
 
-function setupAjaxFormSubmit(form, successHandler) {
+function setupAjaxFormSubmit(form, successHandler, closeModal = true) {
     form.submit(function (event) {
         // avoid to execute the actual submit of the form.
         event.preventDefault();
@@ -62,7 +62,8 @@ function setupAjaxFormSubmit(form, successHandler) {
 
                 // reset form and close dialog
                 form[0].reset();
-                form.closest('.modal').modal('hide');
+                if (closeModal)
+                    form.closest('.modal').modal('hide');
 
                 // update page
                 successHandler(res);
@@ -81,8 +82,8 @@ function errorHandler(jqXHR, textStatus, errorThrown) {
         textStatus: textStatus,
         errorThrown: errorThrown
     });
-    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.error !== undefined)
-        ? jqXHR.responseJSON.error : jqXHR.statusText;
+    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.message !== undefined)
+        ? jqXHR.responseJSON.message : jqXHR.error;
     alert(`Error - ${jqXHR.status}: ${errorMessage}`);
 }
 
@@ -94,14 +95,11 @@ function formatTimestamps(parent, selector = '.timestamp') {
     parent.find(selector).each(function () {
         const date = new Date($(this).text());
         const momentDate = moment(date);
+        const text = (moment().diff(momentDate, 'days') < 3) ? momentDate.fromNow() : momentDate.format('llll');
+        const prefix = $(this).attr('data-bs-prefix');
 
+        $(this).text((prefix === undefined) ? text : prefix + text);
         $(this).attr('title', momentDate.format('LLLL'))
-
-        if (moment().diff(momentDate, 'days') < 3) {
-            $(this).text(momentDate.fromNow());
-        } else {
-            $(this).text(momentDate.format('llll'));
-        }
     });
 }
 
@@ -127,4 +125,13 @@ if (backToTopButton[0] !== undefined) {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     });
+}
+
+/*
+    Toast in the beginning
+*/
+
+const toastMessage = getUrlParam('toast');
+if (toastMessage !== undefined) {
+    showToast(toastMessage);
 }

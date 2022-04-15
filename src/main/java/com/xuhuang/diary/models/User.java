@@ -12,6 +12,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -56,10 +57,18 @@ public class User extends BaseEntity implements UserDetails {
     private UserRole userRole;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("id")
     @JsonIgnore
     @ToString.Exclude
     @NonNull
     private Set<Book> books = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("id")
+    @JsonIgnore
+    @ToString.Exclude
+    @NonNull
+    private Set<Tag> tags = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

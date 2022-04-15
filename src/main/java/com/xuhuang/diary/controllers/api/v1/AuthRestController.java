@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import com.xuhuang.diary.domains.LoginRequest;
 import com.xuhuang.diary.domains.RegisterRequest;
 import com.xuhuang.diary.exceptions.LoginFailureException;
+import com.xuhuang.diary.models.User;
 import com.xuhuang.diary.services.UserService;
 
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,6 @@ public class AuthRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.CREATED);
         log.info("{}", response);
-
         return response;
     }
 
@@ -77,12 +77,14 @@ public class AuthRestController {
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
         log.info("{}", response);
-
         return response;
     }
 
     @PostMapping("logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Object> logout(HttpServletRequest hsRequest, HttpServletResponse hsResponse) {
+        User user = userService.getCurrentUser();
+        log.info("logout(), user: {}", (user == null) ? null : user.getUsername());
+
         Map<String, Object> body = new LinkedHashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -90,10 +92,12 @@ public class AuthRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        new SecurityContextLogoutHandler().logout(request, response, auth);
+        new SecurityContextLogoutHandler().logout(hsRequest, hsResponse, auth);
         body.put(MESSAGE, LOGGED_OUT_SUCCESSFULLY);
 
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        ResponseEntity<Object> response = new ResponseEntity<>(body, HttpStatus.OK);
+        log.info("{}", response);
+        return response;
     }
 
 }

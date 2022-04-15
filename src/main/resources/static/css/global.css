@@ -11,3 +11,12 @@ body {
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
+
+.btn-light:hover {
+    background-color: lightgrey;
+}
+
+/* Display toast in front of modal (make sure z-index is higher than modal's) */
+.toast {
+    z-index: 1056;
+}

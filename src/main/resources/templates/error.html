@@ -11,8 +11,8 @@
     <div class="d-flex justify-content-center my-auto">
         <div class="text-center">
             <h1 th:text="${status}"></h1>
-            <p><strong th:utext="${error}"></strong></p>
-            <p th:if="${message}" th:utext="${message}"></p>
+            <p><strong th:text="${error}"></strong></p>
+            <p th:if="${message}" th:text="${message}"></p>
             <a th:href="@{/}">Back to Home Page</a>
         </div>
     </div>

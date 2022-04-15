@@ -3,14 +3,13 @@ package com.xuhuang.diary.services;
 import static com.xuhuang.diary.utils.Utils.asTimestamp;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
-import com.xuhuang.diary.models.User;
+import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 
@@ -23,10 +22,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DiaryService {
+public class RecordService extends BaseService {
 
-    public static final String TITLE_MUST_NOT_BE_BLANK = "Title must not be blank.";
-    public static final String YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS = "You do not have permission to access.";
+    public static final String TEXT_MUST_NOT_BE_EMPTY = "Text must not be empty.";
     public static final String PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO = "Page must be greater than or equal to zero.";
     public static final String SIZE_MUST_BE_GREATER_THAN_ZERO = "Size must be greater than zero.";
 
@@ -35,68 +33,18 @@ public class DiaryService {
 
     private final BookRepository bookRepository;
     private final RecordRepository recordRepository;
-    private final UserService userService;
-
-    /*
-     * Throws:
-     * IllegalArgumentException - if title is blank
-     */
-    public Book createBook(String title) {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException(TITLE_MUST_NOT_BE_BLANK);
-        }
-        return bookRepository.save(new Book(title.trim(), userService.getCurrentUser()));
-    }
-
-    public List<Book> getBooks() {
-        return bookRepository.findByUser(userService.getCurrentUser());
-    }
+    private final TagService tagService;
 
     /*
      * Throws:
      * AuthException - if book does not belong to the current user
      * NoSuchElementException - if book is not found
-     */
-    public Book getBook(Long bookId) throws AuthException {
-        Book book = bookRepository.findById(bookId).orElseThrow();
-        throwIfIsNotCurrentUser(book.getUser());
-        return book;
-    }
-
-    /*
-     * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
-     * IllegalArgumentException - if title is blank
-     */
-    public Book updateBook(Long bookId, String title) throws AuthException {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException(TITLE_MUST_NOT_BE_BLANK);
-        }
-        Book book = bookRepository.findById(bookId).orElseThrow();
-        throwIfIsNotCurrentUser(book.getUser());
-        book.setTitle(title.trim());
-        return bookRepository.save(book);
-    }
-
-    /*
-     * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
-     */
-    public Book deleteBook(Long bookId) throws AuthException {
-        Book book = bookRepository.findById(bookId).orElseThrow();
-        throwIfIsNotCurrentUser(book.getUser());
-        bookRepository.deleteById(bookId);
-        return book;
-    }
-
-    /*
-     * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * IllegalArgumentException - if text is empty
      */
     public Record createRecord(Long bookId, String text) throws AuthException {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(TEXT_MUST_NOT_BE_EMPTY);
+        }
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
         return recordRepository.save(new Record(text, book));
@@ -131,8 +79,8 @@ public class DiaryService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
      */
     public Record getRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
@@ -142,10 +90,14 @@ public class DiaryService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
+     * IllegalArgumentException - if text is empty
      */
     public Record updateRecord(Long recordId, String text) throws AuthException {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(TEXT_MUST_NOT_BE_EMPTY);
+        }
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
         recd.setText(text);
@@ -154,47 +106,43 @@ public class DiaryService {
 
     /*
      * Throws:
-     * AuthException - if book does not belong to the current user
-     * NoSuchElementException - if book is not found
+     * AuthException - if record does not belong to the current user
+     * NoSuchElementException - if record is not found
      */
     public Record deleteRecord(Long recordId) throws AuthException {
         Record recd = recordRepository.findById(recordId).orElseThrow();
         throwIfIsNotCurrentUser(recd.getBook().getUser());
+        // clean tag relationships
+        if (!recd.getTags().isEmpty()) {
+            recd.getTags().clear();
+            recordRepository.save(recd);
+        }
         recordRepository.deleteById(recordId);
         return recd;
     }
 
-    private void throwIfIsNotCurrentUser(User user) throws AuthException {
-        if (!userService.isCurrentUser(user)) {
-            throw new AuthException(YOU_DO_NOT_HAVE_PERMISSION_TO_ACCESS);
-        }
+    /*
+     * Throws:
+     * AuthException - if record or tag does not belong to the current user
+     * NoSuchElementException - if record or tag is not found
+     */
+    public Record addTag(Long recordId, Long tagId) throws AuthException {
+        Record recd = getRecord(recordId);
+        Tag tag = tagService.getTag(tagId);
+        recd.getTags().add(tag);
+        return recordRepository.save(recd);
     }
 
-    public Book parseBookJson(Map<String, Object> bookJson, boolean getRelated) {
-        Long id = Long.valueOf(((Integer) bookJson.get("id")).longValue());
-
-        if (getRelated) {
-            try {
-                return getBook(id);
-            } catch (Exception e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
-
-        Timestamp createdAt = asTimestamp((String) bookJson.get("createdAt"));
-        Timestamp updateddAt = asTimestamp((String) bookJson.get("updatedAt"));
-        String title = (String) bookJson.get("title");
-        Book book = new Book();
-
-        book.setId(id);
-        book.setCreatedAt(createdAt);
-        book.setUpdatedAt(updateddAt);
-        book.setTitle(title);
-        return book;
-    }
-
-    public Book parseBookJson(Map<String, Object> bookJson) {
-        return parseBookJson(bookJson, false);
+    /*
+     * Throws:
+     * AuthException - if record or tag does not belong to the current user
+     * NoSuchElementException - if record or tag is not found
+     */
+    public Record removeTag(Long recordId, Long tagId) throws AuthException {
+        Record recd = getRecord(recordId);
+        Tag tag = tagService.getTag(tagId);
+        recd.getTags().remove(tag);
+        return recordRepository.save(recd);
     }
 
     public Record parseRecordJson(Map<String, Object> recordJson, boolean getRelated) {

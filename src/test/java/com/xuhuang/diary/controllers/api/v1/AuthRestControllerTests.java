@@ -23,12 +23,12 @@ import org.springframework.http.HttpStatus;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthRestControllerTests extends RestControllerTests {
+class AuthRestControllerTests extends BaseRestControllerTests {
 
     private static final String API_V1_AUTH_LOGIN = "/api/v1/auth/login";
     private static final String API_V1_AUTH_REGISTER = "/api/v1/auth/register";
 
-    protected static final String MESSAGE_JPEXP = "$.message";
+    private static final String MESSAGE_JPEXP = "$.message";
     private static User mockUser;
 
     @MockBean

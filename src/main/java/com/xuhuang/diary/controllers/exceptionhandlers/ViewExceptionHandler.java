@@ -29,7 +29,6 @@ public class ViewExceptionHandler {
         }
 
         log.info("ex: {}, status: {}", ex, status);
-
         return String.format("redirect:/error/%d?message=%s", status.value(), ex.getMessage());
     }
 
