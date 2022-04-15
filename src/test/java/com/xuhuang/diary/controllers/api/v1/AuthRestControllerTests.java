@@ -117,12 +117,27 @@ class AuthRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void registerValidateEmail() throws Exception {
-        // email format
+        setupMockRepository();
+
+        // unique
         RegisterRequest requestBody = new RegisterRequest(
                 mockUser.getUsername(),
-                "badEmail",
+                mockUser.getEmail(),
                 MOCK_PASSWORD,
                 MOCK_PASSWORD);
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_ALREADY_TAKEN);
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // email format
+        requestBody.setEmail("badEmail");
 
         expectArray(
                 mockMvcPerform(
