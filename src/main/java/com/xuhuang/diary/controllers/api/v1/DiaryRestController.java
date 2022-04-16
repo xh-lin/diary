@@ -7,6 +7,7 @@ import javax.security.auth.message.AuthException;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
@@ -45,7 +46,9 @@ public class DiaryRestController {
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
+    public static final String TITLE_SIZE = "Title length must be less than or equal to {max}.";
     public static final String TITLE_NOTBLANK = "Title must not be blank.";
+    public static final String TEXT_SIZE = "Text length must be less than or equal to {max}.";
     public static final String TEXT_NOT_EMPTY = "Text must not be empty.";
     public static final String PAGE_MIN = "Page must be greater than or equal to zero.";
     public static final String SIZE_MIN = "Size must be greater than zero.";
@@ -67,7 +70,8 @@ public class DiaryRestController {
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createBook(@RequestParam @NotBlank(message = TITLE_NOTBLANK) String title) {
+    public ResponseEntity<Object> createBook(
+            @RequestParam @Size(max = Book.TITLE_LENGTH, message = TITLE_SIZE) @NotBlank(message = TITLE_NOTBLANK) String title) {
         log.info("createBook(title: {})", title);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -109,7 +113,8 @@ public class DiaryRestController {
 
     @PutMapping("/{bookId}")
     public ResponseEntity<Object> updateBook(@PathVariable Long bookId,
-            @RequestParam @NotBlank(message = TITLE_NOTBLANK) String title) throws AuthException {
+            @RequestParam @Size(max = Book.TITLE_LENGTH, message = TITLE_SIZE) @NotBlank(message = TITLE_NOTBLANK) String title)
+            throws AuthException {
         log.info("updateBook(bookId: {}, title: {})", bookId, title);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -138,7 +143,8 @@ public class DiaryRestController {
 
     @PostMapping("/{bookId}/record")
     public ResponseEntity<Object> createRecord(@PathVariable Long bookId,
-            @RequestParam @NotEmpty(message = TEXT_NOT_EMPTY) String text) throws AuthException {
+            @RequestParam @Size(max = Record.TEXT_LENGTH, message = TEXT_SIZE) @NotEmpty(message = TEXT_NOT_EMPTY) String text)
+            throws AuthException {
         log.info("createRecord(bookId: {}, text: {})", bookId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -211,7 +217,8 @@ public class DiaryRestController {
 
     @PutMapping("/record/{recordId}")
     public ResponseEntity<Object> updateRecord(@PathVariable Long recordId,
-            @RequestParam @NotEmpty(message = TEXT_NOT_EMPTY) String text) throws AuthException {
+            @RequestParam @Size(max = Record.TEXT_LENGTH, message = TEXT_SIZE) @NotEmpty(message = TEXT_NOT_EMPTY) String text)
+            throws AuthException {
         log.info("updateRecord(recordId: {}, text: {})", recordId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
