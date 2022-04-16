@@ -180,7 +180,7 @@ function tagOnClickHandler(event) {
             showUpdateTagForm(tagButton);
             break;
         case TagAction.DELETE:
-            const recordsSize =  tagButton.attr('data-bs-records-size');
+            const recordsSize = tagButton.attr('data-bs-records-size');
             deleteTagForm.attr('action', url);
             deleteTagForm.find(DELETE_TAG_NAME_ID).text(name);
             deleteTagForm.find(DELETE_TAG_NAME_ID).attr('title', name);
@@ -226,14 +226,17 @@ tagDialogModal.on('show.bs.modal', function (event) {
 });
 
 setupAjaxFormSubmit(selectTagForm, function (res) {
-    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.tag.id;
     const RECORD_FRAGMENT_ID = RECORD_ID_PREFIX + res.data.record.id; // RECORD_ID_PREFIX declared in record.js
-    const tagBadges = $(RECORD_FRAGMENT_ID).find(TAG_BADGES_ID)
+    const TAG_BUTTON_FRAGMENT_ID = TAG_BUTTON_ID_PREFIX + res.data.tag.id;
+    const tagBadges = $(RECORD_FRAGMENT_ID).find(TAG_BADGES_ID);
+    const tagButton = tagButtons.find(TAG_BUTTON_FRAGMENT_ID);
+    const recordsSize = parseInt(tagButton.find('button').attr('data-bs-records-size'));
 
     switch (selectTagForm.attr('method')) {
         case 'DELETE':
             // update tag button to inactive
-            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).addClass(INACTIVE_TAG_CLASS);
+            tagButton.addClass(INACTIVE_TAG_CLASS);
+            tagButton.find('button').attr('data-bs-records-size', recordsSize - 1);
             // record fragment remove tag badge
             const TAG_BADGES_FRAGMENT_ID = TAG_BADGE_ID_PREFIX + res.data.tag.id;
             const tagBadge = tagBadges.find(TAG_BADGES_FRAGMENT_ID);
@@ -241,7 +244,8 @@ setupAjaxFormSubmit(selectTagForm, function (res) {
             break;
         case 'PUT':
             // update tag button to active
-            tagButtons.find(TAG_BUTTON_FRAGMENT_ID).removeClass(INACTIVE_TAG_CLASS);
+            tagButton.removeClass(INACTIVE_TAG_CLASS);
+            tagButton.find('button').attr('data-bs-records-size', recordsSize + 1);
             // load tag badges fragment
             $.ajax({
                 type: 'POST',
