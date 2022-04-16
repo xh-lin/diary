@@ -110,7 +110,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(TITLE, s.repeat(7));
+        requestParams.add(TITLE, s.repeat(Book.TITLE_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY,
@@ -228,7 +228,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(TITLE, s.repeat(7));
+        requestParams.add(TITLE, s.repeat(Book.TITLE_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_BOOKID,
@@ -337,7 +337,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(TEXT, s.repeat(60));
+        requestParams.add(TEXT, s.repeat(Record.TEXT_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
@@ -494,7 +494,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(TEXT, s.repeat(60));
+        requestParams.add(TEXT, s.repeat(Record.TEXT_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,

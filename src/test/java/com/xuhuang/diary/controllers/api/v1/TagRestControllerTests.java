@@ -83,7 +83,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(NAME, s.repeat(7));
+        requestParams.add(NAME, s.repeat(Tag.NAME_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.POST, API_V1_TAG,
@@ -201,7 +201,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
         // bad request size
         String s = "0123456789";
         requestParams.clear();
-        requestParams.add(NAME, s.repeat(7));
+        requestParams.add(NAME, s.repeat(Tag.NAME_LENGTH / 10 + 1));
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_TAG_TAGID,
