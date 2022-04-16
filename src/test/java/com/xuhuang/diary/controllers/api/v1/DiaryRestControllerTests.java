@@ -291,6 +291,18 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request
+        uriVars[0] = MOCK_BOOK_ID;
+        requestParams.clear();
+        requestParams.add(TEXT, "");
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
 
     @Test
@@ -419,6 +431,18 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
                 uriVars, requestParams, mockUser,
                 HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request
+        uriVars[0] = MOCK_RECORD_ID;
+        requestParams.clear();
+        requestParams.add(TEXT, "");
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
