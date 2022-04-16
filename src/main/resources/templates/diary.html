@@ -25,7 +25,7 @@
     <div class="content d-flex flex-column">
         <div class="container record-container mt-3 mb-auto">
             <!-- If haven't created any book -->
-            <div th:if="${books.isEmpty()}">Please create a diary book.</div>
+            <div class="text-center" th:if="${books.isEmpty()}">Please create a diary book.</div>
             <div th:unless="${books.isEmpty()}">
                 <!-- Create record editor -->
                 <div th:include="fragments/record::create_record_editor"></div>
