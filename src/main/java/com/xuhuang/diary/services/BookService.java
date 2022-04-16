@@ -19,9 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService extends BaseService {
 
-    public static final int DEFAULT_PAGE = 0;
-    public static final int DEFAULT_PAGE_SIZE = 10;
-
     private final BookRepository bookRepository;
     private final UserService userService;
 

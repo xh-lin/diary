@@ -18,6 +18,7 @@ import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 import com.xuhuang.diary.repositories.TagRepository;
 import com.xuhuang.diary.services.BookService;
+import com.xuhuang.diary.services.RecordService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -610,7 +611,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // setup mock repository for record
         Optional<Record> optionalMockRecord = Optional.ofNullable(mockRecord);
         List<Record> mockRecords = Arrays.asList(mockRecord);
-        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
+        Pageable pageable = PageRequest.of(RecordService.DEFAULT_PAGE, RecordService.DEFAULT_PAGE_SIZE);
         Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);
