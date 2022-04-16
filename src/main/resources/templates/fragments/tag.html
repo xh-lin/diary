@@ -56,7 +56,8 @@
         <span th:each="tag : ${tags}" th:id="tagButton_ + ${tag.id}">
             <button class="btn btn-info rounded-pill text-truncate py-0 mb-1" th:text="${tag.name}"
                 th:title="${tag.name}" style="max-width: 100%;" th:data-bs-name="${tag.name}"
-                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}" th:data-bs-id="${tag.id}"></button>
+                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}" th:data-bs-id="${tag.id}"
+                th:data-bs-records-size="${tag.records.size()}"></button>
         </span>
     </div>
 
@@ -110,7 +111,8 @@
                             <span class="d-inline-block text-truncate align-bottom" style="max-width: 50%;">
                                 <strong id="deleteTagName"></strong>
                             </span>
-                            will be deleted.
+                            will be deleted, and will be removed from <strong id="deleteTagRecordsSize"></strong>
+                            records.
                         </form>
                     </div>
                     <!-- Footer -->
