@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.TagService;
@@ -36,6 +37,7 @@ public class TagRestController {
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
+    public static final String NAME_SIZE = "Name length must be less than or equal to {max}.";
     public static final String NAME_NOTBLANK = "Name must not be blank.";
 
     private static final String DATA = "data";
@@ -44,7 +46,8 @@ public class TagRestController {
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createTag(@RequestParam @NotBlank(message = NAME_NOTBLANK) String name) {
+    public ResponseEntity<Object> createTag(
+            @RequestParam @Size(max = Tag.NAME_LENGTH, message = NAME_SIZE) @NotBlank(message = NAME_NOTBLANK) String name) {
         log.info("createTag(name: {})", name);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -86,7 +89,8 @@ public class TagRestController {
 
     @PutMapping("/{tagId}")
     public ResponseEntity<Object> updateTag(@PathVariable Long tagId,
-            @RequestParam @NotBlank(message = NAME_NOTBLANK) String name) throws AuthException {
+            @RequestParam @Size(max = Tag.NAME_LENGTH, message = NAME_SIZE) @NotBlank(message = NAME_NOTBLANK) String name)
+            throws AuthException {
         log.info("updateTag(tagId: {}, name: {})", tagId, name);
 
         Map<String, Object> body = new LinkedHashMap<>();
