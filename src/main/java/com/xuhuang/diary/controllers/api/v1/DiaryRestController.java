@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.security.auth.message.AuthException;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
@@ -46,6 +47,8 @@ public class DiaryRestController {
 
     public static final String TITLE_NOT_BLANK = "Title must not be blank.";
     public static final String TEXT_NOT_EMPTY = "Text must not be empty.";
+    public static final String PAGE_MIN = "Page must be greater than or equal to zero.";
+    public static final String SIZE_MIN = "Size must be greater than zero.";
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
@@ -152,8 +155,9 @@ public class DiaryRestController {
             "/{bookId}/record",
             "/{bookId}/record/{page}",
             "/{bookId}/record/{page}/{size}" })
-    public ResponseEntity<Object> getRecords(@PathVariable Long bookId, @PathVariable(required = false) Integer page,
-            @PathVariable(required = false) Integer size) throws AuthException {
+    public ResponseEntity<Object> getRecords(@PathVariable Long bookId,
+            @PathVariable(required = false) @Min(value = 0, message = PAGE_MIN) Integer page,
+            @PathVariable(required = false) @Min(value = 1, message = SIZE_MIN) Integer size) throws AuthException {
         log.info("getRecords(bookId: {}, page: {}, size: {})", bookId, page, size);
 
         Map<String, Object> body = new LinkedHashMap<>();

@@ -24,9 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RecordService extends BaseService {
 
-    public static final String PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO = "Page must be greater than or equal to zero.";
-    public static final String SIZE_MUST_BE_GREATER_THAN_ZERO = "Size must be greater than zero.";
-
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -53,12 +50,6 @@ public class RecordService extends BaseService {
      * IllegalArgumentException - if either page < 0 or size <= 0
      */
     public Page<Record> getRecords(Long bookId, int page, int size) throws AuthException {
-        if (page < 0) {
-            throw new IllegalArgumentException(PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO);
-        } else if (size <= 0) {
-            throw new IllegalArgumentException(SIZE_MUST_BE_GREATER_THAN_ZERO);
-        }
-
         Book book = bookRepository.findById(bookId).orElseThrow();
         throwIfIsNotCurrentUser(book.getUser());
         Pageable pageable = PageRequest.of(page, size);

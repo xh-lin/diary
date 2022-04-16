@@ -18,7 +18,6 @@ import com.xuhuang.diary.repositories.BookRepository;
 import com.xuhuang.diary.repositories.RecordRepository;
 import com.xuhuang.diary.repositories.TagRepository;
 import com.xuhuang.diary.services.BookService;
-import com.xuhuang.diary.services.RecordService;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -345,7 +344,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                .andExpect(jsonPath("$.messages.page").value(DiaryRestController.PAGE_MIN));
 
         // bad request page size
         uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
@@ -354,7 +353,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                .andExpect(jsonPath("$.messages.size").value(DiaryRestController.SIZE_MIN));
     }
 
     @Test
