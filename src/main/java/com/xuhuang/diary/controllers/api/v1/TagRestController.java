@@ -36,7 +36,7 @@ public class TagRestController {
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
-    public static final String NAME_NOT_BLANK = "Name must not be blank.";
+    public static final String NAME_NOTBLANK = "Name must not be blank.";
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
@@ -44,7 +44,7 @@ public class TagRestController {
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createTag(@RequestParam @NotBlank(message = NAME_NOT_BLANK) String name) {
+    public ResponseEntity<Object> createTag(@RequestParam @NotBlank(message = NAME_NOTBLANK) String name) {
         log.info("createTag(name: {})", name);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -86,7 +86,7 @@ public class TagRestController {
 
     @PutMapping("/{tagId}")
     public ResponseEntity<Object> updateTag(@PathVariable Long tagId,
-            @RequestParam @NotBlank(message = NAME_NOT_BLANK) String name) throws AuthException {
+            @RequestParam @NotBlank(message = NAME_NOTBLANK) String name) throws AuthException {
         log.info("updateTag(tagId: {}, name: {})", tagId, name);
 
         Map<String, Object> body = new LinkedHashMap<>();

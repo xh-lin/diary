@@ -102,7 +102,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.POST, API_V1_DIARY,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath("$.messages.title").value(DiaryRestController.TITLE_NOT_BLANK));
+                .andExpect(jsonPath("$.messages.title").value(DiaryRestController.TITLE_NOTBLANK));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }

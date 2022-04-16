@@ -45,7 +45,7 @@ public class DiaryRestController {
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
-    public static final String TITLE_NOT_BLANK = "Title must not be blank.";
+    public static final String TITLE_NOTBLANK = "Title must not be blank.";
     public static final String TEXT_NOT_EMPTY = "Text must not be empty.";
     public static final String PAGE_MIN = "Page must be greater than or equal to zero.";
     public static final String SIZE_MIN = "Size must be greater than zero.";
@@ -67,7 +67,7 @@ public class DiaryRestController {
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createBook(@RequestParam @NotBlank(message = TITLE_NOT_BLANK) String title) {
+    public ResponseEntity<Object> createBook(@RequestParam @NotBlank(message = TITLE_NOTBLANK) String title) {
         log.info("createBook(title: {})", title);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -109,7 +109,7 @@ public class DiaryRestController {
 
     @PutMapping("/{bookId}")
     public ResponseEntity<Object> updateBook(@PathVariable Long bookId,
-            @RequestParam @NotBlank(message = TITLE_NOT_BLANK) String title) throws AuthException {
+            @RequestParam @NotBlank(message = TITLE_NOTBLANK) String title) throws AuthException {
         log.info("updateBook(bookId: {}, title: {})", bookId, title);
 
         Map<String, Object> body = new LinkedHashMap<>();
