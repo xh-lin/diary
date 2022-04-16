@@ -36,7 +36,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Record extends BaseEntity {
 
-    public static final int TEXT_LENGTH = 511;
+    public static final int TEXT_LENGTH = 65535;
 
     @Lob
     @Column(nullable = false)
