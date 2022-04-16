@@ -33,7 +33,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Tag extends BaseEntity {
 
-    @Column(nullable = false, length = 63)
+    public static final int NAME_LENGTH = 63;
+
+    @Column(nullable = false, length = NAME_LENGTH)
     @NonNull
     private String name;
 

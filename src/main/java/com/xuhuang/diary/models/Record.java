@@ -36,6 +36,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Record extends BaseEntity {
 
+    public static final int TEXT_LENGTH = 511;
+
     @Lob
     @Column(nullable = false)
     @NonNull
@@ -51,8 +53,7 @@ public class Record extends BaseEntity {
     private Book book;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(joinColumns = { @JoinColumn(name = "record_id") },
-            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    @JoinTable(joinColumns = { @JoinColumn(name = "record_id") }, inverseJoinColumns = { @JoinColumn(name = "tag_id") })
     @OrderBy("id")
     @NonNull
     private Set<Tag> tags = new HashSet<>();
