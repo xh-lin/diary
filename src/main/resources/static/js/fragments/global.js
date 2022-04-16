@@ -76,15 +76,24 @@ function setupAjaxFormSubmit(form, successHandler, closeModal = true) {
     Error handler
 */
 
-function errorHandler(jqXHR, textStatus, errorThrown) {
-    console.error({
-        jqXHR: jqXHR,
-        textStatus: textStatus,
-        errorThrown: errorThrown
-    });
-    const errorMessage = (jqXHR.responseJSON !== undefined && jqXHR.responseJSON.message !== undefined)
-        ? jqXHR.responseJSON.message : jqXHR.error;
-    alert(`Error - ${jqXHR.status}: ${errorMessage}`);
+function errorHandler(jqXHR) {
+    console.error(jqXHR);
+
+    // if has response body
+    if (jqXHR.responseJSON !== undefined) {
+        let errorText = jqXHR.responseJSON.status + ' - ' + jqXHR.responseJSON.error;
+        if (jqXHR.responseJSON.message !== undefined) {
+            errorText += '\n' + jqXHR.responseJSON.message;
+        }
+        if (jqXHR.responseJSON.messages !== undefined) {
+            for (let name in jqXHR.responseJSON.messages) {
+                errorText += '\n' + name + ': ' + jqXHR.responseJSON.messages[name];
+            }
+        }
+        alert(errorText);
+    } else {
+        alert(`${jqXHR.status} - ${jqXHR.statusText}`);
+    }
 }
 
 /*
