@@ -76,7 +76,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.POST, API_V1_TAG,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagService.NAME_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath("$.messages.name").value(TagRestController.NAME_NOT_BLANK));
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
     }
