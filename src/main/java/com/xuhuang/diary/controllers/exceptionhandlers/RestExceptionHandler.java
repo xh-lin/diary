@@ -8,6 +8,9 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import javax.security.auth.message.AuthException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 
 import com.xuhuang.diary.exceptions.LoginFailureException;
 
@@ -30,7 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice("com.xuhuang.diary.controllers.api")
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // error handle for bean validations
+    private static final String TIMESTAMP = "timestamp";
+    private static final String STATUS = "status";
+    private static final String ERROR = "error";
+    private static final String MESSAGES = "messages";
+    private static final String MESSAGE = "message";
+
+    // error handle for RequestBody validation
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -48,12 +57,38 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             messages.put("global", global);
         }
 
-        body.put("timestamp", new Date());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("messages", messages);
+        body.put(TIMESTAMP, new Date());
+        body.put(STATUS, status.value());
+        body.put(ERROR, status.getReasonPhrase());
+        body.put(MESSAGES, messages);
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, headers, status);
+        log.info("{}", response);
+        return response;
+    }
+
+    // error handle for PathVariable and RequestParam validation
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        Map<Object, Object> messages = new LinkedHashMap<>();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        for (ConstraintViolation<?> cv : ex.getConstraintViolations()) {
+            String varName = "";
+            //  get the name of last node
+            for (Path.Node node : cv.getPropertyPath())  {
+                varName = node.getName();
+            }
+            messages.put(varName, cv.getMessage());
+        }
+
+        body.put(TIMESTAMP, new Date());
+        body.put(STATUS, status.value());
+        body.put(ERROR, status.getReasonPhrase());
+        body.put(MESSAGES, messages);
+
+        ResponseEntity<Object> response = new ResponseEntity<>(body, status);
         log.info("{}", response);
         return response;
     }
@@ -75,10 +110,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        body.put("timestamp", new Date());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", ex.getMessage());
+        body.put(TIMESTAMP, new Date());
+        body.put(STATUS, status.value());
+        body.put(ERROR, status.getReasonPhrase());
+        body.put(MESSAGE, ex.getMessage());
 
         ResponseEntity<Object> response = new ResponseEntity<>(body, status);
         log.info("{}", response);
