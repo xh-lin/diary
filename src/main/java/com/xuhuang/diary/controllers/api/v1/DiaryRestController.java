@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.security.auth.message.AuthException;
+import javax.validation.constraints.NotBlank;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
@@ -15,6 +16,7 @@ import com.xuhuang.diary.services.TagService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/diary")
 @RequiredArgsConstructor
@@ -39,6 +42,8 @@ public class DiaryRestController {
     public static final String FETCHED_SUCCESSFULLY = "Fetched successfully.";
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
+
+    public static final String TITLE_NOT_BLANK = "Title must not be blank.";
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
@@ -57,7 +62,7 @@ public class DiaryRestController {
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createBook(@RequestParam String title) {
+    public ResponseEntity<Object> createBook(@RequestParam @NotBlank(message = TITLE_NOT_BLANK) String title) {
         log.info("createBook(title: {})", title);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -98,8 +103,8 @@ public class DiaryRestController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<Object> updateBook(@PathVariable Long bookId, @RequestParam String title)
-            throws AuthException {
+    public ResponseEntity<Object> updateBook(@PathVariable Long bookId,
+            @RequestParam @NotBlank(message = TITLE_NOT_BLANK) String title) throws AuthException {
         log.info("updateBook(bookId: {}, title: {})", bookId, title);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -145,9 +150,7 @@ public class DiaryRestController {
             "/{bookId}/record",
             "/{bookId}/record/{page}",
             "/{bookId}/record/{page}/{size}" })
-    public ResponseEntity<Object> getRecords(
-            @PathVariable Long bookId,
-            @PathVariable(required = false) Integer page,
+    public ResponseEntity<Object> getRecords(@PathVariable Long bookId, @PathVariable(required = false) Integer page,
             @PathVariable(required = false) Integer size) throws AuthException {
         log.info("getRecords(bookId: {}, page: {}, size: {})", bookId, page, size);
 
