@@ -28,6 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
     private static final String REDIRECT_ROOT = "redirect:/";
+    private static final String REDIRECT_LOGIN = "redirect:/login";
+
+    private static final String USERNAME_MAX_LENGTH = "usernameMaxLength";
+    private static final String EMAIL_MAX_LENGTH = "emailMaxLength";
+    private static final String PASSWORD_MAX_LENGTH = "passwordMaxLength";
+
     private static final String REQUEST_BODY = "requestBody";
     private static final String ERROR_MESSAGES = "errorMessages";
 
@@ -42,6 +48,9 @@ public class AuthController {
             return REDIRECT_ROOT;
         }
 
+        model.addAttribute(USERNAME_MAX_LENGTH, RegisterRequest.USERNAME_SIZE_MAX);
+        model.addAttribute(EMAIL_MAX_LENGTH, RegisterRequest.EMAIL_SIZE_MAX);
+        model.addAttribute(PASSWORD_MAX_LENGTH, RegisterRequest.PASSWORD_SIZE_MAX);
         model.addAttribute(REQUEST_BODY, new RegisterRequest());
 
         log.info("{}", model.asMap());
@@ -65,6 +74,9 @@ public class AuthController {
                 errorMessages.put("passwordConfirm", global);
             }
 
+            model.addAttribute(USERNAME_MAX_LENGTH, RegisterRequest.USERNAME_SIZE_MAX);
+            model.addAttribute(EMAIL_MAX_LENGTH, RegisterRequest.EMAIL_SIZE_MAX);
+            model.addAttribute(PASSWORD_MAX_LENGTH, RegisterRequest.PASSWORD_SIZE_MAX);
             model.addAttribute(ERROR_MESSAGES, errorMessages);
             model.addAttribute(REQUEST_BODY, requestBody);
 
@@ -73,11 +85,12 @@ public class AuthController {
         }
 
         userService.register(requestBody);
-        return Template.LOGIN.toString();
+        // redirect to the login page after registering successfully
+        return REDIRECT_LOGIN;
     }
 
     @GetMapping("/login")
-    public String viewLogin() {
+    public String viewLogin(Model model) {
         log.info("viewLogin()");
 
         if (userService.getCurrentUser() != null) {
@@ -85,6 +98,8 @@ public class AuthController {
             return REDIRECT_ROOT;
         }
 
+        model.addAttribute(USERNAME_MAX_LENGTH, RegisterRequest.USERNAME_SIZE_MAX);
+        model.addAttribute(PASSWORD_MAX_LENGTH, RegisterRequest.PASSWORD_SIZE_MAX);
         return Template.LOGIN.toString();
     }
 

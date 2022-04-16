@@ -41,12 +41,27 @@ class AuthRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void registerValidateUsername() throws Exception {
-        // only -, _, letters or numbers
+        setupMockRepository();
+
+        // unique
         RegisterRequest requestBody = new RegisterRequest(
-                "user:)",
+                mockUser.getUsername(),
                 mockUser.getEmail(),
                 MOCK_PASSWORD,
                 MOCK_PASSWORD);
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.username",
+                RegisterRequest.USERNAME_ALREADY_TAKEN);
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // only -, _, letters or numbers
+        requestBody.setUsername("user:)");
 
         expectArray(
                 mockMvcPerform(
@@ -102,10 +117,12 @@ class AuthRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void registerValidateEmail() throws Exception {
-        // email format
+        setupMockRepository();
+
+        // unique
         RegisterRequest requestBody = new RegisterRequest(
                 mockUser.getUsername(),
-                "badEmail",
+                mockUser.getEmail(),
                 MOCK_PASSWORD,
                 MOCK_PASSWORD);
 
@@ -115,7 +132,34 @@ class AuthRestControllerTests extends BaseRestControllerTests {
                         requestBody,
                         HttpStatus.BAD_REQUEST),
                 "$.messages.email",
+                RegisterRequest.EMAIL_ALREADY_TAKEN);
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // email format
+        requestBody.setEmail("badEmail");
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
                 RegisterRequest.EMAIL_FORMAT);
+
+        verify(mockUserRepository, times(0)).save(any(User.class));
+
+        // size
+        String s = "0123456789";
+        requestBody.setEmail(s.repeat(RegisterRequest.EMAIL_SIZE_MAX / 10) + "@test.com");
+
+        expectArray(
+                mockMvcPerform(
+                        HttpMethod.POST, API_V1_AUTH_REGISTER,
+                        requestBody,
+                        HttpStatus.BAD_REQUEST),
+                "$.messages.email",
+                RegisterRequest.EMAIL_SIZE.replace("{max}", String.valueOf(RegisterRequest.EMAIL_SIZE_MAX)));
 
         verify(mockUserRepository, times(0)).save(any(User.class));
 
@@ -204,12 +248,17 @@ class AuthRestControllerTests extends BaseRestControllerTests {
         requestBody.setPasswordConfirm(password);
 
         expectArray(
-                mockMvcPerform(
-                        HttpMethod.POST, API_V1_AUTH_REGISTER,
-                        requestBody,
-                        HttpStatus.BAD_REQUEST),
-                "$.messages.password",
-                RegisterRequest.PASSWORD_SIZE
+                expectArray(
+                        mockMvcPerform(
+                                HttpMethod.POST, API_V1_AUTH_REGISTER,
+                                requestBody,
+                                HttpStatus.BAD_REQUEST),
+                        "$.messages.password",
+                        RegisterRequest.PASSWORD_SIZE
+                                .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
+                                .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX))),
+                "$.messages.passwordConfirm",
+                RegisterRequest.PASSWORD_CONFIRM_SIZE
                         .replace("{min}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MIN))
                         .replace("{max}", String.valueOf(RegisterRequest.PASSWORD_SIZE_MAX)));
 

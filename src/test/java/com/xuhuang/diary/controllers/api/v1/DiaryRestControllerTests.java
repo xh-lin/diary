@@ -95,7 +95,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void createBookFailure() throws Exception {
-        // bad request
+        // bad request not blank
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add(TITLE, "");
 
@@ -103,7 +103,21 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.POST, API_V1_DIARY,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(BookService.TITLE_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath("$.messages.title").value(DiaryRestController.TITLE_NOTBLANK));
+
+        verify(mockBookRepository, times(0)).save(any(Book.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(TITLE, s.repeat(Book.TITLE_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY,
+                requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.title").value(
+                        DiaryRestController.TITLE_SIZE.replace("{max}", String.valueOf(Book.TITLE_LENGTH))));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -198,7 +212,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
 
-        // bad request
+        // bad request not blank
         uriVars[0] = MOCK_BOOK_ID;
         requestParams.clear();
         requestParams.add(TITLE, "");
@@ -206,7 +220,22 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_DIARY_BOOKID,
                 uriVars, requestParams, mockUser,
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.title").value(DiaryRestController.TITLE_NOTBLANK));
+
+        verify(mockBookRepository, times(0)).save(any(Book.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(TITLE, s.repeat(Book.TITLE_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_BOOKID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.title").value(
+                        DiaryRestController.TITLE_SIZE.replace("{max}", String.valueOf(Book.TITLE_LENGTH))));
 
         verify(mockBookRepository, times(0)).save(any(Book.class));
     }
@@ -291,6 +320,33 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpStatus.NOT_FOUND);
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request not empty
+        uriVars[0] = MOCK_BOOK_ID;
+        requestParams.clear();
+        requestParams.add(TEXT, "");
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.text").value(DiaryRestController.TEXT_NOT_EMPTY));
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(TEXT, s.repeat(Record.TEXT_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_DIARY_BOOKID_RECORD,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.text").value(
+                        DiaryRestController.TEXT_SIZE.replace("{max}", String.valueOf(Record.TEXT_LENGTH))));
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
 
     @Test
@@ -333,7 +389,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.PAGE_MUST_BE_GREATER_THAN_OR_EQUAL_TO_ZERO));
+                .andExpect(jsonPath("$.messages.page").value(DiaryRestController.PAGE_MIN));
 
         // bad request page size
         uriVars = new Object[] { MOCK_BOOK_ID, 0, 0 };
@@ -342,7 +398,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.GET, API_V1_DIARY_BOOKID_RECORD_PAGE_SIZE,
                 uriVars, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(RecordService.SIZE_MUST_BE_GREATER_THAN_ZERO));
+                .andExpect(jsonPath("$.messages.size").value(DiaryRestController.SIZE_MIN));
     }
 
     @Test
@@ -419,6 +475,33 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
                 uriVars, requestParams, mockUser,
                 HttpStatus.NOT_FOUND);
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request not empty
+        uriVars[0] = MOCK_RECORD_ID;
+        requestParams.clear();
+        requestParams.add(TEXT, "");
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.text").value(DiaryRestController.TEXT_NOT_EMPTY));
+
+        verify(mockRecordRepository, times(0)).save(any(Record.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(TEXT, s.repeat(Record.TEXT_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_DIARY_RECORD_RECORDID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.text").value(
+                        DiaryRestController.TEXT_SIZE.replace("{max}", String.valueOf(Record.TEXT_LENGTH))));
 
         verify(mockRecordRepository, times(0)).save(any(Record.class));
     }
@@ -587,7 +670,7 @@ class DiaryRestControllerTests extends BaseRestControllerTests {
         // setup mock repository for record
         Optional<Record> optionalMockRecord = Optional.ofNullable(mockRecord);
         List<Record> mockRecords = Arrays.asList(mockRecord);
-        Pageable pageable = PageRequest.of(BookService.DEFAULT_PAGE, BookService.DEFAULT_PAGE_SIZE);
+        Pageable pageable = PageRequest.of(RecordService.DEFAULT_PAGE, RecordService.DEFAULT_PAGE_SIZE);
         Page<Record> mockRecordPage = new PageImpl<>(mockRecords, pageable, mockRecords.size());
         doReturn(optionalMockRecord).when(mockRecordRepository).findById(MOCK_RECORD_ID);
         doReturn(mockRecordPage).when(mockRecordRepository).findByBookOrderByCreatedAtDescIdDesc(mockBook, pageable);

@@ -20,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TagService extends BaseService {
 
-    public static final String NAME_MUST_NOT_BE_BLANK = "Name must not be blank.";
-
     private final TagRepository tagRepository;
     private final UserService userService;
 
@@ -30,9 +28,6 @@ public class TagService extends BaseService {
      * IllegalArgumentException - if name is blank
      */
     public Tag createTag(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(NAME_MUST_NOT_BE_BLANK);
-        }
         return tagRepository.save(new Tag(name.trim(), userService.getCurrentUser()));
     }
 
@@ -58,9 +53,6 @@ public class TagService extends BaseService {
      * IllegalArgumentException - if name is blank
      */
     public Tag updateTag(Long tagId, String name) throws AuthException {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(NAME_MUST_NOT_BE_BLANK);
-        }
         Tag tag = tagRepository.findById(tagId).orElseThrow();
         throwIfIsNotCurrentUser(tag.getUser());
         tag.setName(name.trim());

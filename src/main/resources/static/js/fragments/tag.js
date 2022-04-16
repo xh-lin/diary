@@ -25,6 +25,7 @@ const UPDATE_TAG_FORM_ID = '#updateTagForm';
 const DELETE_TAG_DIALOG_MODAL_ID = '#deleteTagDialogModal';
 const DELETE_TAG_FORM_ID = '#deleteTagForm';
 const DELETE_TAG_NAME_ID = '#deleteTagName';
+const DELETE_TAG_RECORDS_SIZE_ID = '#deleteTagRecordsSize';
 
 const TAG_DIALOG_MODAL_LABEL_ID = '#tagDialogModalLabel';
 const SELECT_TAG_LABEL_ID = '#selectTagLabel';
@@ -179,8 +180,11 @@ function tagOnClickHandler(event) {
             showUpdateTagForm(tagButton);
             break;
         case TagAction.DELETE:
+            const recordsSize =  tagButton.attr('data-bs-records-size');
             deleteTagForm.attr('action', url);
             deleteTagForm.find(DELETE_TAG_NAME_ID).text(name);
+            deleteTagForm.find(DELETE_TAG_NAME_ID).attr('title', name);
+            deleteTagForm.find(DELETE_TAG_RECORDS_SIZE_ID).text(recordsSize);
             deleteTagDialogModal.show()
             break;
         default:

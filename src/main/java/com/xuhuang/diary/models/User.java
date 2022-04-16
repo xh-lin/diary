@@ -37,22 +37,28 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(nullable = false, unique = true)
+    public static final int USERNAME_LENGTH = 63;
+    public static final int EMAIL_LENGTH = 63;
+    public static final int PASSWORD_LENGTH = 127;
+    public static final int PASSWORD_ENCRYPTED_LENGTH = 63;
+    public static final int USER_ROLE_LENGTH = 15;
+
+    @Column(nullable = false, unique = true, length = USERNAME_LENGTH)
     @NonNull
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = EMAIL_LENGTH)
     @NonNull
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = PASSWORD_ENCRYPTED_LENGTH)
     @JsonIgnore
     @ToString.Exclude
     @NonNull
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = USER_ROLE_LENGTH)
     @NonNull
     private UserRole userRole;
 

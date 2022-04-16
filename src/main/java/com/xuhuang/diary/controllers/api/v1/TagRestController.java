@@ -4,12 +4,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.security.auth.message.AuthException;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.xuhuang.diary.models.Tag;
 import com.xuhuang.diary.services.TagService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/tag")
 @RequiredArgsConstructor
@@ -33,13 +37,17 @@ public class TagRestController {
     public static final String UPDATED_SUCCESSFULLY = "Updated successfully.";
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
+    public static final String NAME_SIZE = "Name length must be less than or equal to {max}.";
+    public static final String NAME_NOTBLANK = "Name must not be blank.";
+
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
 
     private final TagService tagService;
 
     @PostMapping()
-    public ResponseEntity<Object> createTag(@RequestParam String name) {
+    public ResponseEntity<Object> createTag(
+            @RequestParam @Size(max = Tag.NAME_LENGTH, message = NAME_SIZE) @NotBlank(message = NAME_NOTBLANK) String name) {
         log.info("createTag(name: {})", name);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -80,7 +88,8 @@ public class TagRestController {
     }
 
     @PutMapping("/{tagId}")
-    public ResponseEntity<Object> updateTag(@PathVariable Long tagId, @RequestParam String name)
+    public ResponseEntity<Object> updateTag(@PathVariable Long tagId,
+            @RequestParam @Size(max = Tag.NAME_LENGTH, message = NAME_SIZE) @NotBlank(message = NAME_NOTBLANK) String name)
             throws AuthException {
         log.info("updateTag(tagId: {}, name: {})", tagId, name);
 

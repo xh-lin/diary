@@ -68,7 +68,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
     @Test
     void createTagFailure() throws Exception {
-        // bad request
+        // bad request not blank
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add(NAME, "");
 
@@ -76,7 +76,21 @@ class TagRestControllerTests extends BaseRestControllerTests {
                 HttpMethod.POST, API_V1_TAG,
                 requestParams, mockUser,
                 HttpStatus.BAD_REQUEST)
-                .andExpect(jsonPath(MESSAGE_JPEXP).value(TagService.NAME_MUST_NOT_BE_BLANK));
+                .andExpect(jsonPath("$.messages.name").value(TagRestController.NAME_NOTBLANK));
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(NAME, s.repeat(Tag.NAME_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.POST, API_V1_TAG,
+                requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.name").value(
+                        TagRestController.NAME_SIZE.replace("{max}", String.valueOf(Tag.NAME_LENGTH))));
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
     }
@@ -125,7 +139,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.GET, API_V1_TAG_TAGID,
-                uriVars, anotherMockUser,
+                uriVars, mockUser,
                 HttpStatus.NOT_FOUND);
     }
 
@@ -166,20 +180,35 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_TAG_TAGID,
-                uriVars, requestParams, anotherMockUser,
+                uriVars, requestParams, mockUser,
                 HttpStatus.NOT_FOUND);
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
 
-        // bad request
+        // bad request not blank
         uriVars[0] = MOCK_TAG_ID;
         requestParams.clear();
         requestParams.add(NAME, "");
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_TAG_TAGID,
-                uriVars, requestParams, anotherMockUser,
-                HttpStatus.BAD_REQUEST);
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.name").value(TagRestController.NAME_NOTBLANK));
+
+        verify(mockTagRepository, times(0)).save(any(Tag.class));
+
+        // bad request size
+        String s = "0123456789";
+        requestParams.clear();
+        requestParams.add(NAME, s.repeat(Tag.NAME_LENGTH / 10 + 1));
+
+        mockMvcPerform(
+                HttpMethod.PUT, API_V1_TAG_TAGID,
+                uriVars, requestParams, mockUser,
+                HttpStatus.BAD_REQUEST)
+                .andExpect(jsonPath("$.messages.name").value(
+                        TagRestController.NAME_SIZE.replace("{max}", String.valueOf(Tag.NAME_LENGTH))));
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
     }
@@ -217,7 +246,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.DELETE, API_V1_TAG_TAGID,
-                uriVars, anotherMockUser,
+                uriVars, mockUser,
                 HttpStatus.NOT_FOUND);
 
         verify(mockTagRepository, times(0)).deleteById(any(Long.class));

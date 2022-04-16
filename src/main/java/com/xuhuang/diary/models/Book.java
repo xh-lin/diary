@@ -35,7 +35,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Book extends BaseEntity {
 
-    @Column(nullable = false)
+    public static final int TITLE_LENGTH = 63;
+
+    @Column(nullable = false, length = TITLE_LENGTH)
     @NonNull
     private String title;
 

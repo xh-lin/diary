@@ -56,7 +56,8 @@
         <span th:each="tag : ${tags}" th:id="tagButton_ + ${tag.id}">
             <button class="btn btn-info rounded-pill text-truncate py-0 mb-1" th:text="${tag.name}"
                 th:title="${tag.name}" style="max-width: 100%;" th:data-bs-name="${tag.name}"
-                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}" th:data-bs-id="${tag.id}"></button>
+                th:data-bs-url="@{|/api/v1/tag/${tag.id}|}" th:data-bs-id="${tag.id}"
+                th:data-bs-records-size="${tag.records.size()}"></button>
         </span>
     </div>
 
@@ -75,7 +76,8 @@
         <!-- Create tag form -->
         <form class="d-inline-flex d-none" id="createTagForm" style="max-width:200px; height:25px;"
             th:action="@{/api/v1/tag}" method="POST">
-            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" required>
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;"
+                th:maxlength="${nameMaxLength}" required>
             <button type="submit" class="btn btn-outline-success py-0" style="border-radius: 0px 50px 50px 0px;">
                 <i class="bi bi-check"></i>
             </button>
@@ -84,7 +86,8 @@
 
     <div th:fragment="update_tag_form">
         <form class="d-inline-flex d-none" id="updateTagForm" style="max-width:200px; height:25px;" method="PUT">
-            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" required>
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;"
+                th:maxlength="${nameMaxLength}" required>
             <button type="submit" class="btn btn-outline-primary py-0" style="border-radius: 0px 50px 50px 0px;">
                 <i class="bi bi-check"></i>
             </button>
@@ -108,7 +111,8 @@
                             <span class="d-inline-block text-truncate align-bottom" style="max-width: 50%;">
                                 <strong id="deleteTagName"></strong>
                             </span>
-                            will be deleted.
+                            will be deleted, and will be removed from <strong id="deleteTagRecordsSize"></strong>
+                            records.
                         </form>
                     </div>
                     <!-- Footer -->
