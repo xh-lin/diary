@@ -125,7 +125,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.GET, API_V1_TAG_TAGID,
-                uriVars, anotherMockUser,
+                uriVars, mockUser,
                 HttpStatus.NOT_FOUND);
     }
 
@@ -166,7 +166,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_TAG_TAGID,
-                uriVars, requestParams, anotherMockUser,
+                uriVars, requestParams, mockUser,
                 HttpStatus.NOT_FOUND);
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
@@ -178,7 +178,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.PUT, API_V1_TAG_TAGID,
-                uriVars, requestParams, anotherMockUser,
+                uriVars, requestParams, mockUser,
                 HttpStatus.BAD_REQUEST);
 
         verify(mockTagRepository, times(0)).save(any(Tag.class));
@@ -217,7 +217,7 @@ class TagRestControllerTests extends BaseRestControllerTests {
 
         mockMvcPerform(
                 HttpMethod.DELETE, API_V1_TAG_TAGID,
-                uriVars, anotherMockUser,
+                uriVars, mockUser,
                 HttpStatus.NOT_FOUND);
 
         verify(mockTagRepository, times(0)).deleteById(any(Long.class));
