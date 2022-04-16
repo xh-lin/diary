@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.security.auth.message.AuthException;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import com.xuhuang.diary.models.Book;
 import com.xuhuang.diary.models.Record;
@@ -44,6 +45,7 @@ public class DiaryRestController {
     public static final String DELETED_SUCCESSFULLY = "Deleted successfully.";
 
     public static final String TITLE_NOT_BLANK = "Title must not be blank.";
+    public static final String TEXT_NOT_EMPTY = "Text must not be empty.";
 
     private static final String DATA = "data";
     private static final String MESSAGE = "message";
@@ -132,8 +134,8 @@ public class DiaryRestController {
     }
 
     @PostMapping("/{bookId}/record")
-    public ResponseEntity<Object> createRecord(@PathVariable Long bookId, @RequestParam String text)
-            throws AuthException {
+    public ResponseEntity<Object> createRecord(@PathVariable Long bookId,
+            @RequestParam @NotEmpty(message = TEXT_NOT_EMPTY) String text) throws AuthException {
         log.info("createRecord(bookId: {}, text: {})", bookId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
@@ -204,8 +206,8 @@ public class DiaryRestController {
     }
 
     @PutMapping("/record/{recordId}")
-    public ResponseEntity<Object> updateRecord(@PathVariable Long recordId, @RequestParam String text)
-            throws AuthException {
+    public ResponseEntity<Object> updateRecord(@PathVariable Long recordId,
+            @RequestParam @NotEmpty(message = TEXT_NOT_EMPTY) String text) throws AuthException {
         log.info("updateRecord(recordId: {}, text: {})", recordId, text);
 
         Map<String, Object> body = new LinkedHashMap<>();
