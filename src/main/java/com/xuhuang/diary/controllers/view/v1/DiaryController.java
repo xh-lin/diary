@@ -33,6 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DiaryController {
 
+    private static final String TITLE_MAX_LENGTH = "titleMaxLength";
+    private static final String TEXT_MAX_LENGTH = "textMaxLength";
+    private static final String NAME_MAX_LENGTH = "nameMaxLength";
+
     private static final String CURRENT_BOOK_ID = "currentBookId";
     private static final String BOOKS = "books";
     private static final String RECORDS = "records";
@@ -85,6 +89,9 @@ public class DiaryController {
             model.addAttribute(TAGS, tagService.getTags());
         }
 
+        model.addAttribute(TITLE_MAX_LENGTH, Book.TITLE_LENGTH);
+        model.addAttribute(TEXT_MAX_LENGTH, Record.TEXT_LENGTH);
+        model.addAttribute(NAME_MAX_LENGTH, Tag.NAME_LENGTH);
         model.addAttribute(CURRENT_BOOK_ID, bookId);
         model.addAttribute(BOOKS, books);
 

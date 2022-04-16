@@ -16,7 +16,7 @@
                 <div class="mb-3">
                     <input type="text" class="form-control"
                         th:classappend="${errorMessages != null && errorMessages.containsKey('username') ? 'is-invalid' : ''}"
-                        th:field="*{username}" placeholder="Username" maxlength="63" required>
+                        th:field="*{username}" placeholder="Username" th:maxlength="${usernameMaxLength}" required>
                     <ul th:if="${errorMessages?.containsKey('username')}" class="invalid-feedback">
                         <li th:each="message : ${errorMessages.username}" th:text="${message}"></li>
                     </ul>
@@ -25,7 +25,7 @@
                 <div class="mb-3">
                     <input type="email" class="form-control"
                         th:classappend="${errorMessages != null && errorMessages.containsKey('email') ? 'is-invalid' : ''}"
-                        th:field="*{email}" placeholder="Email" maxlength="63" required>
+                        th:field="*{email}" placeholder="Email" th:maxlength="${emailMaxLength}" required>
                     <ul th:if="${errorMessages?.containsKey('email')}" class="invalid-feedback">
                         <li th:each="message : ${errorMessages.email}" th:text="${message}"></li>
                     </ul>
@@ -34,7 +34,7 @@
                 <div class="mb-3">
                     <input type="password" class="form-control"
                         th:classappend="${errorMessages != null && errorMessages.containsKey('password') ? 'is-invalid' : ''}"
-                        th:field="*{password}" placeholder="Password" maxlength="127" required>
+                        th:field="*{password}" placeholder="Password" th:maxlength="${passwordMaxLength}" required>
                     <ul th:if="${errorMessages?.containsKey('password')}" class="invalid-feedback">
                         <li th:each="message : ${errorMessages.password}" th:text="${message}"></li>
                     </ul>
@@ -43,7 +43,8 @@
                 <div class="mb-3">
                     <input type="password" class="form-control"
                         th:classappend="${errorMessages != null && errorMessages.containsKey('passwordConfirm') ? 'is-invalid' : ''}"
-                        th:field="*{passwordConfirm}" placeholder="Confirm password" maxlength="127" required>
+                        th:field="*{passwordConfirm}" placeholder="Confirm password" th:maxlength="${passwordMaxLength}"
+                        required>
                     <ul th:if="${errorMessages?.containsKey('passwordConfirm')}" class="invalid-feedback">
                         <li th:each="message : ${errorMessages.passwordConfirm}" th:text="${message}"></li>
                     </ul>

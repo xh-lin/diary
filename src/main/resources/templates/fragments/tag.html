@@ -75,8 +75,8 @@
         <!-- Create tag form -->
         <form class="d-inline-flex d-none" id="createTagForm" style="max-width:200px; height:25px;"
             th:action="@{/api/v1/tag}" method="POST">
-            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" maxlength="63"
-                required>
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;"
+                th:maxlength="${nameMaxLength}" required>
             <button type="submit" class="btn btn-outline-success py-0" style="border-radius: 0px 50px 50px 0px;">
                 <i class="bi bi-check"></i>
             </button>
@@ -85,8 +85,8 @@
 
     <div th:fragment="update_tag_form">
         <form class="d-inline-flex d-none" id="updateTagForm" style="max-width:200px; height:25px;" method="PUT">
-            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;" maxlength="63"
-                required>
+            <input type="text" class="form-control" name="name" style="border-radius: 50px 0px 0px 50px;"
+                th:maxlength="${nameMaxLength}" required>
             <button type="submit" class="btn btn-outline-primary py-0" style="border-radius: 0px 50px 50px 0px;">
                 <i class="bi bi-check"></i>
             </button>
