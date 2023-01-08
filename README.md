@@ -1,7 +1,14 @@
 # diary
 
-- Demo project for Spring Boot.
-- This is a full-stack web application that you can use to write diaries.
+- This is a web app that you can write things down.
+- A demo project for Spring Boot.
+
+### Demo Link
+
+- https://diary-qa.up.railway.app
+- If you wish to try the site but it's down. Please contact me.
+- Data stored isn't secure and will be deleted irregularly.
+- The app is deployed using [Railway](https://railway.app), and the DB is hosted on [db4free](https://www.db4free.net).
 
 ## Preview
 
